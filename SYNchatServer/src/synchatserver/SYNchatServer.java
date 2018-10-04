@@ -8,6 +8,7 @@ package synchatserver;
 /**
  *
  * @author Peter
+ * Test server
  */
 public class SYNchatServer {
 
