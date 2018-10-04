@@ -15,7 +15,7 @@ public class SYNchatServer {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-       System.out.println("hejsa");
+       System.out.println("hejsas");
     }
     
 }
