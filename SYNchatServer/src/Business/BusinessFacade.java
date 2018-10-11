@@ -10,10 +10,17 @@ public class BusinessFacade implements IBusiness{
     
     private static BusinessFacade instance;
     
+    /**
+     * Private Constructor, requred for singleton
+     */
     private BusinessFacade(){
         
     }
-
+    
+    /**
+     * getter method for singleton, requered for layered architecture
+     * @return the facade itself.
+     */
     public static IBusiness getInstance() {
         
             if(instance == null){
@@ -22,6 +29,10 @@ public class BusinessFacade implements IBusiness{
         return instance;
     }
 
+    /**
+     * Acquaints this with the persistance facade through the "gluecode" in the starter pack
+     * @param per 
+     */
     @Override
     public void injectPersistence(IPersistence per) {
        this.persistence = per;
