@@ -1,22 +1,24 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Starter;
 
-/**
- *
- * @author Peter
- * Test server
- */
-public class SYNchatServer {
+import Acquaintance.IBusiness;
+import Acquaintance.IConnection;
+import Acquaintance.IPersistence;
+import Business.BusinessFacade;
+import Connection.ConnectionFacade;
+import Persistence.PersistenceFacade;
 
-    /**
-     * @param args the command line arguments
-     */
+
+
+public class SYNchatServer {
     public static void main(String[] args) {
-       System.out.println("hejsas");
+        IBusiness business = BusinessFacade.getInstance();
+        IConnection con = ConnectionFacade.getInstance();
+        IPersistence per = PersistenceFacade.getInstance();
+        
+        business.injectPersistence(per);
+        con.injectBusiness(business);
+        
+        
     }
-    
+
 }
