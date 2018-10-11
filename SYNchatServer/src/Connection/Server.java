@@ -5,15 +5,21 @@
  */
 package Connection;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.net.ssl.HandshakeCompletedEvent;
+import javax.net.ssl.HandshakeCompletedListener;
 import javax.net.ssl.SSLServerSocket;
 import javax.net.ssl.SSLServerSocketFactory;
 import javax.net.ssl.SSLSocket;
@@ -24,6 +30,8 @@ import javax.net.ssl.SSLSocket;
  */
 public class Server implements Runnable{
 
+    
+    private int nudeCounter;
     private int port;
      private boolean isStopped = false;
     ExecutorService threadpool = Executors.newFixedThreadPool(10);
@@ -55,25 +63,50 @@ public class Server implements Runnable{
     @Override
     public void run() {
         System.out.println(createSocket());
-        System.out.println("Det kører!");
+     //   System.out.println("Det kører!");
         while(!isStopped()) {
             SSLSocket clientSocket;
              try {
                 clientSocket = (SSLSocket) this.sslServerSocket.accept(); // Wait for connection and accept
+             
+                nudeCounter++;
+                 System.out.println("You recieved a nude! It is nude number: " + nudeCounter);
+                  handleConnection(clientSocket);
             } catch (IOException e) {
                 throw new RuntimeException("Error accepting client connection", e);
             }
-             handleConnection(clientSocket);
+            
             
         }
     }
     
     
-        private void handleConnection(SSLSocket client) {
-            threadpool.submit(new Runnable() {
-                @Override
-                public void run() {
-                    //TODO
+     private void handleConnection(SSLSocket client) {
+        threadpool.submit(new Runnable() {
+            @Override
+            public void run() {
+                //TODO
+                try (Scanner scanner = new Scanner(client.getInputStream());
+                    PrintWriter writerClient = new PrintWriter(client.getOutputStream(), true);) {
+                    System.out.println("Sends: server ready");
+                    writerClient.println("Server ready. Type your massage:");
+                    while (scanner.hasNextLine()) {
+
+                        String line = scanner.nextLine();
+
+                        //  writerFile.println(line);
+                        System.out.println("Printede : " + line);
+                    }
+                    writerClient.close();
+                } catch (IOException ex) {
+                    Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+                } finally {
+                    try {
+                        client.close();
+                    } catch (IOException ex) {
+                        Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
                     /*
              try {       
             InputStream input  = client.getInputStream();
