@@ -44,11 +44,14 @@ public class ChatHandler extends Thread{
   protected static Vector handlers = new Vector ();
   public void run () {
       System.out.println("Started");
+   
     try {
-      handlers.addElement (this);
+      handlers.addElement (this); 
+    //  sendMessage("Welcome!");
       while (true) {
+        System.out.println("Waiting");
         String msg = input.readUTF ();
-          System.out.println("msg: " + msg);
+        System.out.println("msg: " + msg);
         sendMessage (msg);
       }
     } catch (IOException ex) {
@@ -72,8 +75,8 @@ protected static void sendMessage (String message) {
         ChatHandler ch = (ChatHandler) e.nextElement ();
         try {
           synchronized (ch.output) {
-              System.out.println("About to write: " + ch.output);
-            ch.output.writeUTF (message);
+              System.out.println("About to write: " + message);
+            ch.output.writeUTF(message);
           }
           ch.output.flush ();
         } catch (IOException ex) {
