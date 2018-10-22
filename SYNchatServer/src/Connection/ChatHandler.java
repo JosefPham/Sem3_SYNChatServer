@@ -5,6 +5,7 @@
  */
 package Connection;
 
+import Acquaintance.IUser;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.DataInputStream;
@@ -12,6 +13,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -26,7 +28,9 @@ public class ChatHandler extends Thread{
     DataInputStream input;
     DataOutputStream output;
     
-    
+  public static HashMap<String, ChatHandler> clients = new HashMap<String, ChatHandler>();    
+  
+  
     public ChatHandler(Socket s) {
         try {
             this.s = s;
@@ -42,22 +46,40 @@ public class ChatHandler extends Thread{
     
     
   protected static Vector handlers = new Vector ();
+  
   public void run () {
       System.out.println("Started");
-   
     try {
       handlers.addElement (this); 
+      if(!clients.containsKey("bruger" + handlers.size())){
+        clients.put("bruger" + handlers.size(), this);  
+      }
+      
+        System.out.println("Added: " + "bruger"+handlers.size());
     //  sendMessage("Welcome!");
       while (true) {
         System.out.println("Waiting");
         String msg = input.readUTF ();
         System.out.println("msg: " + msg);
-        sendMessage (msg);
+        if(msg.contains(":")){
+            String[] name = msg.trim().split(":");
+            sendPrivateMessage(name[0].trim(), name[1]);
+        }
+        else{
+        sendPublicMessage (msg);
+        }
       }
     } catch (IOException ex) {
       ex.printStackTrace ();
     } finally {
       handlers.removeElement (this);
+      for (String s : clients.keySet()){
+          if(clients.get(s).equals(this)){
+              System.out.println("removing: " + s);
+              clients.remove(s);
+          }
+      }
+      
       try {
         s.close ();
       } catch (IOException ex) {
@@ -67,7 +89,33 @@ public class ChatHandler extends Thread{
   }
     
   
-protected static void sendMessage (String message) {
+
+  
+  
+  
+  
+protected static void sendPrivateMessage(String message, String reciever){
+    
+    for(String s : clients.keySet()){
+        if(s.equals(reciever)){
+            try {
+                ChatHandler ch = clients.get(s);
+                ch.output.writeUTF(message);
+                ch.output.flush();
+                
+            } catch (IOException ex) {
+                Logger.getLogger(ChatHandler.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+    
+    
+    
+}  
+  
+  
+  
+protected static void sendPublicMessage (String message) {
     synchronized (handlers) {
         System.out.println("Trying to send a message!");
       Enumeration e = handlers.elements ();
