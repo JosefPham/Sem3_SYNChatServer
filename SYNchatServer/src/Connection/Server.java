@@ -12,6 +12,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.InetAddress;
+import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
@@ -36,7 +37,7 @@ public class Server implements Runnable{
      private boolean isStopped = false;
     ExecutorService threadpool = Executors.newFixedThreadPool(10);
     InetAddress ip;
-    SSLServerSocket sslServerSocket;
+    ServerSocket serverSocket;
     
     
     public Server(InetAddress ip, int port){
@@ -46,9 +47,8 @@ public class Server implements Runnable{
     
     
     public boolean createSocket(){
-         SSLServerSocketFactory socketFactory = (SSLServerSocketFactory) SSLServerSocketFactory.getDefault();
         try {
-            this.sslServerSocket = (SSLServerSocket) socketFactory.createServerSocket(port, 0, ip);
+            serverSocket = new ServerSocket(port, 0, ip);
            // port = sslServerSocket.getLocalPort();
            return true;
         } catch (IOException ex) {
@@ -65,9 +65,9 @@ public class Server implements Runnable{
         System.out.println(createSocket());
      //   System.out.println("Det kører!");
         while(!isStopped()) {
-            SSLSocket clientSocket;
+            Socket clientSocket;
              try {
-                clientSocket = (SSLSocket) this.sslServerSocket.accept(); // Wait for connection and accept
+                clientSocket = this.serverSocket.accept(); // Wait for connection and accept
              
                 nudeCounter++;
                  System.out.println("You recieved a nude! It is nude number: " + nudeCounter);
@@ -81,7 +81,7 @@ public class Server implements Runnable{
     }
     
     
-     private void handleConnection(SSLSocket client) {
+     private void handleConnection(Socket client) {
         threadpool.submit(new Runnable() {
             @Override
             public void run() {
@@ -151,7 +151,7 @@ public class Server implements Runnable{
         this.isStopped = true;
         try {
             System.out.println("Closing web server");
-            this.sslServerSocket.close();
+            this.serverSocket.close();
         } catch (IOException e) {
             throw new RuntimeException("Error closing server", e);
         }
