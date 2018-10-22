@@ -34,7 +34,7 @@ public class Server implements Runnable{
     
     private int nudeCounter;
     private int port;
-     private boolean isStopped = false;
+    private boolean isStopped = false;
     ExecutorService threadpool = Executors.newFixedThreadPool(10);
     InetAddress ip;
     ServerSocket serverSocket;
