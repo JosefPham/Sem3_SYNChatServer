@@ -29,7 +29,7 @@ import javax.net.ssl.SSLSocket;
  *
  * @author Sigurd E. Espersen
  */
-public class Server implements Runnable{
+public class Server{
 
     
     private int nudeCounter;
@@ -43,10 +43,12 @@ public class Server implements Runnable{
     public Server(InetAddress ip, int port){
         this.port = port;
         this.ip = ip;
+        createSocket();
+        
     }
     
     
-    public boolean createSocket(){
+    private boolean createSocket(){
         try {
             serverSocket = new ServerSocket(port, 0, ip);
            // port = sslServerSocket.getLocalPort();
@@ -57,90 +59,87 @@ public class Server implements Runnable{
         return false;
     }
     
-    
-    
-    
-    @Override
-    public void run() {
-        System.out.println(createSocket());
-     //   System.out.println("Det kører!");
-        while(!isStopped()) {
+    private void acceptClient(){
+        while(!isStopped()){
             Socket clientSocket;
              try {
                 clientSocket = this.serverSocket.accept(); // Wait for connection and accept
-             
                 nudeCounter++;
                  System.out.println("You recieved a nude! It is nude number: " + nudeCounter);
-                  handleConnection(clientSocket);
+                 ChatHandler ch = new ChatHandler(clientSocket);
+                 ch.start();
+             //     handleConnection(clientSocket);
             } catch (IOException e) {
                 throw new RuntimeException("Error accepting client connection", e);
             }
-            
-            
         }
+        
+        
     }
     
     
-     private void handleConnection(Socket client) {
-        threadpool.submit(new Runnable() {
-            @Override
-            public void run() {
-                //TODO
-                try (Scanner scanner = new Scanner(client.getInputStream());
-                    PrintWriter writerClient = new PrintWriter(client.getOutputStream(), true);) {
-                    System.out.println("Sends: server ready");
-                    writerClient.println("Server ready. Type your massage:");
-                    while (scanner.hasNextLine()) {
-
-                        String line = scanner.nextLine();
-
-                        //  writerFile.println(line);
-                        System.out.println("Printede : " + line);
-                    }
-                    writerClient.close();
-                } catch (IOException ex) {
-                    Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
-                } finally {
-                    try {
-                        client.close();
-                    } catch (IOException ex) {
-                        Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                }
-                    /*
-             try {       
-            InputStream input  = client.getInputStream();
-            OutputStream output = client.getOutputStream();
-
-            long time = System.currentTimeMillis();
-            String httpResponse = "HTTP/1.1 200 OK\r\nConnection: close\r\nContent-Type: text/html\r\n\r\nHello visitor number " + "\r\n";
-
-            output.write(httpResponse.getBytes("UTF-8"));
-
-            client.shutdownOutput();
-            output.close();
-            input.close();
-
-            System.out.println("Request processed: " + time);
-
-            // Simulate a connection lasting 10 seconds
-            try {
-                Thread.sleep(10000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-
-        } catch (IOException e) {
-            //report exception somewhere.
-            e.printStackTrace();
-        }
-*/
-                }
-            }
-            );
-    }
     
-    
+//
+//     private void handleConnection(Socket client) {
+//        threadpool.submit(new Runnable() {
+//            @Override
+//            public void run() {
+//                TODO
+//                try (Scanner scanner = new Scanner(client.getInputStream());
+//                    PrintWriter writerClient = new PrintWriter(client.getOutputStream(), true);) {
+//                    System.out.println("Sends: server ready");
+//                    writerClient.println("Server ready. Type your massage:");
+//                    while (scanner.hasNextLine()) {
+//
+//                        String line = scanner.nextLine();
+//
+//                          writerFile.println(line);
+//                        System.out.println("Printede : " + line);
+//                    }
+//                    writerClient.close();
+//                } catch (IOException ex) {
+//                    Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+//                } finally {
+//                    try {
+//                        client.close();
+//                    } catch (IOException ex) {
+//                        Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+//                    }
+//                }
+//                    /*
+//             try {       
+//            InputStream input  = client.getInputStream();
+//            OutputStream output = client.getOutputStream();
+//
+//            long time = System.currentTimeMillis();
+//            String httpResponse = "HTTP/1.1 200 OK\r\nConnection: close\r\nContent-Type: text/html\r\n\r\nHello visitor number " + "\r\n";
+//
+//            output.write(httpResponse.getBytes("UTF-8"));
+//
+//            client.shutdownOutput();
+//            output.close();
+//            input.close();
+//
+//            System.out.println("Request processed: " + time);
+//
+//             Simulate a connection lasting 10 seconds
+//            try {
+//                Thread.sleep(10000);
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
+//
+//        } catch (IOException e) {
+//            report exception somewhere.
+//            e.printStackTrace();
+//        }
+//*/
+//                }
+//            }
+//            );
+//    }
+//    
+ 
     
     
       private synchronized boolean isStopped() {

@@ -24,11 +24,12 @@ public class SYNchatServer {
     public static void main(String[] args) {
         
          try {
-            InetAddress ip = (InetAddress) InetAddress.getByName("10.126.37.220");
+            InetAddress ip = (InetAddress) InetAddress.getByName("10.126.33.99");
             int port = 8080;
             Server server = new Server(ip, port);
-            Thread t = new Thread(server);
-            t.start();
+            
+           // Thread t = new Thread(server);
+        //    t.start();
         } catch (IOException ex) {
             Logger.getLogger(SYNchatServer.class.getName()).log(Level.SEVERE, null, ex);
         }
