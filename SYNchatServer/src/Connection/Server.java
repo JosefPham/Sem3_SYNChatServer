@@ -44,6 +44,8 @@ public class Server{
         this.port = port;
         this.ip = ip;
         createSocket();
+        System.out.println("Server started");
+        acceptClient();
         
     }
     

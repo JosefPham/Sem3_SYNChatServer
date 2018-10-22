@@ -30,6 +30,7 @@ public class ChatHandler extends Thread{
     public ChatHandler(Socket s) {
         try {
             this.s = s;
+            System.out.println("got: " + s.getInetAddress());
             input = new DataInputStream (new BufferedInputStream (s.getInputStream()));
             output = new DataOutputStream (new BufferedOutputStream (s.getOutputStream()));
         } catch (IOException ex) {
@@ -42,10 +43,12 @@ public class ChatHandler extends Thread{
     
   protected static Vector handlers = new Vector ();
   public void run () {
+      System.out.println("Started");
     try {
       handlers.addElement (this);
       while (true) {
         String msg = input.readUTF ();
+          System.out.println("msg: " + msg);
         sendMessage (msg);
       }
     } catch (IOException ex) {
@@ -63,11 +66,13 @@ public class ChatHandler extends Thread{
   
 protected static void sendMessage (String message) {
     synchronized (handlers) {
+        System.out.println("Trying to send a message!");
       Enumeration e = handlers.elements ();
       while (e.hasMoreElements ()) {
         ChatHandler ch = (ChatHandler) e.nextElement ();
         try {
           synchronized (ch.output) {
+              System.out.println("About to write: " + ch.output);
             ch.output.writeUTF (message);
           }
           ch.output.flush ();
