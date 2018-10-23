@@ -1,8 +1,10 @@
 package Persistence;
 
 import Acquaintance.ILogin;
+import Acquaintance.IUser;
 import java.sql.*;
 import java.sql.DriverManager;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -32,7 +34,8 @@ public class DatabaseHandler {
     }
 */
     
-    private void Login(ILogin login){
+    private ILogin Login(ILogin login){
+        ILogin returnLogin = null;
         try(Connection conn = DriverManager.getConnection(url, dbUsername, dbPassword)){
             Class.forName("org.postgresql.Driver");
             
@@ -43,18 +46,20 @@ public class DatabaseHandler {
             
             if(rs.first()){
                 if(login.gethPW().equals(rs.getString("password"))){
-                    //do code for when login is sucsess
+                    IUser returnUser = new PerUser(rs.getInt("userID"), rs.getString("mail"), rs.getBoolean("banned"), rs.getInt("repartcount"), (List<Integer>) rs.getArray("chats"));
+                    returnLogin = new PerLogin(2,returnUser);
                 }
                 else{
-                    //return wrong pw
+                    returnLogin = new PerLogin(1, null);
                 }
             }
             else {
-                // return "wrong username
+               returnLogin = new PerLogin(0, null);
             }
             
         } catch (SQLException | ClassNotFoundException ex) {
             Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
+        return returnLogin;
     }
 }
