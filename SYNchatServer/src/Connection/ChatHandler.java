@@ -45,12 +45,12 @@ public class ChatHandler extends Thread{
     
     
     
-  protected static Vector handlers = new Vector ();
+  protected static Vector handlers = new Vector (); // to be removed
   
   public void run () {
       System.out.println("Started");
     try {
-      handlers.addElement (this); 
+      handlers.addElement (this); //to be removed
       if(!clients.containsKey("bruger" + handlers.size())){
         clients.put("bruger" + handlers.size(), this);  
       }
@@ -72,7 +72,9 @@ public class ChatHandler extends Thread{
     } catch (IOException ex) {
       ex.printStackTrace ();
     } finally {
-      handlers.removeElement (this);
+      handlers.removeElement (this); // to be removed
+      
+      // removes the clienthandler from the hashmap
       for (String s : clients.keySet()){
           if(clients.get(s).equals(this)){
               System.out.println("removing: " + s);
