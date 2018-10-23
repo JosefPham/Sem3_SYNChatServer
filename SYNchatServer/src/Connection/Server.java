@@ -81,66 +81,7 @@ public class Server{
     
     
     
-//
-//     private void handleConnection(Socket client) {
-//        threadpool.submit(new Runnable() {
-//            @Override
-//            public void run() {
-//                TODO
-//                try (Scanner scanner = new Scanner(client.getInputStream());
-//                    PrintWriter writerClient = new PrintWriter(client.getOutputStream(), true);) {
-//                    System.out.println("Sends: server ready");
-//                    writerClient.println("Server ready. Type your massage:");
-//                    while (scanner.hasNextLine()) {
-//
-//                        String line = scanner.nextLine();
-//
-//                          writerFile.println(line);
-//                        System.out.println("Printede : " + line);
-//                    }
-//                    writerClient.close();
-//                } catch (IOException ex) {
-//                    Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
-//                } finally {
-//                    try {
-//                        client.close();
-//                    } catch (IOException ex) {
-//                        Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
-//                    }
-//                }
-//                    /*
-//             try {       
-//            InputStream input  = client.getInputStream();
-//            OutputStream output = client.getOutputStream();
-//
-//            long time = System.currentTimeMillis();
-//            String httpResponse = "HTTP/1.1 200 OK\r\nConnection: close\r\nContent-Type: text/html\r\n\r\nHello visitor number " + "\r\n";
-//
-//            output.write(httpResponse.getBytes("UTF-8"));
-//
-//            client.shutdownOutput();
-//            output.close();
-//            input.close();
-//
-//            System.out.println("Request processed: " + time);
-//
-//             Simulate a connection lasting 10 seconds
-//            try {
-//                Thread.sleep(10000);
-//            } catch (InterruptedException e) {
-//                e.printStackTrace();
-//            }
-//
-//        } catch (IOException e) {
-//            report exception somewhere.
-//            e.printStackTrace();
-//        }
-//*/
-//                }
-//            }
-//            );
-//    }
-//    
+
  
     
     
