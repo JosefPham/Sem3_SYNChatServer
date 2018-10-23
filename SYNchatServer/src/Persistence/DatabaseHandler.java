@@ -44,23 +44,31 @@ public class DatabaseHandler {
             String sql = "Select * FROM Synchat.users WHERE users.email = '" + login.gethMail() + "';";
 
             ResultSet rs = st.executeQuery(sql);
+            while (rs.next()) {
+                if (rs.first()) {
+                    if (login.gethPW().equals(rs.getString("password"))) {
 
-            if (rs.first()) {
-                if (login.gethPW().equals(rs.getString("password"))) {
-                    List<Integer> tmpList = new ArrayList<>();
-
-                    IUser returnUser = new PerUser(rs.getInt("userID"), rs.getString("mail"), rs.getBoolean("banned"), rs.getInt("repartcount"), (List<Integer>) rs.getArray("chats"));
-                    returnLogin = new PerLogin(2, returnUser);
+                        // for converting sqlarray to int List
+                        List<Integer> tmpList = new ArrayList<>();
+                        Array chats = rs.getArray(2);
+                        Integer[] intChats = (Integer[]) chats.getArray();
+                        for (int i = 0; i < intChats.length; i++) {
+                            tmpList.add(intChats[i]);
+                        }
+                        
+                        IUser returnUser = new PerUser(rs.getInt("userID"), rs.getString("mail"), rs.getBoolean("banned"), rs.getInt("repartcount"), tmpList);
+                        returnLogin = new PerLogin(2, returnUser);
+                    } else {
+                        returnLogin = new PerLogin(1, null);
+                    }
                 } else {
-                    returnLogin = new PerLogin(1, null);
+                    returnLogin = new PerLogin(0, null);
                 }
-            } else {
-                returnLogin = new PerLogin(0, null);
             }
-
         } catch (SQLException | ClassNotFoundException ex) {
             Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
+
         return returnLogin;
     }
 }
