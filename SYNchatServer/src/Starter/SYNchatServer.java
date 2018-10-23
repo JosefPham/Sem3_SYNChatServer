@@ -1,5 +1,6 @@
 package Starter;
 
+
 import Acquaintance.IBusiness;
 import Acquaintance.IConnection;
 import Acquaintance.IPersistence;
@@ -9,9 +10,24 @@ import Persistence.PersistenceFacade;
 
 
 
+import Connection.Server;
+import java.io.IOException;
+import java.net.InetAddress;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+/**
+ *
+ * @author Peter
+ * Test server
+ */
 public class SYNchatServer {
+
+
+
     public static void main(String[] args) {
         
+
         /**
          * The aquiering af the facade instanceses, and there trough thire creation
          */
@@ -26,6 +42,19 @@ public class SYNchatServer {
         con.injectBusiness(business);
         
         
+
+         try {
+            InetAddress ip = (InetAddress) InetAddress.getByName("10.126.33.99");
+            int port = 8080;
+            Server server = new Server(ip, port);
+            
+           // Thread t = new Thread(server);
+        //    t.start();
+        } catch (IOException ex) {
+            Logger.getLogger(SYNchatServer.class.getName()).log(Level.SEVERE, null, ex);
+        }
+       
+
     }
 
 }
