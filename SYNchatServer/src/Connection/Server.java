@@ -56,10 +56,10 @@ public class Server{
              try {
                 clientSocket = this.serverSocket.accept(); // Wait for connection and accept
                 nudeCounter++;
-             //    System.out.println("You recieved a nude! It is nude number: " + nudeCounter);
-                 ChatHandler ch = new ChatHandler(clientSocket);
+                System.out.println("You recieved a nude! It is nude number: " + nudeCounter);
+                 ClientHandler ch = new ClientHandler(clientSocket);
+                 // check login
                  ch.start();
-             //     handleConnection(clientSocket);
             } catch (IOException e) {
                 throw new RuntimeException("Error accepting client connection", e);
             }

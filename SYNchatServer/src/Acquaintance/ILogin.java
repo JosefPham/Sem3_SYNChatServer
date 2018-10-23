@@ -1,6 +1,8 @@
 package Acquaintance;
 
-public interface ILogin {
+import java.io.Serializable;
+
+public interface ILogin extends Serializable {
 
     public String gethMail();
 

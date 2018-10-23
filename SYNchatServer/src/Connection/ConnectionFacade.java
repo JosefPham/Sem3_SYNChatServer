@@ -2,6 +2,7 @@ package Connection;
 
 import Acquaintance.IBusiness;
 import Acquaintance.IConnection;
+import Acquaintance.ILogin;
 
 
 public class ConnectionFacade implements IConnection{
@@ -36,6 +37,12 @@ public class ConnectionFacade implements IConnection{
     @Override
     public void injectBusiness(IBusiness business) {
         this.business = business;
+    }
+    
+    // skal på interface
+     public void checkLogin(ILogin login){
+        //check database
+        
     }
     
 
