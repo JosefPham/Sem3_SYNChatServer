@@ -37,7 +37,7 @@ public class DatabaseHandler {
             Class.forName("org.postgresql.Driver");
             
             Statement st = conn.createStatement();
-            String sql = "Do sql here";
+            String sql = "Select * FROM Synchat.users WHERE users.email = '" + login.gethMail() + "';";
 
             ResultSet rs = st.executeQuery(sql);
             
