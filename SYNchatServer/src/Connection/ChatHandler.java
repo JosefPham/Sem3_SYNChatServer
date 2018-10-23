@@ -56,7 +56,10 @@ public class ChatHandler extends Thread{
     //  sendMessage("Welcome!");
       while (true) {
         System.out.println("Waiting");
-        String msg = input.readUTF ();
+        String msg;
+          try {
+              msg = input.readObject().toString();
+          
         System.out.println("msg: " + msg);
         if(msg.contains(":")){
             String[] name = msg.trim().split(":");
@@ -65,6 +68,11 @@ public class ChatHandler extends Thread{
         else{
         sendPublicMessage (msg);
         }
+        } 
+        catch (ClassNotFoundException ex) {
+              Logger.getLogger(ChatHandler.class.getName()).log(Level.SEVERE, null, ex);
+          }
+        
       }
     } catch (IOException ex) {
       ex.printStackTrace ();

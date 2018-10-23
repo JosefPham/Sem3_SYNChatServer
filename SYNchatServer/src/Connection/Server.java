@@ -67,7 +67,7 @@ public class Server{
              try {
                 clientSocket = this.serverSocket.accept(); // Wait for connection and accept
                 nudeCounter++;
-                 System.out.println("You recieved a nude! It is nude number: " + nudeCounter);
+             //    System.out.println("You recieved a nude! It is nude number: " + nudeCounter);
                  ChatHandler ch = new ChatHandler(clientSocket);
                  ch.start();
              //     handleConnection(clientSocket);
