@@ -55,7 +55,7 @@ public class DatabaseHandler {
                         for (int i = 0; i < intChats.length; i++) {
                             tmpList.add(intChats[i]);
                         }
-                        
+
                         IUser returnUser = new PerUser(rs.getInt("userID"), rs.getString("mail"), rs.getBoolean("banned"), rs.getInt("repartcount"), tmpList);
                         returnLogin = new PerLogin(2, returnUser);
                     } else {
@@ -70,5 +70,35 @@ public class DatabaseHandler {
         }
 
         return returnLogin;
+    }
+
+    protected IUser createUser(ILogin login, IUser user) {
+        IUser returnUser = null;
+        try (Connection conn = DriverManager.getConnection(url, dbUsername, dbPassword)) {
+
+            // Statement 1 - create person
+            PreparedStatement st1 = conn.prepareStatement("INSERT INTO SYNCHAT.users (mail, password, tmpName)) "
+                    + "VALUES('" + login.gethMail() + "', '" + login.gethPW() + "', '" + user.getTmpName() + "'");
+            st1.executeUpdate();
+
+            Statement st = conn.createStatement();
+            String sql = "Select * FROM Synchat.users WHERE users.email = '" + login.gethMail() + "';";
+
+            ResultSet rs = st.executeQuery(sql);
+            while(rs.next()){
+            List<Integer> tmpList = new ArrayList<>();
+            Array chats = rs.getArray(2);
+            Integer[] intChats = (Integer[]) chats.getArray();
+            for (int i = 0; i < intChats.length; i++) {
+                tmpList.add(intChats[i]);
+            }
+
+           returnUser = new PerUser(rs.getInt("userID"), rs.getString("mail"), rs.getBoolean("banned"), rs.getInt("repartcount"), tmpList);
+            }
+            } catch (SQLException ex) {
+            Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return returnUser;
     }
 }
