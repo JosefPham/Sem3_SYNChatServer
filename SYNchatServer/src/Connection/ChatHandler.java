@@ -5,16 +5,15 @@
  */
 package Connection;
 
-import Acquaintance.IUser;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -25,8 +24,8 @@ import java.util.logging.Logger;
 public class ChatHandler extends Thread{
 
     private Socket s;
-    DataInputStream input;
-    DataOutputStream output;
+    ObjectInputStream input;
+    ObjectOutputStream output;
     
   public static HashMap<String, ChatHandler> clients = new HashMap<String, ChatHandler>();    
   
@@ -35,8 +34,9 @@ public class ChatHandler extends Thread{
         try {
             this.s = s;
             System.out.println("got: " + s.getInetAddress());
-            input = new DataInputStream (new BufferedInputStream (s.getInputStream()));
-            output = new DataOutputStream (new BufferedOutputStream (s.getOutputStream()));
+            output = new ObjectOutputStream (s.getOutputStream());
+            input = new ObjectInputStream (s.getInputStream());
+           
         } catch (IOException ex) {
             Logger.getLogger(ChatHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
