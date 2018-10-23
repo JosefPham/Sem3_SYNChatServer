@@ -44,18 +44,15 @@ public class ChatHandler extends Thread{
     
     
     
-    
-  protected static Vector handlers = new Vector (); // to be removed
   
   public void run () {
       System.out.println("Started");
     try {
-      handlers.addElement (this); //to be removed
-      if(!clients.containsKey("bruger" + handlers.size())){
-        clients.put("bruger" + handlers.size(), this);  
+      if(!clients.containsKey("bruger" + clients.size())){
+        clients.put("bruger" + clients.size(), this);  
       }
       
-        System.out.println("Added: " + "bruger"+handlers.size());
+        System.out.println("Added: " + "bruger"+clients.size());
     //  sendMessage("Welcome!");
       while (true) {
         System.out.println("Waiting");
@@ -72,7 +69,6 @@ public class ChatHandler extends Thread{
     } catch (IOException ex) {
       ex.printStackTrace ();
     } finally {
-      handlers.removeElement (this); // to be removed
       
       // removes the clienthandler from the hashmap
       for (String s : clients.keySet()){
@@ -118,11 +114,10 @@ protected static void sendPrivateMessage(String message, String reciever){
   
   
 protected static void sendPublicMessage (String message) {
-    synchronized (handlers) {
+    synchronized (clients) {
         System.out.println("Trying to send a message!");
-      Enumeration e = handlers.elements ();
-      while (e.hasMoreElements ()) {
-        ChatHandler ch = (ChatHandler) e.nextElement ();
+      for (String s : clients.keySet()) {
+        ChatHandler ch = (ChatHandler) clients.get(s);
         try {
           synchronized (ch.output) {
               System.out.println("About to write: " + message);
