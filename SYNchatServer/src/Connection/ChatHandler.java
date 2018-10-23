@@ -56,10 +56,7 @@ public class ChatHandler extends Thread{
     //  sendMessage("Welcome!");
       while (true) {
         System.out.println("Waiting");
-        String msg;
-          try {
-              msg = input.readObject().toString();
-          
+        String msg = (String) input.readObject();  // skal være readObject ved objekter
         System.out.println("msg: " + msg);
         if(msg.contains(":")){
             String[] name = msg.trim().split(":");
@@ -68,15 +65,12 @@ public class ChatHandler extends Thread{
         else{
         sendPublicMessage (msg);
         }
-        } 
-        catch (ClassNotFoundException ex) {
-              Logger.getLogger(ChatHandler.class.getName()).log(Level.SEVERE, null, ex);
-          }
-        
       }
     } catch (IOException ex) {
       ex.printStackTrace ();
-    } finally {
+    }   catch (ClassNotFoundException ex) {
+            Logger.getLogger(ChatHandler.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
     
       for (String s : clients.keySet()){
           if(clients.get(s).equals(this)){
@@ -105,7 +99,7 @@ protected static void sendPrivateMessage(String message, String reciever){
         if(s.equals(reciever)){
             try {
                 ChatHandler ch = clients.get(s);
-                ch.output.writeUTF(message);
+                ch.output.writeObject(message);
                 ch.output.flush();
                 
             } catch (IOException ex) {
@@ -129,7 +123,7 @@ protected static void sendPublicMessage (String message) {
         try {
           synchronized (ch.output) {
               System.out.println("About to write: " + message);
-            ch.output.writeUTF(message);
+            ch.output.writeObject(message);
           }
           ch.output.flush ();
         } catch (IOException ex) {
