@@ -6,6 +6,7 @@
 package Connection;
 
 import Acquaintance.ILogin;
+import Acquaintance.IUser;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -60,14 +61,20 @@ public class ClientHandler extends Thread {
 
     public void run() {
         try {
-            System.out.println("Started");
-
-            ILogin login = (ILogin) input.readObject();
-            if (login != null) {
-                System.out.println("Login wasn't null");
-                sendLoginInfo(ConnectionFacade.getInstance().checkLogin(login));
+            
+            Object o = input.readObject();
+            
+            
+            if(o instanceof ILogin){
+                System.out.println("Det er et login");
+                sendLoginInfo(ConnectionFacade.getInstance().checkLogin((ILogin) o));
             }
-
+            else if(o instanceof IUser){
+                System.out.println("Det er en User");
+            }
+            
+            
+            System.out.println("Started");
             try {
                 if (!clients.containsKey("bruger" + (clients.size() + 1))) {
                     clients.put("bruger" + (clients.size() + 1), this);
