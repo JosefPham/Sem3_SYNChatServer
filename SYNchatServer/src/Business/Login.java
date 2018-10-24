@@ -16,8 +16,8 @@ import java.io.Serializable;
 public class Login implements ILogin, Serializable {
     
     
-    private final String hMail;
-    private final String hPW;
+    private String hMail;
+    private String hPW;
     private int loginvalue;
     private IUser user;
     
