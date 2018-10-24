@@ -44,7 +44,7 @@ public class BusinessFacade implements IBusiness{
         Login log = new Login(login.gethMail(), login.gethPW());
         log.setLoginvalue(2);
         
-        return (ILogin) log;
+        return persistence.Login(login);
     }
 
 }
