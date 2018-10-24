@@ -36,7 +36,6 @@ public class DatabaseHandler {
     }
      */
     ILogin Login(ILogin login) {
-        ILogin returnLogin = null;
 
         try (Connection conn = DriverManager.getConnection(url, dbUsername, dbPassword)) {
             Class.forName("org.postgresql.Driver");
@@ -59,19 +58,22 @@ public class DatabaseHandler {
                         }
 
                         IUser returnUser = new PerUser(rs.getInt("userID"), rs.getString("tmpname"), rs.getBoolean("banned"), rs.getInt("reportcount"), tmpList);
-                        return new PerLogin(2, returnUser);
+                        ILogin tempLog =  new Login(2, returnUser);
+                        return tempLog;
                     } else {
-                        return new PerLogin(1, null);
+                        ILogin tempLog = new Login(1, null);
+                        return tempLog;
                     }
                
             }
-            return new PerLogin(0, null);
+            
 
         } catch (SQLException | ClassNotFoundException ex) {
             Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        return returnLogin;
+             ILogin tempLog = new Login(0, null);
+            return tempLog;
     }
 
     IUser createUser(ILogin login) {

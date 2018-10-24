@@ -41,8 +41,8 @@ public class BusinessFacade implements IBusiness{
     
     @Override
     public ILogin checkLogin(ILogin login) {
-        Login log = new Login(login.gethMail(), login.gethPW());
-        log.setLoginvalue(2);
+      //  Login log = new Login(login.gethMail(), login.gethPW());
+      //  log.setLoginvalue(2);
         
         return persistence.Login(login);
     }
