@@ -1,6 +1,7 @@
 package Business;
 
 import Acquaintance.IBusiness;
+import Acquaintance.ILogin;
 import Acquaintance.IPersistence;
 
 
@@ -36,6 +37,14 @@ public class BusinessFacade implements IBusiness{
     @Override
     public void injectPersistence(IPersistence per) {
        this.persistence = per;
+    }
+    
+    @Override
+    public ILogin checkLogin(ILogin login) {
+        Login log = new Login(login.gethMail(), login.gethPW());
+        log.setLoginvalue(2);
+        
+        return (ILogin) log;
     }
 
 }

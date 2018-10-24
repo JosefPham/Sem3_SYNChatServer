@@ -43,6 +43,14 @@ public class Login implements ILogin, Serializable {
     public IUser getUser() {
         return user;
     }
+
+    public void setLoginvalue(int loginvalue) {
+        this.loginvalue = loginvalue;
+    }
+
+    public void setUser(IUser user) {
+        this.user = user;
+    }
     
     
     
