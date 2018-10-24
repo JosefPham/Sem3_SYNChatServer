@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.postgresql.util.PSQLException;
 
 public class DatabaseHandler {
 
@@ -40,31 +41,32 @@ public class DatabaseHandler {
         try (Connection conn = DriverManager.getConnection(url, dbUsername, dbPassword)) {
             Class.forName("org.postgresql.Driver");
 
-            Statement st = conn.createStatement();
-            String sql = "Select * FROM Synchat.users WHERE users.email = '" + login.gethMail() + "';";
+            PreparedStatement st = conn.prepareStatement("Select * FROM Synchat.users WHERE users.mail = ?;");
+            st.setString(1, login.gethMail());
 
-            ResultSet rs = st.executeQuery(sql);
-            while (rs.next()) {
-                if (rs.first()) {
+            ResultSet rs = st.executeQuery();
+            while (rs.next()) {                
                     if (login.gethPW().equals(rs.getString("password"))) {
-
                         // for converting sqlarray to int List
                         List<Integer> tmpList = new ArrayList<>();
-                        Array chats = rs.getArray(2);
-                        Integer[] intChats = (Integer[]) chats.getArray();
-                        for (int i = 0; i < intChats.length; i++) {
-                            tmpList.add(intChats[i]);
+                        Array chats = rs.getArray("chats");
+                        try {
+                            Integer[] intChats = (Integer[]) chats.getArray();
+                            for (int i = 0; i < intChats.length; i++) {
+                                tmpList.add(intChats[i]);
+                            }
+                        } catch (PSQLException | NullPointerException ex) {
                         }
 
                         IUser returnUser = new PerUser(rs.getInt("userID"), rs.getString("tmpname"), rs.getBoolean("banned"), rs.getInt("reportcount"), tmpList);
-                        returnLogin = new PerLogin(2, returnUser);
+                        return new PerLogin(2, returnUser);
                     } else {
-                        returnLogin = new PerLogin(1, null);
+                        return new PerLogin(1, null);
                     }
-                } else {
-                    returnLogin = new PerLogin(0, null);
-                }
+               
             }
+            return new PerLogin(0, null);
+
         } catch (SQLException | ClassNotFoundException ex) {
             Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -72,31 +74,30 @@ public class DatabaseHandler {
         return returnLogin;
     }
 
-    IUser createUser(ILogin login, IUser user) {
+    IUser createUser(ILogin login) {
         IUser returnUser = null;
         try (Connection conn = DriverManager.getConnection(url, dbUsername, dbPassword)) {
 
             // Statement 1 - create person
-            PreparedStatement st1 = conn.prepareStatement("INSERT INTO SYNCHAT.users (mail, password, tmpName) "
-                    + "VALUES ('" + login.gethMail() + "', '" + login.gethPW() + "', '" + user.getTmpName() + "');");
+            PreparedStatement st1 = conn.prepareStatement("INSERT INTO SYNCHAT.users (mail, password, tmpName) VALUES(?,?,?)");
+            //   + "VALUES ('" + login.gethMail() + "', '" + login.gethPW() + "', '" + user.getTmpName() + "');");
+            st1.setString(1, login.gethMail());
+            st1.setString(2, login.gethPW());
+            st1.setString(3, login.getUser().getTmpName());
+
             st1.executeUpdate();
 
-            Statement st2 = conn.createStatement();
-            String sql = "Select * FROM Synchat.users WHERE users.email = '" + login.gethMail() + "';";
+            PreparedStatement st2 = conn.prepareStatement("Select * FROM Synchat.users WHERE users.mail = ?;");
+            st2.setString(1, login.gethMail());
 
-            ResultSet rs = st2.executeQuery(sql);
-            while(rs.next()){
-                
-            List<Integer> tmpList = new ArrayList<>();
-            Array chats = rs.getArray(2);
-            Integer[] intChats = (Integer[]) chats.getArray();
-            for (int i = 0; i < intChats.length; i++) {
-                tmpList.add(intChats[i]);
-            }
+            ResultSet rs = st2.executeQuery();
+            while (rs.next()) {
 
-           returnUser = new PerUser(rs.getInt("userID"), rs.getString("tmpname"), rs.getBoolean("banned"), rs.getInt("reportcount"), tmpList);
+                List<Integer> tmpList = new ArrayList<>();
+
+                returnUser = new PerUser(rs.getInt("userid"), rs.getString("tmpname"), rs.getBoolean("banned"), rs.getInt("reportcount"), tmpList);
             }
-            } catch (SQLException ex) {
+        } catch (SQLException ex) {
             Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
 

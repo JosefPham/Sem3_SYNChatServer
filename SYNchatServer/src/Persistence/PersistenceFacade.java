@@ -32,7 +32,7 @@ public class PersistenceFacade implements IPersistence{
         return sqlDatabase.Login(Login);
     }
     
-    public IUser createUser(ILogin login, IUser user){
-        return sqlDatabase.createUser(login, user);
+    public IUser createUser(ILogin login){
+        return sqlDatabase.createUser(login);
     }
 }
