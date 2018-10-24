@@ -56,7 +56,7 @@ public class DatabaseHandler {
                             tmpList.add(intChats[i]);
                         }
 
-                        IUser returnUser = new PerUser(rs.getInt("userID"), rs.getString("mail"), rs.getBoolean("banned"), rs.getInt("repartcount"), tmpList);
+                        IUser returnUser = new PerUser(rs.getInt("userID"), rs.getString("tmpname"), rs.getBoolean("banned"), rs.getInt("reportcount"), tmpList);
                         returnLogin = new PerLogin(2, returnUser);
                     } else {
                         returnLogin = new PerLogin(1, null);
@@ -72,7 +72,7 @@ public class DatabaseHandler {
         return returnLogin;
     }
 
-    protected IUser createUser(ILogin login, IUser user) {
+    IUser createUser(ILogin login, IUser user) {
         IUser returnUser = null;
         try (Connection conn = DriverManager.getConnection(url, dbUsername, dbPassword)) {
 
@@ -81,11 +81,12 @@ public class DatabaseHandler {
                     + "VALUES('" + login.gethMail() + "', '" + login.gethPW() + "', '" + user.getTmpName() + "'");
             st1.executeUpdate();
 
-            Statement st = conn.createStatement();
+            Statement st2 = conn.createStatement();
             String sql = "Select * FROM Synchat.users WHERE users.email = '" + login.gethMail() + "';";
 
-            ResultSet rs = st.executeQuery(sql);
+            ResultSet rs = st2.executeQuery(sql);
             while(rs.next()){
+                
             List<Integer> tmpList = new ArrayList<>();
             Array chats = rs.getArray(2);
             Integer[] intChats = (Integer[]) chats.getArray();
@@ -93,7 +94,7 @@ public class DatabaseHandler {
                 tmpList.add(intChats[i]);
             }
 
-           returnUser = new PerUser(rs.getInt("userID"), rs.getString("mail"), rs.getBoolean("banned"), rs.getInt("repartcount"), tmpList);
+           returnUser = new PerUser(rs.getInt("userID"), rs.getString("tmpname"), rs.getBoolean("banned"), rs.getInt("reportcount"), tmpList);
             }
             } catch (SQLException ex) {
             Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
