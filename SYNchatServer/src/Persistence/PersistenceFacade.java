@@ -1,11 +1,14 @@
 package Persistence;
 
+import Acquaintance.ILogin;
 import Acquaintance.IPersistence;
+import Acquaintance.IUser;
 
 
 public class PersistenceFacade implements IPersistence{
     
     private static PersistenceFacade instance;
+    private DatabaseHandler sqlDatabase = new DatabaseHandler();
     
     /**
      * Private Constructor, requred for singleton
@@ -25,4 +28,11 @@ public class PersistenceFacade implements IPersistence{
         return instance;
     }
 
+    public ILogin Login(ILogin Login){
+        return sqlDatabase.Login(Login);
+    }
+    
+    public IUser createUser(ILogin login){
+        return sqlDatabase.createUser(login);
+    }
 }
