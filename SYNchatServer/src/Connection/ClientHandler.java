@@ -66,8 +66,6 @@ public class ClientHandler extends Thread {
             if (login != null) {
                 System.out.println("Login wasn't null");
                 sendLoginInfo(ConnectionFacade.getInstance().checkLogin(login));
-
-                //  checkLogin(login); // skal erstattes af et facade kald
             }
 
             try {
