@@ -77,8 +77,8 @@ public class DatabaseHandler {
         try (Connection conn = DriverManager.getConnection(url, dbUsername, dbPassword)) {
 
             // Statement 1 - create person
-            PreparedStatement st1 = conn.prepareStatement("INSERT INTO SYNCHAT.users (mail, password, tmpName)) "
-                    + "VALUES('" + login.gethMail() + "', '" + login.gethPW() + "', '" + user.getTmpName() + "'");
+            PreparedStatement st1 = conn.prepareStatement("INSERT INTO SYNCHAT.users (mail, password, tmpName) "
+                    + "VALUES ('" + login.gethMail() + "', '" + login.gethPW() + "', '" + user.getTmpName() + "');");
             st1.executeUpdate();
 
             Statement st2 = conn.createStatement();
