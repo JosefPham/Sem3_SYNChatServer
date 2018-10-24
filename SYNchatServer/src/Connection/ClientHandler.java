@@ -60,60 +60,79 @@ public class ClientHandler extends Thread {
     }
 
     public void run() {
+
         try {
-            
-            Object o = input.readObject();
-            
-            
-            if(o instanceof ILogin){
+            ILogin l = null;
+
+            Object login = input.readObject();
+
+            if (login instanceof ILogin) {
                 System.out.println("Det er et login");
-                sendLoginInfo(ConnectionFacade.getInstance().checkLogin((ILogin) o));
+                l = ConnectionFacade.getInstance().checkLogin((ILogin) login);
+
+                sendLoginInfo(l);
             }
-            else if(o instanceof IUser){
-                System.out.println("Det er en User");
-            }
+
+            if (l.getLoginvalue() == 2) {
+            System.out.println("User logged in");
             
-            
-            System.out.println("Started");
-            try {
-                if (!clients.containsKey("bruger" + (clients.size() + 1))) {
-                    clients.put("bruger" + (clients.size() + 1), this);
-                }
+                
 
-                System.out.println("Added: " + "bruger" + clients.size());
-                //  sendMessage("Welcome!");
-                while (true) {
-                    System.out.println("Waiting");
-
-                    String msg = (String) input.readObject();
-                    System.out.println("msg: " + msg);
-                    if (msg.contains(":")) {
-                        String[] name = msg.trim().split(":");
-                        sendPrivateMessage(name[0].trim(), name[1]);
-                    } else {
-                        sendPublicMessage(msg);
-                    }
-
-                }
-
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            } catch (ClassNotFoundException ex) {
-                Logger.getLogger(ClientHandler.class.getName()).log(Level.SEVERE, null, ex);
-            } finally {
-
-                for (String s : clients.keySet()) {
-                    if (clients.get(s).equals(this)) {
-                        System.out.println("removing: " + s);
-                        clients.remove(s);
-                    }
-                }
-
+                
                 try {
-                    s.close();
+                    if (!clients.containsKey("bruger" + (clients.size() + 1))) {
+                        clients.put("bruger" + (clients.size() + 1), this);
+                    }
+
+                    System.out.println("Added: " + "bruger" + clients.size());
+                    //  sendMessage("Welcome!");
+                    while (true) {
+                        Object o = input.readObject();
+                        
+                        
+                        System.out.println("Waiting");
+                        
+                         if (o instanceof IUser) {
+                    System.out.println("Det er en User");
+                }
+                        
+                         else if(o instanceof String){
+                        String msg = (String) o;
+                        System.out.println("msg: " + msg);
+                        if (msg.contains(":")) {
+                            String[] name = msg.trim().split(":");
+                            sendPrivateMessage(name[0].trim(), name[1]);
+                        } else {
+                            sendPublicMessage(msg);
+                        }
+
+                    }
+                  }  
+                    
+
                 } catch (IOException ex) {
                     ex.printStackTrace();
+                } catch (ClassNotFoundException ex) {
+                    Logger.getLogger(ClientHandler.class.getName()).log(Level.SEVERE, null, ex);
+                } finally {
+
+                    for (String s : clients.keySet()) {
+                        if (clients.get(s).equals(this)) {
+                            System.out.println("removing: " + s);
+                            clients.remove(s);
+                        }
+                    }
+
+                    try {
+                        s.close();
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    }
                 }
+                
+                
+                
+                
             }
         } catch (IOException ex) {
             Logger.getLogger(ClientHandler.class.getName()).log(Level.SEVERE, null, ex);

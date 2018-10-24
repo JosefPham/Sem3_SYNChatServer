@@ -5,7 +5,7 @@ import java.io.Serializable;
 import java.util.List;
 
 
-public class User implements IUser, Serializable{
+public class User implements IUser{
 
     private int userID;
     private String tmpName; //must be removed when profile is implemented
