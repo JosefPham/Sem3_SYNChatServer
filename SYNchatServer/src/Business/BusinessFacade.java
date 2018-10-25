@@ -42,12 +42,16 @@ public class BusinessFacade implements IBusiness{
     
     @Override
     public ILogin checkLogin(ILogin login) {
-      //  Login log = new Login(login.gethMail(), login.gethPW());
-      //  log.setLoginvalue(2);
-        ILogin datalogin = persistence.Login(login);
-        IUser retUser = new User(datalogin.getUser().getUserID(), datalogin.getUser().getTmpName(), datalogin.getUser().isBanned(), datalogin.getUser().getReports(), datalogin.getUser().getChats());
-        ILogin retLogin = new Login(datalogin.getLoginvalue(), retUser);
-        return retLogin;
+     //  Login log = new Login(login.gethMail(), login.gethPW());
+     //  log.setLoginvalue(2);
+       ILogin datalogin = persistence.Login(login);
+       System.out.println("chats: " + datalogin.getUser().getChats());
+       System.out.println(datalogin.getLoginvalue());
+        
+       IUser retUser = new User(datalogin.getUser().getUserID(), datalogin.getUser().getTmpName(), datalogin.getUser().isBanned(), datalogin.getUser().getReports(), datalogin.getUser().getChats());
+       ILogin retLogin = new Login(datalogin.getLoginvalue(), retUser);
+       return retLogin;
+       //return log;
     }
 
 }
