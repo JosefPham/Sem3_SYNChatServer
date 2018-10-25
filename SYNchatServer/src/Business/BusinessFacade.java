@@ -9,6 +9,7 @@ import Acquaintance.IUser;
 public class BusinessFacade implements IBusiness{
     
     private IPersistence persistence;
+    private ServerSystem serversys = ServerSystem.getInstance();
     
     private static BusinessFacade instance;
     
@@ -23,7 +24,7 @@ public class BusinessFacade implements IBusiness{
      * getter method for singleton, requered for layered architecture
      * @return the facade itself.
      */
-    public static IBusiness getInstance() {
+    public static BusinessFacade getInstance() {
         
             if(instance == null){
             instance = new BusinessFacade();
@@ -44,14 +45,21 @@ public class BusinessFacade implements IBusiness{
     public ILogin checkLogin(ILogin login) {
      //  Login log = new Login(login.gethMail(), login.gethPW());
      //  log.setLoginvalue(2);
-       ILogin datalogin = persistence.Login(login);
-       System.out.println("chats: " + datalogin.getUser().getChats());
-       System.out.println(datalogin.getLoginvalue());
-        
-       IUser retUser = new User(datalogin.getUser().getUserID(), datalogin.getUser().getTmpName(), datalogin.getUser().isBanned(), datalogin.getUser().getReports(), datalogin.getUser().getChats());
-       ILogin retLogin = new Login(datalogin.getLoginvalue(), retUser);
-       return retLogin;
+     
+     return serversys.login(login);
+     
+//       ILogin datalogin = persistence.Login(login);
+//       System.out.println("chats: " + datalogin.getUser().getChats());
+//       System.out.println(datalogin.getLoginvalue());
+//        
+//       IUser retUser = new User(datalogin.getUser().getUserID(), datalogin.getUser().getTmpName(), datalogin.getUser().isBanned(), datalogin.getUser().getReports(), datalogin.getUser().getChats());
+//       ILogin retLogin = new Login(datalogin.getLoginvalue(), retUser);
+//       return retLogin;
        //return log;
+    }
+    
+    ILogin checkLoginDB(ILogin login) {
+        return persistence.Login(login);
     }
 
     @Override
