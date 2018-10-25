@@ -89,7 +89,8 @@ public class ClientHandler extends Thread {
                     sendCreateUser(b);
                 }
             }
-
+            
+            if(l != null){
             if (l.getLoginvalue() == 2) {
                 System.out.println("User logged in");
 
@@ -141,6 +142,7 @@ public class ClientHandler extends Thread {
                 }
 
             }
+        }
         } catch (IOException ex) {
             Logger.getLogger(ClientHandler.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ClassNotFoundException ex) {
