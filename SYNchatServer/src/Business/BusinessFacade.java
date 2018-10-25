@@ -3,6 +3,7 @@ package Business;
 import Acquaintance.IBusiness;
 import Acquaintance.ILogin;
 import Acquaintance.IPersistence;
+import Acquaintance.IUser;
 
 
 public class BusinessFacade implements IBusiness{
@@ -43,8 +44,10 @@ public class BusinessFacade implements IBusiness{
     public ILogin checkLogin(ILogin login) {
       //  Login log = new Login(login.gethMail(), login.gethPW());
       //  log.setLoginvalue(2);
-        
-        return persistence.Login(login);
+        ILogin datalogin = persistence.Login(login);
+        IUser retUser = new User(datalogin.getUser().getUserID(), datalogin.getUser().getTmpName(), datalogin.getUser().isBanned(), datalogin.getUser().getReports(), datalogin.getUser().getChats());
+        ILogin retLogin = new Login(datalogin.getLoginvalue(), retUser);
+        return retLogin;
     }
 
 }

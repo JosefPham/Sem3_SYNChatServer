@@ -7,7 +7,7 @@ import Acquaintance.IUser;
  */
 public class Login implements ILogin {
 
-     private String hMail = null;
+    private String hMail = null;
     private  String hPW =null;
     private int loginvalue;
     private IUser user;
