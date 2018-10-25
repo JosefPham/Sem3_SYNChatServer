@@ -54,4 +54,11 @@ public class BusinessFacade implements IBusiness{
        //return log;
     }
 
+    @Override
+    public Boolean createUser(ILogin login) {
+        return persistence.createUser(login);
+    }
+    
+    
+
 }

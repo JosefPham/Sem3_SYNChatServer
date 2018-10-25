@@ -3,7 +3,6 @@ package Connection;
 import Acquaintance.IBusiness;
 import Acquaintance.IConnection;
 import Acquaintance.ILogin;
-import Business.BusinessFacade;
 
 public class ConnectionFacade implements IConnection {
 
@@ -41,13 +40,12 @@ public class ConnectionFacade implements IConnection {
         this.business = business;
     }
 
-    // skal på interface
     @Override
     public ILogin checkLogin(ILogin login) {
-           login = business.checkLogin(login);
-        
-        return login;
-
+        return business.checkLogin(login);
     }
 
+    public Boolean createUser(ILogin login) {
+        return business.createUser(login);
+    }
 }

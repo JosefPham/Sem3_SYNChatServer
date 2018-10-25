@@ -2,7 +2,6 @@ package Persistence;
 
 import Acquaintance.ILogin;
 import Acquaintance.IPersistence;
-import Acquaintance.IUser;
 
 
 public class PersistenceFacade implements IPersistence{
@@ -28,11 +27,13 @@ public class PersistenceFacade implements IPersistence{
         return instance;
     }
 
+    @Override
     public ILogin Login(ILogin Login){
         return sqlDatabase.Login(Login);
     }
     
-    public IUser createUser(ILogin login){
+    @Override
+    public Boolean createUser(ILogin login){
         return sqlDatabase.createUser(login);
     }
 }
