@@ -18,8 +18,8 @@ public class Login implements ILogin, Serializable {
     
     private String hMail;
     private String hPW;
-    private int loginvalue;
-    private IUser user;
+    private int loginvalue = -1;
+    private IUser user = null;
     
     public Login(String mail, String pw) {
         hMail = mail;

@@ -53,11 +53,22 @@ public class ClientHandler extends Thread {
     public void sendLoginInfo(ILogin login) {
         try {
             output.writeObject(login);
-            System.out.println("Skal sende her :)");
+            System.out.println("Sendte et login");
         } catch (IOException ex) {
             Logger.getLogger(ClientHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    
+    
+    public void sendCreateUser(Boolean b){
+        try {
+            output.writeObject(b);
+            System.out.println("Sendte en boolean");
+        } catch (IOException ex) {
+            Logger.getLogger(ClientHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
 
     public void run() {
 
@@ -68,17 +79,20 @@ public class ClientHandler extends Thread {
 
             if (login instanceof ILogin) {
                 System.out.println("Det er et login");
-                l = ConnectionFacade.getInstance().checkLogin((ILogin) login);
-
-                sendLoginInfo(l);
+                
+                if(((ILogin) login).getUser() == null){
+                   l = ConnectionFacade.getInstance().checkLogin((ILogin) login);  
+                   sendLoginInfo(l);
+                }
+                else{
+                    Boolean b = ConnectionFacade.getInstance().createUser((ILogin) login);
+                    sendCreateUser(b);
+                }
             }
 
             if (l.getLoginvalue() == 2) {
-            System.out.println("User logged in");
-            
-                
+                System.out.println("User logged in");
 
-                
                 try {
                     if (!clients.containsKey("bruger" + (clients.size() + 1))) {
                         clients.put("bruger" + (clients.size() + 1), this);
@@ -88,27 +102,23 @@ public class ClientHandler extends Thread {
                     //  sendMessage("Welcome!");
                     while (true) {
                         Object o = input.readObject();
-                        
-                        
-                        System.out.println("Waiting");
-                        
-                         if (o instanceof IUser) {
-                    System.out.println("Det er en User");
-                }
-                        
-                         else if(o instanceof String){
-                        String msg = (String) o;
-                        System.out.println("msg: " + msg);
-                        if (msg.contains(":")) {
-                            String[] name = msg.trim().split(":");
-                            sendPrivateMessage(name[0].trim(), name[1]);
-                        } else {
-                            sendPublicMessage(msg);
-                        }
 
+                        System.out.println("Waiting");
+
+                        if (o instanceof IUser) {
+                            System.out.println("Det er en User");
+                        } else if (o instanceof String) {
+                            String msg = (String) o;
+                            System.out.println("msg: " + msg);
+                            if (msg.contains(":")) {
+                                String[] name = msg.trim().split(":");
+                                sendPrivateMessage(name[0].trim(), name[1]);
+                            } else {
+                                sendPublicMessage(msg);
+                            }
+
+                        }
                     }
-                  }  
-                    
 
                 } catch (IOException ex) {
                     ex.printStackTrace();
@@ -129,10 +139,7 @@ public class ClientHandler extends Thread {
                         ex.printStackTrace();
                     }
                 }
-                
-                
-                
-                
+
             }
         } catch (IOException ex) {
             Logger.getLogger(ClientHandler.class.getName()).log(Level.SEVERE, null, ex);
