@@ -86,6 +86,7 @@ public class ClientHandler extends Thread {
                 }
                 else{
                     Boolean b = ConnectionFacade.getInstance().createUser((ILogin) login);
+                    System.out.println("Sender: " + b);
                     sendCreateUser(b);
                 }
             }
@@ -102,6 +103,7 @@ public class ClientHandler extends Thread {
                     System.out.println("Added: " + "bruger" + clients.size());
                     //  sendMessage("Welcome!");
                     while (true) {
+                            
                         Object o = input.readObject();
 
                         System.out.println("Waiting");
