@@ -47,7 +47,7 @@ public class BusinessFacade implements IBusiness {
         //  Login log = new Login(login.gethMail(), login.gethPW());
         //  log.setLoginvalue(2);
         ILogin datalogin = persistence.Login(login);
-        System.out.println("chats: " + datalogin.getUser().getChats());
+      //  System.out.println("chats: " + datalogin.getUser().getChats());
         System.out.println(datalogin.getLoginvalue());
 
         IUser retUser = new User(datalogin.getUser().getUserID(), datalogin.getUser().getTmpName(), datalogin.getUser().isBanned(), datalogin.getUser().getReports(), datalogin.getUser().getChats());
