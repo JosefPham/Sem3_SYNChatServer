@@ -5,60 +5,60 @@ import Acquaintance.ILogin;
 import Acquaintance.IPersistence;
 import Acquaintance.IUser;
 
+public class BusinessFacade implements IBusiness {
 
-public class BusinessFacade implements IBusiness{
-    
     private IPersistence persistence;
-    
+
     private static BusinessFacade instance;
-    
+
     /**
      * Private Constructor, requred for singleton
      */
-    private BusinessFacade(){
-        
+    private BusinessFacade() {
+
     }
-    
+
     /**
      * getter method for singleton, requered for layered architecture
+     *
      * @return the facade itself.
      */
     public static IBusiness getInstance() {
-        
-            if(instance == null){
+
+        if (instance == null) {
             instance = new BusinessFacade();
         }
         return instance;
     }
 
     /**
-     * Acquaints this with the persistance facade through the "gluecode" in the starter pack
-     * @param per 
+     * Acquaints this with the persistance facade through the "gluecode" in the
+     * starter pack
+     *
+     * @param per
      */
     @Override
     public void injectPersistence(IPersistence per) {
-       this.persistence = per;
+        this.persistence = per;
     }
-    
+
     @Override
     public ILogin checkLogin(ILogin login) {
-     //  Login log = new Login(login.gethMail(), login.gethPW());
-     //  log.setLoginvalue(2);
-       ILogin datalogin = persistence.Login(login);
-       System.out.println("chats: " + datalogin.getUser().getChats());
-       System.out.println(datalogin.getLoginvalue());
-        
-       IUser retUser = new User(datalogin.getUser().getUserID(), datalogin.getUser().getTmpName(), datalogin.getUser().isBanned(), datalogin.getUser().getReports(), datalogin.getUser().getChats());
-       ILogin retLogin = new Login(datalogin.getLoginvalue(), retUser);
-       return retLogin;
-       //return log;
+        //  Login log = new Login(login.gethMail(), login.gethPW());
+        //  log.setLoginvalue(2);
+        ILogin datalogin = persistence.Login(login);
+        System.out.println("chats: " + datalogin.getUser().getChats());
+        System.out.println(datalogin.getLoginvalue());
+
+        IUser retUser = new User(datalogin.getUser().getUserID(), datalogin.getUser().getTmpName(), datalogin.getUser().isBanned(), datalogin.getUser().getReports(), datalogin.getUser().getChats());
+        ILogin retLogin = new Login(datalogin.getLoginvalue(), retUser);
+        return retLogin;
+        //return log;
     }
 
     @Override
     public Boolean createUser(ILogin login) {
         return persistence.createUser(login);
     }
-    
-    
 
 }

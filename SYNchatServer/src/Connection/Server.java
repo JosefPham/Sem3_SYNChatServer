@@ -18,67 +18,57 @@ import java.util.logging.Logger;
  *
  * @author Sigurd E. Espersen
  */
-public class Server{
+public class Server {
 
-    
     private int nudeCounter;
     private int port;
     private boolean isStopped = false;
     ExecutorService threadpool = Executors.newFixedThreadPool(10);
     InetAddress ip;
     ServerSocket serverSocket;
-    
-    
-    public Server(InetAddress ip, int port){
+
+    public Server(InetAddress ip, int port) {
         this.port = port;
         this.ip = ip;
         createSocket();
         System.out.println("Server started");
         acceptClient();
-        
+
     }
-    
-    
-    private boolean createSocket(){
+
+    private boolean createSocket() {
         try {
             serverSocket = new ServerSocket(port, 0, ip);
-           // port = sslServerSocket.getLocalPort();
-           return true;
+            // port = sslServerSocket.getLocalPort();
+            return true;
         } catch (IOException ex) {
             Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
         }
         return false;
     }
-    
-    private void acceptClient(){
-        while(!isStopped()){
+
+    private void acceptClient() {
+        while (!isStopped()) {
             Socket clientSocket;
-             try {
+            try {
                 clientSocket = this.serverSocket.accept(); // Wait for connection and accept
                 nudeCounter++;
                 System.out.println("You recieved a nude! It is nude number: " + nudeCounter);
-                 ClientHandler ch = new ClientHandler(clientSocket);
-                 // check login
-                 ch.start();
+                ClientHandler ch = new ClientHandler(clientSocket);
+                // check login
+                ch.start();
             } catch (IOException e) {
                 throw new RuntimeException("Error accepting client connection", e);
             }
         }
-        
-        
-    }
-    
-    
-    
 
- 
-    
-    
-      private synchronized boolean isStopped() {
+    }
+
+    private synchronized boolean isStopped() {
         return this.isStopped;
     }
 
-    public synchronized void stop(){
+    public synchronized void stop() {
         this.isStopped = true;
         try {
             System.out.println("Closing web server");
@@ -87,8 +77,5 @@ public class Server{
             throw new RuntimeException("Error closing server", e);
         }
     }
-    
-    
-    
-    
+
 }
