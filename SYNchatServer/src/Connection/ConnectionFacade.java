@@ -22,7 +22,7 @@ public class ConnectionFacade implements IConnection {
      *
      * @return the facade itself.
      */
-    public static IConnection getInstance() {
+    public static ConnectionFacade getInstance() {
         if (instance == null) {
             instance = new ConnectionFacade();
         }

@@ -20,7 +20,7 @@ public class PersistenceFacade implements IPersistence {
      *
      * @return
      */
-    public static IPersistence getInstance() {
+    public static PersistenceFacade getInstance() {
         if (instance == null) {
             instance = new PersistenceFacade();
         }

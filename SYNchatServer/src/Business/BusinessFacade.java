@@ -25,7 +25,6 @@ public class BusinessFacade implements IBusiness {
      *
      * @return the facade itself.
      */
-  
     public static BusinessFacade getInstance() {
         
             if(instance == null){
