@@ -9,6 +9,8 @@ public class BusinessFacade implements IBusiness {
 
     private IPersistence persistence;
 
+    private ServerSystem serversys = ServerSystem.getInstance();
+    
     private static BusinessFacade instance;
 
     /**
@@ -23,9 +25,10 @@ public class BusinessFacade implements IBusiness {
      *
      * @return the facade itself.
      */
-    public static IBusiness getInstance() {
-
-        if (instance == null) {
+  
+    public static BusinessFacade getInstance() {
+        
+            if(instance == null){
             instance = new BusinessFacade();
         }
         return instance;
@@ -44,16 +47,23 @@ public class BusinessFacade implements IBusiness {
 
     @Override
     public ILogin checkLogin(ILogin login) {
-        //  Login log = new Login(login.gethMail(), login.gethPW());
-        //  log.setLoginvalue(2);
-        ILogin datalogin = persistence.Login(login);
-      //  System.out.println("chats: " + datalogin.getUser().getChats());
-        System.out.println(datalogin.getLoginvalue());
-
-        IUser retUser = new User(datalogin.getUser().getUserID(), datalogin.getUser().getTmpName(), datalogin.getUser().isBanned(), datalogin.getUser().getReports(), datalogin.getUser().getChats());
-        ILogin retLogin = new Login(datalogin.getLoginvalue(), retUser);
-        return retLogin;
-        //return log;
+     //  Login log = new Login(login.gethMail(), login.gethPW());
+     //  log.setLoginvalue(2);
+     
+     return serversys.login(login);
+     
+//       ILogin datalogin = persistence.Login(login);
+//       System.out.println("chats: " + datalogin.getUser().getChats());
+//       System.out.println(datalogin.getLoginvalue());
+//        
+//       IUser retUser = new User(datalogin.getUser().getUserID(), datalogin.getUser().getTmpName(), datalogin.getUser().isBanned(), datalogin.getUser().getReports(), datalogin.getUser().getChats());
+//       ILogin retLogin = new Login(datalogin.getLoginvalue(), retUser);
+//       return retLogin;
+       //return log;
+    }
+    
+    ILogin checkLoginDB(ILogin login) {
+        return persistence.Login(login);
     }
 
     @Override
