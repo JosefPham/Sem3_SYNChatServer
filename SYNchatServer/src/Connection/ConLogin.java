@@ -60,9 +60,24 @@ public class ConLogin implements ILogin{
         return user;
     }
 
-    @Override
+   @Override
     public int login(int loginValue) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+
+        if (loginValue == 2) {
+
+            //fetch and inplement user object through socket
+        }
+        return loginValue;
+    }
+
+    @Override
+    public void setLoginvalue(int loginvalue) {
+        this.loginvalue = loginvalue;
+    }
+
+    @Override
+    public void setUser(IUser user) {
+        this.user = user;
     }
     
 }

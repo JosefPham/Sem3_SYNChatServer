@@ -58,4 +58,14 @@ public class Login implements ILogin {
     public int login(int loginValue) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
+   @Override
+    public void setLoginvalue(int loginvalue) {
+        this.loginvalue = loginvalue;
+    }
+
+    @Override
+    public void setUser(IUser user) {
+        this.user = user;
+    }
 }

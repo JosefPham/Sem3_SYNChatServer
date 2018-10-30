@@ -42,18 +42,22 @@ public class Login implements ILogin, Serializable {
         return hPW;
     }
 
+    @Override
     public int getLoginvalue() {
         return loginvalue;
     }
 
+    @Override
     public IUser getUser() {
         return user;
     }
 
+    @Override
     public void setLoginvalue(int loginvalue) {
         this.loginvalue = loginvalue;
     }
 
+    @Override
     public void setUser(IUser user) {
         this.user = user;
     }
