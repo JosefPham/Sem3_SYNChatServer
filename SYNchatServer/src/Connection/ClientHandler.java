@@ -24,6 +24,8 @@ public class ClientHandler extends Thread {
     private Socket s;
     ObjectInputStream input;
     ObjectOutputStream output;
+    
+     String userName = "";
 
     public static HashMap<String, ClientHandler> clients = new HashMap<String, ClientHandler>();
 
@@ -70,6 +72,7 @@ public class ClientHandler extends Thread {
 
     public void run() {
 
+        
         try {
             ILogin l = null;
 
@@ -84,6 +87,7 @@ public class ClientHandler extends Thread {
                 } else {
                     Boolean b = ConnectionFacade.getInstance().createUser((ILogin) login);
                     System.out.println("Sender: " + b);
+                    this.userName = ((ILogin) login).getUser().getTmpName();
                     sendCreateUser(b);
                 }
             }
@@ -93,11 +97,14 @@ public class ClientHandler extends Thread {
                     System.out.println("User logged in");
 
                     try {
+                        /*
                         if (!clients.containsKey("bruger" + (clients.size() + 1))) {
                             clients.put("bruger" + (clients.size() + 1), this);
                         }
+*/
+                        clients.put(userName, this);
 
-                        System.out.println("Added: " + "bruger" + clients.size());
+                        System.out.println("Added: " + userName);
                         //  sendMessage("Welcome!");
                         while (true) {
 
@@ -110,6 +117,7 @@ public class ClientHandler extends Thread {
                             } else if (o instanceof String) {
                                 String msg = (String) o;
                                 System.out.println("msg: " + msg);
+                                msg = userName + " " + msg;
                                 if (msg.contains(":")) {
                                     String[] name = msg.trim().split(":");
                                     sendPrivateMessage(name[0].trim(), name[1]);
