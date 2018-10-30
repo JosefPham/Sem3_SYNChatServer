@@ -5,25 +5,27 @@ import Acquaintance.ILogin;
 import Acquaintance.IPersistence;
 import Acquaintance.IUser;
 
+public class BusinessFacade implements IBusiness {
 
-public class BusinessFacade implements IBusiness{
-    
     private IPersistence persistence;
+
     private ServerSystem serversys = ServerSystem.getInstance();
     
     private static BusinessFacade instance;
-    
+
     /**
      * Private Constructor, requred for singleton
      */
-    private BusinessFacade(){
-        
+    private BusinessFacade() {
+
     }
-    
+
     /**
      * getter method for singleton, requered for layered architecture
+     *
      * @return the facade itself.
      */
+  
     public static BusinessFacade getInstance() {
         
             if(instance == null){
@@ -33,14 +35,16 @@ public class BusinessFacade implements IBusiness{
     }
 
     /**
-     * Acquaints this with the persistance facade through the "gluecode" in the starter pack
-     * @param per 
+     * Acquaints this with the persistance facade through the "gluecode" in the
+     * starter pack
+     *
+     * @param per
      */
     @Override
     public void injectPersistence(IPersistence per) {
-       this.persistence = per;
+        this.persistence = per;
     }
-    
+
     @Override
     public ILogin checkLogin(ILogin login) {
      //  Login log = new Login(login.gethMail(), login.gethPW());
@@ -66,7 +70,5 @@ public class BusinessFacade implements IBusiness{
     public Boolean createUser(ILogin login) {
         return persistence.createUser(login);
     }
-    
-    
 
 }

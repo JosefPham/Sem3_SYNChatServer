@@ -81,7 +81,7 @@ public class DatabaseHandler {
             PreparedStatement st0 = conn.prepareStatement("Select * FROM Synchat.users WHERE users.mail = ?;");
             st0.setString(1, login.gethMail());
             ResultSet rs0 = st0.executeQuery();
-            if (rs0.next()) {
+            if (!rs0.next()) {
                 PreparedStatement st1 = conn.prepareStatement("INSERT INTO SYNCHAT.users (mail, password, tmpName) VALUES(?,?,?)");
                 st1.setString(1, login.gethMail());
                 st1.setString(2, login.gethPW());

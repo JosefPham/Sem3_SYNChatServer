@@ -58,9 +58,8 @@ public class ClientHandler extends Thread {
             Logger.getLogger(ClientHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    
-    public void sendCreateUser(Boolean b){
+
+    public void sendCreateUser(Boolean b) {
         try {
             output.writeObject(b);
             System.out.println("Sendte en boolean");
@@ -68,7 +67,6 @@ public class ClientHandler extends Thread {
             Logger.getLogger(ClientHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
 
     public void run() {
 
@@ -79,67 +77,70 @@ public class ClientHandler extends Thread {
 
             if (login instanceof ILogin) {
                 System.out.println("Det er et login");
-                
-                if(((ILogin) login).getUser() == null){
-                   l = ConnectionFacade.getInstance().checkLogin((ILogin) login);  
-                   sendLoginInfo(l);
-                }
-                else{
+
+                if (((ILogin) login).getUser() == null) {
+                    l = ConnectionFacade.getInstance().checkLogin((ILogin) login);
+                    sendLoginInfo(l);
+                } else {
                     Boolean b = ConnectionFacade.getInstance().createUser((ILogin) login);
+                    System.out.println("Sender: " + b);
                     sendCreateUser(b);
                 }
             }
 
-            if (l.getLoginvalue() == 2) {
-                System.out.println("User logged in");
-
-                try {
-                    if (!clients.containsKey("bruger" + (clients.size() + 1))) {
-                        clients.put("bruger" + (clients.size() + 1), this);
-                    }
-
-                    System.out.println("Added: " + "bruger" + clients.size());
-                    //  sendMessage("Welcome!");
-                    while (true) {
-                        Object o = input.readObject();
-
-                        System.out.println("Waiting");
-
-                        if (o instanceof IUser) {
-                            System.out.println("Det er en User");
-                        } else if (o instanceof String) {
-                            String msg = (String) o;
-                            System.out.println("msg: " + msg);
-                            if (msg.contains(":")) {
-                                String[] name = msg.trim().split(":");
-                                sendPrivateMessage(name[0].trim(), name[1]);
-                            } else {
-                                sendPublicMessage(msg);
-                            }
-
-                        }
-                    }
-
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                } catch (ClassNotFoundException ex) {
-                    Logger.getLogger(ClientHandler.class.getName()).log(Level.SEVERE, null, ex);
-                } finally {
-
-                    for (String s : clients.keySet()) {
-                        if (clients.get(s).equals(this)) {
-                            System.out.println("removing: " + s);
-                            clients.remove(s);
-                        }
-                    }
+            if (l != null) {
+                if (l.getLoginvalue() == 2) {
+                    System.out.println("User logged in");
 
                     try {
-                        s.close();
+                        if (!clients.containsKey("bruger" + (clients.size() + 1))) {
+                            clients.put("bruger" + (clients.size() + 1), this);
+                        }
+
+                        System.out.println("Added: " + "bruger" + clients.size());
+                        //  sendMessage("Welcome!");
+                        while (true) {
+
+                            Object o = input.readObject();
+
+                            System.out.println("Waiting");
+
+                            if (o instanceof IUser) {
+                                System.out.println("Det er en User");
+                            } else if (o instanceof String) {
+                                String msg = (String) o;
+                                System.out.println("msg: " + msg);
+                                if (msg.contains(":")) {
+                                    String[] name = msg.trim().split(":");
+                                    sendPrivateMessage(name[0].trim(), name[1]);
+                                } else {
+                                    sendPublicMessage(msg);
+                                }
+
+                            }
+                        }
+
                     } catch (IOException ex) {
                         ex.printStackTrace();
-                    }
-                }
+                    } catch (ClassNotFoundException ex) {
+                        Logger.getLogger(ClientHandler.class.getName()).log(Level.SEVERE, null, ex);
+                    } finally {
 
+                        for (String s : clients.keySet()) {
+                            if (clients.get(s).equals(this)) {
+                                System.out.println("removing: " + s);
+                                clients.remove(s);
+                            }
+                        }
+
+                        try {
+                            s.close();
+                        } catch (IOException ex) {
+                            ex.printStackTrace();
+                        }
+                    }
+
+                }
             }
         } catch (IOException ex) {
             Logger.getLogger(ClientHandler.class.getName()).log(Level.SEVERE, null, ex);

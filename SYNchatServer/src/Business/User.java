@@ -3,7 +3,7 @@ package Business;
 import Acquaintance.IUser;
 import java.util.List;
 
-public class User implements IUser{
+public class User implements IUser {
 
     private int userID;
     private String tmpName; //must be removed when profile is implemented
@@ -23,8 +23,6 @@ public class User implements IUser{
         this.chats = chats;
     }
 
-    
-    
     @Override
     public int getUserID() {
         return userID;
@@ -49,5 +47,5 @@ public class User implements IUser{
     public List<Integer> getChats() {
         return chats;
     }
-    
+
 }
