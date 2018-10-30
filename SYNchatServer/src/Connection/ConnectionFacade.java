@@ -43,11 +43,18 @@ public class ConnectionFacade implements IConnection {
 
     @Override
     public ILogin checkLogin(ILogin login) {
-        
         ILogin l = business.checkLogin(login);
+        if(l.getLoginvalue() == 2){
         IUser retUser = new ConUser(l.getUser().getUserID(), l.getUser().getTmpName(), l.getUser().isBanned(), l.getUser().getReports(), l.getUser().getChats());
-        ILogin log = new ConLogin(l.gethMail(), l.gethPW(), l.getLoginvalue(), retUser);
-        return log;
+        ILogin log = new ConLogin(l.gethMail(), l.gethPW(), l.getLoginvalue(), retUser);  
+         return log;
+        }
+        else{
+         ILogin log = new ConLogin(l.getLoginvalue(), null);
+          return log;
+        }
+        
+       
     }
 
     @Override
