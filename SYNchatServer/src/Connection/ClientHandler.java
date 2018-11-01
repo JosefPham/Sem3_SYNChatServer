@@ -73,9 +73,15 @@ public class ClientHandler extends Thread {
     public void run() {
 
         
+        
         try {
+            
+            
             ILogin l = null;
 
+            
+            while(l == null || l.getLoginvalue() == 2){
+            
             Object login = input.readObject();
 
             if (login instanceof ILogin) {
@@ -92,6 +98,7 @@ public class ClientHandler extends Thread {
                 }
             }
 
+            }
             if (l != null) {
                 if (l.getLoginvalue() == 2) {
                     System.out.println("User logged in");
