@@ -42,11 +42,11 @@ public class ClientHandler extends Thread {
     }
 
     /*
-    public void checkLogin(ILogin login){
-        System.out.println("Hashed Password: " + login.gethPW());
-       // sendPublicMessage( "Email: " + login.gethMail() + " has password: " + login.gethPW() );
+    public void checkLogin(ILogin readLogin){
+        System.out.println("Hashed Password: " + readLogin.gethPW());
+       // sendPublicMessage( "Email: " + readLogin.gethMail() + " has password: " + readLogin.gethPW() );
         try {
-            output.writeObject(login);
+            output.writeObject(readLogin);
         } catch (IOException ex) {
             Logger.getLogger(ClientHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -70,36 +70,48 @@ public class ClientHandler extends Thread {
         }
     }
 
-    public void run() {
-        try {
+    
+    
+    
+    
+    private ILogin loginLoop(Object readLogin){
+        
+        
+        System.out.println("Started login loop");
+            ILogin login = null;
             
-            
-            ILogin l = null;
 
-            
-            while(l == null || l.getLoginvalue() != 2){
-            
-            Object login = input.readObject();
-
-            if (login instanceof ILogin) {
+                System.out.println("er i while");
+            if (readLogin instanceof ILogin) {
                 System.out.println("Det er et login");
 
-                if (((ILogin) login).getUser() == null) {
-                    l = ConnectionFacade.getInstance().checkLogin((ILogin) login);
-                    sendLoginInfo(l);
+                if (((ILogin) readLogin).getUser() == null) {
+                    login = ConnectionFacade.getInstance().checkLogin((ILogin) readLogin);
+                    sendLoginInfo(login);
                 } else {
-                    Boolean b = ConnectionFacade.getInstance().createUser((ILogin) login);
+                    Boolean b = ConnectionFacade.getInstance().createUser((ILogin) readLogin);
                     System.out.println("Sender: " + b);
-                    this.userName = ((ILogin) login).getUser().getTmpName();
+                    this.userName = ((ILogin) readLogin).getUser().getTmpName();
                     sendCreateUser(b);
                 }
             }
 
-            }
-            if (l != null) {
-                if (l.getLoginvalue() == 2) {
+            
+            return login;
+            
+            
+    }
+    
+    
+    
+    
+    public void chatLoop(){
+        
+        
+                    
+                    
                     System.out.println("User logged in");
-
+                    boolean b = false;
                     try {
                         /*
                         if (!clients.containsKey("bruger" + (clients.size() + 1))) {
@@ -110,7 +122,7 @@ public class ClientHandler extends Thread {
 
                         System.out.println("Added: " + userName);
                         //  sendMessage("Welcome!");
-                        while (true) {
+                        while (true && !b) {
 
                             Object o = input.readObject();
 
@@ -126,7 +138,8 @@ public class ClientHandler extends Thread {
                                     String[] name = msg.trim().split(":");
                                     sendPrivateMessage(name[0].trim(), name[1]);
                                 } else if(msg.contains("!SYN!-logout-!SYN!")){
-                                    return;
+                                    System.out.println("returning true");
+                                    b = true;
                                 }
                                 else {
                                     sendPublicMessage(msg);
@@ -140,27 +153,56 @@ public class ClientHandler extends Thread {
                     } catch (ClassNotFoundException ex) {
                         Logger.getLogger(ClientHandler.class.getName()).log(Level.SEVERE, null, ex);
                     } finally {
-
-                        for (String s : clients.keySet()) {
+                        if(!b){
+                             for (String s : clients.keySet()) {
                             if (clients.get(s).equals(this)) {
                                 System.out.println("removing: " + s);
                                 clients.remove(s);
                             }
                         }
+                        }
+                       
 
                         try {
-                            s.close();
+                            if(!b){
+                              s.close();
+                            }
+                            
                         } catch (IOException ex) {
                             ex.printStackTrace();
                         }
                     }
-
+    }
+    
+    
+    
+    
+    
+    
+    public void run() {
+            
+        
+        System.out.println("Starter while");
+        
+        while(!s.isClosed()){
+        try {
+            System.out.println("læser");
+            Object o = input.readObject();
+            
+               ILogin l = loginLoop(o); 
+               
+            
+            
+            if (l != null) {
+                if (l.getLoginvalue() == 2) {
+                    chatLoop();
                 }
             }
         } catch (IOException ex) {
             Logger.getLogger(ClientHandler.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(ClientHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
         }
     }
 
