@@ -71,16 +71,13 @@ public class ClientHandler extends Thread {
     }
 
     public void run() {
-
-        
-        
         try {
             
             
             ILogin l = null;
 
             
-            while(l == null || l.getLoginvalue() == 2){
+            while(l == null || l.getLoginvalue() != 2){
             
             Object login = input.readObject();
 
@@ -128,7 +125,10 @@ public class ClientHandler extends Thread {
                                 if (msg.contains(":")) {
                                     String[] name = msg.trim().split(":");
                                     sendPrivateMessage(name[0].trim(), name[1]);
-                                } else {
+                                } else if(msg.contains("!SYN!-logout-!SYN!")){
+                                    return;
+                                }
+                                else {
                                     sendPublicMessage(msg);
                                 }
 
