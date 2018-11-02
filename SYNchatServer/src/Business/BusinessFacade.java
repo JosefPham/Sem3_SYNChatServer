@@ -73,7 +73,11 @@ public class BusinessFacade implements IBusiness {
 
     @Override
     public Boolean updateFriends(IFriends friends, int userID) {
-        return false;
+        return ServerSystem.getInstance().updateFriends(friends, userID);
+    }
+
+    boolean addFriend(int userID, int i) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

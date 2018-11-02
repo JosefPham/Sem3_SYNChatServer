@@ -1,11 +1,15 @@
 package Business;
 
+import Acquaintance.IFriends;
 import Acquaintance.ILogin;
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class ServerSystem {
     
     private static ServerSystem instance = null;
+    private Map<Integer,User> onlineUsers = new HashMap<>();
     
     private ServerSystem(){
     }
@@ -29,7 +33,14 @@ public class ServerSystem {
         
         return DBlog;
     }
-    
-    
 
+    Boolean updateFriends(IFriends friends, int userID) {
+        if(!onlineUsers.containsKey(userID)) {
+            System.out.println("User not found in onlineUsers!");
+        } else {
+            return onlineUsers.get(userID).updateFriends(friends, userID);
+        }
+        return false;
+    }
+    
 }

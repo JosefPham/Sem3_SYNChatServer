@@ -23,8 +23,25 @@ public class Friends implements IFriends {
         return friendList;
     }
     
-    boolean updateFriends(IFriends friends) {
-        
+    boolean updateFriends(IFriends newFriends, int userID) {
+        if(this.friendList.size() < newFriends.getFriendlist().size()) {
+            for (Integer newID : newFriends.getFriendlist().keySet()) {
+                if(!this.friendList.containsKey(newID)) {
+                    this.friendList.put(newID, newFriends.getFriendlist().get(newID));
+                    
+                    return true;
+                }
+            }
+        } else {
+            for (Integer ID : this.friendList.keySet()) {
+                if(!newFriends.getFriendlist().containsKey(ID)) {
+                    this.friendList.remove(ID);
+                    //Remove friend in database
+                    //return
+                }
+            }
+        }
+        return false;
     }
 
 }
