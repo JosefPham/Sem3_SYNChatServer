@@ -76,8 +76,12 @@ public class BusinessFacade implements IBusiness {
         return ServerSystem.getInstance().updateFriends(friends, userID);
     }
 
-    boolean addFriend(int userID, int i) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    boolean addFriend(int userID, int newFriendID) {
+        return persistence.addFriend(userID, newFriendID);
+    }
+
+    boolean removeFriend(int userID, int oldFriendID) {
+        return persistence.removeFriend(userID, oldFriendID);
     }
 
 }

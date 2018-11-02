@@ -29,15 +29,14 @@ public class Friends implements IFriends {
                 if(!this.friendList.containsKey(newID)) {
                     this.friendList.put(newID, newFriends.getFriendlist().get(newID));
                     
-                    return true;
+                    return BusinessFacade.getInstance().addFriend(userID, (int) newID);
                 }
             }
         } else {
             for (Integer ID : this.friendList.keySet()) {
                 if(!newFriends.getFriendlist().containsKey(ID)) {
                     this.friendList.remove(ID);
-                    //Remove friend in database
-                    //return
+                    return BusinessFacade.getInstance().removeFriend(userID, (int) ID);
                 }
             }
         }

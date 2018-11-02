@@ -36,4 +36,14 @@ public class PersistenceFacade implements IPersistence {
     public Boolean createUser(ILogin login) {
         return sqlDatabase.createUser(login);
     }
+
+    @Override
+    public boolean addFriend(int userID, int newFriendID) {
+        return sqlDatabase.addFriend(userID, newFriendID);
+    }
+
+    @Override
+    public boolean removeFriend(int userID, int oldFriendID) {
+        return sqlDatabase.removeFriend(userID, oldFriendID);
+    }
 }
