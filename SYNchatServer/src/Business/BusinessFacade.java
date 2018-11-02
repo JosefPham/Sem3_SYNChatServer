@@ -1,6 +1,7 @@
 package Business;
 
 import Acquaintance.IBusiness;
+import Acquaintance.IFriends;
 import Acquaintance.ILogin;
 import Acquaintance.IPersistence;
 import Acquaintance.IUser;
@@ -68,6 +69,11 @@ public class BusinessFacade implements IBusiness {
     @Override
     public Boolean createUser(ILogin login) {
         return persistence.createUser(login);
+    }
+
+    @Override
+    public Boolean updateFriends(IFriends friends, int userID) {
+        return false;
     }
 
 }

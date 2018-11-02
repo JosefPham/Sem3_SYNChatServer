@@ -8,4 +8,6 @@ public interface IBusiness {
 
     public Boolean createUser(ILogin login);
 
+    public Boolean updateFriends(IFriends friends, int userID);
+
 }
