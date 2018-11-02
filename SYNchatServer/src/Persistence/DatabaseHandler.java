@@ -95,4 +95,58 @@ public class DatabaseHandler {
         }
         return createBoolean;
     }
+
+    String verifyPw(int userID) {
+        try (Connection conn = DriverManager.getConnection(url, dbUsername, dbPassword)) {
+            Class.forName("org.postgresql.Driver");
+
+            PreparedStatement st = conn.prepareStatement("SELECT users.password FROM SYNchat.users WHERE users.userid = ?;");
+            st.setString(1, (userID + ""));
+
+            ResultSet rs = st.executeQuery();
+            if (rs.next()) {
+                return rs.getString("password");
+            }
+
+        } catch (SQLException | ClassNotFoundException ex) {
+            Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return "error";
+    }
+
+    boolean changePw(int userID, String hashedPw) {
+        boolean statusBoolean = false;
+        try (Connection conn = DriverManager.getConnection(url, dbUsername, dbPassword)) {
+            Class.forName("org.postgresql.Driver");
+
+            PreparedStatement st = conn.prepareStatement("UPDATE SYNchat.users SET password = ? WHERE users.userid = ?;");
+            st.setString(1, hashedPw);
+            st.setString(2, (userID + ""));
+
+            st.executeUpdate();
+            statusBoolean = true;
+
+        } catch (SQLException | ClassNotFoundException ex) {
+            Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return statusBoolean;
+    }
+
+    boolean changeMail(int userID, String hashedMail) {
+        boolean statusBoolean = false;
+        try (Connection conn = DriverManager.getConnection(url, dbUsername, dbPassword)) {
+            Class.forName("org.postgresql.Driver");
+
+            PreparedStatement st = conn.prepareStatement("UPDATE SYNchat.users SET mail = ? WHERE users.userid = ?;");
+            st.setString(1, hashedMail);
+            st.setString(2, (userID + ""));
+
+            st.executeUpdate();
+            statusBoolean = true;
+
+        } catch (SQLException | ClassNotFoundException ex) {
+            Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return statusBoolean;
+    }
 }
