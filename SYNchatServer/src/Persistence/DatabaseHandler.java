@@ -96,7 +96,9 @@ public class DatabaseHandler {
         return createBoolean;
     }
 
-    String verifyPw(int userID) {
+    int verifyPw(int userID, String hashedPw) {
+        int returnstatus = 2;
+        
         try (Connection conn = DriverManager.getConnection(url, dbUsername, dbPassword)) {
             Class.forName("org.postgresql.Driver");
 
@@ -105,17 +107,22 @@ public class DatabaseHandler {
 
             ResultSet rs = st.executeQuery();
             if (rs.next()) {
-                return rs.getString("password");
+                if (rs.getString("password").equals(hashedPw.toString())) {
+                    //if passwords match retur 1 for success.
+                    returnstatus = 1;
+                }
             }
 
         } catch (SQLException | ClassNotFoundException ex) {
             Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return "error";
+        //If password is incorrect retur 2 for error
+        return returnstatus;
     }
 
-    boolean changePw(int userID, String hashedPw) {
-        boolean statusBoolean = false;
+    int changePw(int userID, String hashedPw) {
+        int returnstatus = 2;
+        
         try (Connection conn = DriverManager.getConnection(url, dbUsername, dbPassword)) {
             Class.forName("org.postgresql.Driver");
 
@@ -124,29 +131,38 @@ public class DatabaseHandler {
             st.setString(2, (userID + ""));
 
             st.executeUpdate();
-            statusBoolean = true;
+            //success retrun 1.
+            returnstatus = 1;
 
         } catch (SQLException | ClassNotFoundException ex) {
             Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return statusBoolean;
+        //if 1 in return, success. if 2 in return, error.
+        return returnstatus;
     }
 
-    boolean changeMail(int userID, String hashedMail) {
-        boolean statusBoolean = false;
-        try (Connection conn = DriverManager.getConnection(url, dbUsername, dbPassword)) {
-            Class.forName("org.postgresql.Driver");
+    int changeMail(int userID, String hashedPw, String hashedMail) {
+        int returnStatus = 2;
+        
+        if (verifyPw(userID, hashedPw) == 1) {
+            try (Connection conn = DriverManager.getConnection(url, dbUsername, dbPassword)) {
+                Class.forName("org.postgresql.Driver");
 
-            PreparedStatement st = conn.prepareStatement("UPDATE SYNchat.users SET mail = ? WHERE users.userid = ?;");
-            st.setString(1, hashedMail);
-            st.setString(2, (userID + ""));
+                PreparedStatement st = conn.prepareStatement("UPDATE SYNchat.users SET mail = ? WHERE users.userid = ?;");
+                st.setString(1, hashedMail);
+                st.setString(2, (userID + ""));
 
-            st.executeUpdate();
-            statusBoolean = true;
+                st.executeUpdate();
+                //success return 1.
+                returnStatus = 1;
 
-        } catch (SQLException | ClassNotFoundException ex) {
-            Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (SQLException | ClassNotFoundException ex) {
+                Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
-        return statusBoolean;
+        //For 1 in return, success. if 2 in return, error.
+        return returnStatus;
+
     }
+
 }
