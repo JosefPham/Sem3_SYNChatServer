@@ -8,8 +8,7 @@ import java.util.Date;
  */
 public interface IMessage {
 
-    int getSenderId();
+    int getSenderID();
 
-    Date getTimeStamp();
-
+    Date getTimestamp();
 }
