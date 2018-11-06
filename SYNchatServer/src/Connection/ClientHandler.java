@@ -101,14 +101,7 @@ public class ClientHandler extends Thread {
                     
                     
                     System.out.println("msg: " + msg.getContext());
-                   // String msg = userName;
-                    /*
-                    if (msg.contains(":")) {
-                        String[] name = msg.trim().split(":");
-                        sendPrivateMessage(name[0].trim(), name[1]);
-                    } 
-
-*/                  if (msg.getContext().contains("!SYN!-logout-!SYN!")) {
+                    if (msg.getContext().contains("!SYN!-logout-!SYN!")) {
                         return;
                     } else {
                         sendPublicMessage(msg);
@@ -127,8 +120,13 @@ public class ClientHandler extends Thread {
 
         ILogin l = null;
 
-        while (l == null || l.getLoginvalue() != 2) {
+        while ((l == null || l.getLoginvalue() != 2)) {
 
+            if(s.isClosed()){
+                return;
+            }
+            
+            
             try {
                 Object obj = input.readObject();
 
@@ -146,7 +144,6 @@ public class ClientHandler extends Thread {
             } catch (ClassNotFoundException ex) {
                 Logger.getLogger(ClientHandler.class.getName()).log(Level.SEVERE, null, ex);
             } finally {
-
                 for (String s : clients.keySet()) {
                     if (clients.get(s).equals(this)) {
                         System.out.println("removing: " + s);
