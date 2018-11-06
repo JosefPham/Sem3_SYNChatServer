@@ -6,6 +6,7 @@
 package Connection;
 
 import Acquaintance.ILogin;
+import Acquaintance.IMessage;
 import Acquaintance.IUser;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -95,14 +96,19 @@ public class ClientHandler extends Thread {
 
                 if (obj instanceof IUser) {
                     System.out.println("Det er en User");
-                } else if (obj instanceof String) {
-                    String msg = (String) obj;
-                    System.out.println("msg: " + msg);
-                    msg = userName + " " + msg;
+                } else if (obj instanceof IMessage) {
+                    ConMessage msg = new ConTextMessage(((IMessage) obj).getSenderID(), ((IMessage) obj).getContext());
+                    
+                    
+                    System.out.println("msg: " + msg.getContext());
+                   // String msg = userName;
+                    /*
                     if (msg.contains(":")) {
                         String[] name = msg.trim().split(":");
                         sendPrivateMessage(name[0].trim(), name[1]);
-                    } else if (msg.contains("!SYN!-logout-!SYN!")) {
+                    } 
+
+*/                  if (msg.getContext().contains("!SYN!-logout-!SYN!")) {
                         return;
                     } else {
                         sendPublicMessage(msg);
@@ -177,7 +183,7 @@ public class ClientHandler extends Thread {
 
     }
 
-    protected static void sendPublicMessage(String message) {
+    protected static void sendPublicMessage(IMessage message) {
         synchronized (clients) {
             System.out.println("Trying to send a message!");
 
@@ -185,7 +191,7 @@ public class ClientHandler extends Thread {
                 ClientHandler ch = (ClientHandler) clients.get(s);
                 try {
                     synchronized (ch.output) {
-                        System.out.println("About to write: " + message);
+                        System.out.println("About to write: " + message.getContext());
                         ch.output.writeObject(message);
                     }
                     ch.output.flush();

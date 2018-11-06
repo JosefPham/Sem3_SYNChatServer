@@ -1,4 +1,4 @@
-package Connection;
+package Business;
 
 import Acquaintance.IMessage;
 import java.io.Serializable;
@@ -9,12 +9,12 @@ import java.util.Date;
  *
  * @author Group 9
  */
-public abstract class ConMessage implements Serializable, IMessage {
+public abstract class Message implements Serializable, IMessage {
 
     int senderID;
     Instant timestamp;
 
-    public ConMessage(int senderID) {
+    public Message(int senderID) {
         this.senderID = senderID;
         timestamp = Instant.now();
     }
@@ -28,7 +28,7 @@ public abstract class ConMessage implements Serializable, IMessage {
     public Instant getTimestamp() {
         return timestamp;
     }
-
+    
     @Override
     public String getContext() {
         return "Abstract klasse getContext";
