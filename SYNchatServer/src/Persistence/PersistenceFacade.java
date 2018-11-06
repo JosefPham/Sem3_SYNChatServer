@@ -1,7 +1,9 @@
 package Persistence;
 
 import Acquaintance.ILogin;
+import Acquaintance.IManagement;
 import Acquaintance.IPersistence;
+import Acquaintance.IProfile;
 
 public class PersistenceFacade implements IPersistence {
 
@@ -35,5 +37,20 @@ public class PersistenceFacade implements IPersistence {
     @Override
     public Boolean createUser(ILogin login) {
         return sqlDatabase.createUser(login);
+    }
+    
+    @Override
+    public int changeMail(IManagement management) {
+        return sqlDatabase.changeMail(management);
+    }
+    
+    @Override
+    public int changePw(IManagement management) {
+        return sqlDatabase.changePw(management);
+    }
+    
+    @Override
+    public boolean alterProfile(IProfile profile) {
+        return sqlDatabase.alterProfile(profile);
     }
 }

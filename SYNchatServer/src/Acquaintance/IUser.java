@@ -7,8 +7,6 @@ public interface IUser extends Serializable {
 
     public int getUserID();
 
-    public String getTmpName();
-
     public boolean isBanned();
 
     public int getReports();

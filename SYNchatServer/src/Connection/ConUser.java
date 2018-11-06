@@ -1,24 +1,25 @@
 package Connection;
 
-
+import Acquaintance.IProfile;
 import Acquaintance.IUser;
+import Acquaintance.Nationality;
+import Business.Profile;
 import java.util.List;
 
 public class ConUser implements IUser {
 
     private int userID;
-    private String tmpName; //must be removed when profile is implemented
     private boolean banned; // a flag for if the user is banned
     private int reports;    // the amount of reprts a user have recived
     private List<Integer> chats;
+    private IProfile profile;
 
-    public ConUser(String tmpName) {
-        this.tmpName = tmpName;
+    public ConUser(String firstName, String lastName, Nationality nationality) {
+        new Profile(firstName, lastName, nationality);
     }
 
-    public ConUser(int userID, String tmpName, boolean banned, int reports, List<Integer> chats) {
+    public ConUser(int userID, boolean banned, int reports, List<Integer> chats) {
         this.userID = userID;
-        this.tmpName = tmpName;
         this.banned = banned;
         this.reports = reports;
         this.chats = chats;
@@ -27,11 +28,6 @@ public class ConUser implements IUser {
     @Override
     public int getUserID() {
         return userID;
-    }
-
-    @Override
-    public String getTmpName() {
-        return tmpName;
     }
 
     @Override

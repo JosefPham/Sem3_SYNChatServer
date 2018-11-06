@@ -1,6 +1,8 @@
 package Persistence;
 
 import Acquaintance.ILogin;
+import Acquaintance.IManagement;
+import Acquaintance.IProfile;
 import Acquaintance.IUser;
 import java.sql.*;
 import java.sql.DriverManager;
@@ -128,8 +130,8 @@ public class DatabaseHandler {
         //return 3 = Password does no match and access is denied;
     }
 
-    int changePw(int userID, String hashedPw) {
-        int passwordverification = verifyPw(userID, hashedPw);
+    int changePw(IManagement management) {
+        int passwordverification = verifyPw(management.getUserID(), management.getPw());
         int returnstatus = 2;
 
         switch (passwordverification) {
@@ -139,8 +141,8 @@ public class DatabaseHandler {
                     Class.forName("org.postgresql.Driver");
 
                     PreparedStatement st = conn.prepareStatement("UPDATE SYNchat.users SET password = ? WHERE users.userid = ?;");
-                    st.setString(1, hashedPw);
-                    st.setString(2, (userID + ""));
+                    st.setString(1, management.getString1());
+                    st.setString(2, (management.getUserID() + ""));
 
                     st.executeUpdate();
                     //success retrun 1.
@@ -165,8 +167,8 @@ public class DatabaseHandler {
         return returnstatus;
     }
 
-    int changeMail(int userID, String hashedPw, String hashedMail) {
-        int passwordverification = verifyPw(userID, hashedPw);
+    int changeMail(IManagement management) {
+        int passwordverification = verifyPw(management.getUserID(), management.getPw());
         int returnStatus = 2;
 
         switch (passwordverification) {
@@ -176,8 +178,8 @@ public class DatabaseHandler {
                     Class.forName("org.postgresql.Driver");
 
                     PreparedStatement st = conn.prepareStatement("UPDATE SYNchat.users SET mail = ? WHERE users.userid = ?;");
-                    st.setString(1, hashedMail);
-                    st.setString(2, (userID + ""));
+                    st.setString(1, management.getString1());
+                    st.setString(2, (management.getUserID() + ""));
 
                     st.executeUpdate();
                     //success return 1.
@@ -200,5 +202,26 @@ public class DatabaseHandler {
         }
         return returnStatus;
     }
+
+    boolean alterProfile(IProfile profile) {
+        Boolean updateBoolean = false;
+        try (Connection conn = DriverManager.getConnection(url, dbUsername, dbPassword)) {
+            Class.forName("org.postgresql.Driver");
+            PreparedStatement st0 = conn.prepareStatement("UPDATE synchat.profiles SET firstname = '?', lastname = '?', nationality = '?', profiletext = '?' WHERE synchat.userid = ?;");
+            st0.setString(1, profile.getFirstName());
+            st0.setString(2, profile.getLastName());
+            st0.setString(3, profile.getNationality().toString());
+            st0.setString(4, profile.getProfileText());
+            st0.setString(5, profile.getSomethingThatCanIdentifyTheUser());
+
+            st0.executeUpdate();
+            updateBoolean = true;
+        } catch (SQLException | ClassNotFoundException ex) {
+            Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return updateBoolean;
+    }
+
+}
 
 }

@@ -3,6 +3,8 @@ package Connection;
 import Acquaintance.IBusiness;
 import Acquaintance.IConnection;
 import Acquaintance.ILogin;
+import Acquaintance.IManagement;
+import Acquaintance.IProfile;
 import Acquaintance.IUser;
 
 public class ConnectionFacade implements IConnection {
@@ -45,7 +47,7 @@ public class ConnectionFacade implements IConnection {
     public ILogin checkLogin(ILogin login) {
         ILogin l = business.checkLogin(login);
         if(l.getLoginvalue() == 2){
-        IUser retUser = new ConUser(l.getUser().getUserID(), l.getUser().getTmpName(), l.getUser().isBanned(), l.getUser().getReports(), l.getUser().getChats());
+        IUser retUser = new ConUser(l.getUser().getUserID(), l.getUser().isBanned(), l.getUser().getReports(), l.getUser().getChats());
         ILogin log = new ConLogin(l.gethMail(), l.gethPW(), l.getLoginvalue(), retUser);  
          return log;
         }
@@ -60,5 +62,15 @@ public class ConnectionFacade implements IConnection {
     @Override
     public Boolean createUser(ILogin login) {
         return business.createUser(login);
+    }
+    
+    @Override
+    public int changeInfo(IManagement management) {
+        return business.changeInfo(management);
+    }
+    
+    @Override
+    public boolean updateProfile(IProfile profile) {
+        return business.updateProfile(profile);
     }
 }

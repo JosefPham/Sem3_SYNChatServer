@@ -6,7 +6,9 @@
 package Connection;
 
 import Acquaintance.ILogin;
-import Acquaintance.IUser;
+import Acquaintance.IManagement;
+import Acquaintance.IProfile;
+import Acquaintance.Nationality;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -17,7 +19,7 @@ import java.util.logging.Logger;
 
 /**
  *
- * @author Peter
+ * @author Group 9
  */
 public class ClientHandler extends Thread {
 
@@ -61,10 +63,19 @@ public class ClientHandler extends Thread {
         }
     }
 
-    public void sendCreateUser(Boolean b) {
+    public void sendBoolReturn(Boolean b) {
         try {
             output.writeObject(b);
             System.out.println("Sendte en boolean");
+        } catch (IOException ex) {
+            Logger.getLogger(ClientHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public void sendChangeInfoUpdate(int value) {
+        try {
+            output.writeObject(value);
+            System.out.println("Sendte en int");
         } catch (IOException ex) {
             Logger.getLogger(ClientHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -91,7 +102,7 @@ public class ClientHandler extends Thread {
                     Boolean b = ConnectionFacade.getInstance().createUser((ILogin) login);
                     System.out.println("Sender: " + b);
                     this.userName = ((ILogin) login).getUser().getTmpName();
-                    sendCreateUser(b);
+                    sendBoolReturn(b);
                 }
             }
 
@@ -116,9 +127,16 @@ public class ClientHandler extends Thread {
 
                             System.out.println("Waiting");
 
-                            if (o instanceof IUser) {
-                                System.out.println("Det er en User");
-                            } else if (o instanceof String) {
+                            if (o instanceof IManagement) {
+                                System.out.println("Det er en Management");
+                                IManagement management = new ConManagement(((IManagement) o).getAction(), ((IManagement) o).getUserID(), ((IManagement) o).getPw(), ((IManagement) o).getString1());
+                                sendChangeInfoUpdate(ConnectionFacade.getInstance().changeInfo(management));
+                            } else if (o instanceof IProfile) {
+                                System.out.println("Det er en Profile");
+                                IProfile profile = new ConProfile(((IProfile) o).getFirstName(), ((IProfile) o).getLastName(), ((IProfile) o).getNationality(), ((IProfile) o).getProfileText());
+                                sendBoolReturn(ConnectionFacade.getInstance().updateProfile(profile));
+                            } 
+                            else if (o instanceof String) {
                                 String msg = (String) o;
                                 System.out.println("msg: " + msg);
                                 msg = userName + " " + msg;
