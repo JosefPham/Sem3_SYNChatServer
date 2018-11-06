@@ -88,7 +88,7 @@ public class ClientHandler extends Thread {
     }
 
     public void readStream() {
-        while (true) {
+        while (s.isConnected()) {
             try {
                 Object obj = input.readObject();
 
