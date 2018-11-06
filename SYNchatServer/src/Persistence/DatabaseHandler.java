@@ -158,6 +158,8 @@ public class DatabaseHandler {
                 //Passwords did not match
                 returnstatus = 3;
                 break;
+            default:
+                returnstatus = 2;
         }
 
         return returnstatus;
@@ -193,6 +195,8 @@ public class DatabaseHandler {
                 //passwords did not match
                 returnStatus = 3;
                 break;
+            default:
+                returnStatus = 2;
         }
         return returnStatus;
     }
