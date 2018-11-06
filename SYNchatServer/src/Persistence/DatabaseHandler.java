@@ -122,7 +122,7 @@ public class DatabaseHandler {
         }
         //If password is incorrect retur 2 for error
         return returnstatus;
-        
+
         //Return 1 = success;
         //return 2 = unknown error with verifcation;
         //return 3 = Password does no match and access is denied;
@@ -132,70 +132,69 @@ public class DatabaseHandler {
         int passwordverification = verifyPw(userID, hashedPw);
         int returnstatus = 2;
 
-        if (passwordverification == 1) {
-            try (Connection conn = DriverManager.getConnection(url, dbUsername, dbPassword)) {
-                Class.forName("org.postgresql.Driver");
+        switch (passwordverification) {
+            case 1:
+                //password success, edit database entries
+                try (Connection conn = DriverManager.getConnection(url, dbUsername, dbPassword)) {
+                    Class.forName("org.postgresql.Driver");
 
-                PreparedStatement st = conn.prepareStatement("UPDATE SYNchat.users SET password = ? WHERE users.userid = ?;");
-                st.setString(1, hashedPw);
-                st.setString(2, (userID + ""));
+                    PreparedStatement st = conn.prepareStatement("UPDATE SYNchat.users SET password = ? WHERE users.userid = ?;");
+                    st.setString(1, hashedPw);
+                    st.setString(2, (userID + ""));
 
-                st.executeUpdate();
-                //success retrun 1.
-                returnstatus = 1;
+                    st.executeUpdate();
+                    //success retrun 1.
+                    returnstatus = 1;
 
-            } catch (SQLException | ClassNotFoundException ex) {
-                Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        } else if (passwordverification == 3) {
-            //if return is 3, access denied due to wrong password
-            returnstatus = 3;
-        } else if(passwordverification == 2) {
-            returnstatus = 4;
-        } else
-            returnstatus = 2;
-        //if 1 in return, success. if 2 in return, unknown error.
+                } catch (SQLException | ClassNotFoundException ex) {
+                    Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                break;
+            case 2:
+                //password verification failed
+                returnstatus = 4;
+                break;
+            case 3:
+                //Passwords did not match
+                returnstatus = 3;
+                break;
+        }
+
         return returnstatus;
-        
-        //return 1 = success;
-        //return 2 = unknown error;
-        //return 3 = passwordverification failed on password match;
-        //return 4 = verification failiure;
     }
 
     int changeMail(int userID, String hashedPw, String hashedMail) {
         int passwordverification = verifyPw(userID, hashedPw);
         int returnStatus = 2;
 
-        if (passwordverification == 1) {
-            try (Connection conn = DriverManager.getConnection(url, dbUsername, dbPassword)) {
-                Class.forName("org.postgresql.Driver");
+        switch (passwordverification) {
+            case 1:
+                //password success, edit database entries
+                try (Connection conn = DriverManager.getConnection(url, dbUsername, dbPassword)) {
+                    Class.forName("org.postgresql.Driver");
 
-                PreparedStatement st = conn.prepareStatement("UPDATE SYNchat.users SET mail = ? WHERE users.userid = ?;");
-                st.setString(1, hashedMail);
-                st.setString(2, (userID + ""));
+                    PreparedStatement st = conn.prepareStatement("UPDATE SYNchat.users SET mail = ? WHERE users.userid = ?;");
+                    st.setString(1, hashedMail);
+                    st.setString(2, (userID + ""));
 
-                st.executeUpdate();
-                //success return 1.
-                returnStatus = 1;
+                    st.executeUpdate();
+                    //success return 1.
+                    returnStatus = 1;
 
-            } catch (SQLException | ClassNotFoundException ex) {
-                Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        } else if (passwordverification == 3) {
-            //if retrun is 3, access denied due to wrong password.
-            returnStatus = 3;
-        } else if(passwordverification == 2) {
-            returnStatus = 4;
-        } else 
-            returnStatus = 2;
-        //For 1 in return, success. if 2 in return, unknown error.
+                } catch (SQLException | ClassNotFoundException ex) {
+                    Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                break;
+            case 2:
+                //password verification faliure
+                returnStatus = 4;
+                break;
+            case 3:
+                //passwords did not match
+                returnStatus = 3;
+                break;
+        }
         return returnStatus;
-        
-        //return 1 = success;
-        //return 2 = unknown error;
-        //return 3 = passwordverification failed on password match;
-        //return 4 = verification failiure;
     }
 
 }
