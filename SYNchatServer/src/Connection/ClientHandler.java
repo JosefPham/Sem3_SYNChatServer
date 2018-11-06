@@ -33,6 +33,7 @@ public class ClientHandler extends Thread {
         try {
             this.s = s;
             System.out.println("got: " + s.getInetAddress());
+            
             output = new ObjectOutputStream(s.getOutputStream());
             input = new ObjectInputStream(s.getInputStream());
 
