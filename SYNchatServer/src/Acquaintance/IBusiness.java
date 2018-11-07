@@ -18,6 +18,6 @@ public interface IBusiness {
     
     public int updatePwSQL(IManagement management);
 
-    public IPrivateChat handlerPrivateChat(IPrivateChat conPrivateChat);
+    public IPrivateChat handlePrivateChat(IPrivateChat conPrivateChat);
 
 }

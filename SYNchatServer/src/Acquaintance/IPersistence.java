@@ -11,5 +11,9 @@ public interface IPersistence {
     public int changePw(IManagement management);
     
     public boolean alterProfile(IUser user);
+
+    public IPrivateChat addToPrivateChat(IPrivateChat prichat);
+
+    public IPrivateChat createNewPrivateChat(IPrivateChat prichat);
     
 }

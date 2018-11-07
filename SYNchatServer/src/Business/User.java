@@ -125,7 +125,7 @@ public class User implements IUser {
             } else {
                 newchat.getUserIDs().remove(userID);    // remove users from the list if they are offline, the clienthandler will send out the meesage to all users still in the list.
             }
-            return newchat;
+            return newchat;     // ********* måske skal det ikke altid være newchat der returnes - det er den vi henter fra databasen
         }
 
         return null;

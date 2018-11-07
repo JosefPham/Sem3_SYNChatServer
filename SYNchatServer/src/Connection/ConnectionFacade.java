@@ -76,6 +76,6 @@ public class ConnectionFacade implements IConnection {
     }
     
     IPrivateChat handlePrivateChat(IPrivateChat conPrivateChat) {
-        return business.handlerPrivateChat(conPrivateChat);
+        return business.handlePrivateChat(conPrivateChat);
     }
 }

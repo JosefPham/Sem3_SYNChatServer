@@ -17,14 +17,14 @@ public class BusinessFacade implements IBusiness {
     private static BusinessFacade instance;
 
     /**
-     * Private Constructor, requred for singleton
+     * Private Constructor, required for singleton
      */
     private BusinessFacade() {
 
     }
 
     /**
-     * getter method for singleton, requered for layered architecture
+     * getter method for singleton, required for layered architecture
      *
      * @return the facade itself.
      */
@@ -99,16 +99,18 @@ public class BusinessFacade implements IBusiness {
     }
 
     @Override
-    public IPrivateChat handlerPrivateChat(IPrivateChat conPrivateChat) {
+    public IPrivateChat handlePrivateChat(IPrivateChat conPrivateChat) {
         return serversys.getUser(conPrivateChat.getCh().getMsgList().get(0).getSenderID()).handlePrivateChat(conPrivateChat);
     }
 
     IPrivateChat createNewPrivateChat(IPrivateChat prichat) {
-        throw new UnsupportedOperationException("Not supported yet."); // create new chat entry in db
+        // create new chat entry in db
+        return persistence.createNewPrivateChat(prichat);
     }
 
     IPrivateChat addToPrivateChat(IPrivateChat prichat) {
-        throw new UnsupportedOperationException("Not supported yet."); // add new message to existing chat in db
+        // add new message to existing chat in db
+        return persistence.addToPrivateChat(prichat);
     }
 
    

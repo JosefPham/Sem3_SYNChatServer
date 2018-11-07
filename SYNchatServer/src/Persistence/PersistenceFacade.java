@@ -3,6 +3,7 @@ package Persistence;
 import Acquaintance.ILogin;
 import Acquaintance.IManagement;
 import Acquaintance.IPersistence;
+import Acquaintance.IPrivateChat;
 import Acquaintance.IProfile;
 import Acquaintance.IUser;
 
@@ -12,14 +13,14 @@ public class PersistenceFacade implements IPersistence {
     private DatabaseHandler sqlDatabase = new DatabaseHandler();
 
     /**
-     * Private Constructor, requred for singleton
+     * Private Constructor, required for singleton
      */
     private PersistenceFacade() {
 
     }
 
     /**
-     * Getter method for singleton, requered for layered architecture
+     * Getter method for singleton, required for layered architecture
      *
      * @return
      */
@@ -53,5 +54,15 @@ public class PersistenceFacade implements IPersistence {
     @Override
     public boolean alterProfile(IUser user) {
         return sqlDatabase.alterProfile(user);
+    }
+
+    @Override
+    public IPrivateChat addToPrivateChat(IPrivateChat prichat) {
+        return sqlDatabase.addToPrivateChat(prichat);
+    }
+
+    @Override
+    public IPrivateChat createNewPrivateChat(IPrivateChat prichat) {
+        return sqlDatabase.createNewPrivateChat(prichat);
     }
 }

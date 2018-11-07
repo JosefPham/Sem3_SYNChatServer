@@ -1,7 +1,10 @@
 package Persistence;
 
+import Acquaintance.IChatHistory;
 import Acquaintance.ILogin;
 import Acquaintance.IManagement;
+import Acquaintance.IMessage;
+import Acquaintance.IPrivateChat;
 import Acquaintance.IProfile;
 import Acquaintance.IUser;
 import Acquaintance.Nationality;
@@ -295,6 +298,137 @@ public class DatabaseHandler {
             Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
         return updateBoolean;
+    }
+
+    
+    IPrivateChat createNewPrivateChat(IPrivateChat prichat) {
+        
+        // convert the message timestamp to java.sql.Timestamp datatype
+        Timestamp time = Timestamp.from(prichat.getCh().getMsgList().get(0).getTimestamp());
+        
+        try (Connection conn = DriverManager.getConnection(url, dbUsername, dbPassword)) {
+            
+            PreparedStatement st0 = conn.prepareStatement("INSERT INTO SYNCHAT.chatmessages (message, timestamp, senderid) VALUES(?,?,?)");
+            
+            st0.setString(1, prichat.getCh().getMsgList().get(0).getContext());
+            st0.setTimestamp(2, time);
+            st0.setInt(3, prichat.getCh().getMsgList().get(0).getSenderID());
+            
+            st0.executeUpdate();
+            
+            PreparedStatement st00 = conn.prepareStatement("SELECT chatid FROM synchat.chatmessages WHERE message = ? && timestamp = ? && senderid = ?");
+            st00.setString(1, prichat.getCh().getMsgList().get(0).getContext());
+            st00.setTimestamp(2, time);
+            st00.setInt(3, prichat.getCh().getMsgList().get(0).getSenderID());
+            
+            ResultSet rs00 = st00.executeQuery();
+            int chatID = -1;
+            if (rs00.next()) {
+                chatID = rs00.getInt("chatid");
+            }
+            
+            
+            for (Integer userID : prichat.getUserIDs()) {
+                PreparedStatement st1 = conn.prepareStatement("INSERT INTO SYNCHAT.userchats (chatid, userid) VALUES(?,?)");
+                
+                st1.setInt(1, chatID);
+                st1.setInt(2, userID);
+                
+                st1.executeUpdate();
+            }
+            
+            
+            PreparedStatement st2 = conn.prepareStatement("INSERT INTO SYNCHAT.chatinfo (chatid, chatname) VALUES(?,?)");
+            
+            st2.setInt(1, chatID);
+            st2.setString(2, prichat.getName());
+
+            st2.executeUpdate();
+            
+            
+            IPrivateChat newchat = loadPrivateChat(chatID);
+            return newchat;
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return null;
+    }
+    
+    IPrivateChat loadPrivateChat(int chatID) {
+        try (Connection conn = DriverManager.getConnection(url, dbUsername, dbPassword)) {
+            
+            // this decides how many messages are loaded at a time
+            int msgLoadedCount = 10;
+            
+            List<Integer> userIDs = new ArrayList<>();
+            String name = "";
+            List<IMessage> msgList = new ArrayList<>();
+            int senderID ;
+            Timestamp time;
+            String text;
+            
+            
+            PreparedStatement st3 = conn.prepareStatement("SELECT * FROM SYNCHAT.chatmessages WHERE chatid = ?");
+            st3.setInt(1, chatID);
+            
+            ResultSet rs3 = st3.executeQuery();
+               
+            for (int i = 0; i <= msgLoadedCount; i++) {
+                while (rs3.next()) {
+                    text = rs3.getString("message");
+                    senderID = rs3.getInt("senderid");
+                    time = rs3.getTimestamp("timestamp");
+                    
+                    // ****NB!* Check for hvorvidt det er en textmessage!
+                    IMessage msg = new PerTextMessage(senderID, time, text);
+                    msgList.add(msg);
+                }
+            }
+            
+            PreparedStatement st4 = conn.prepareStatement("SELECT * FROM synchat.chatinfo WHERE chatid = ?");
+            st4.setInt(1, chatID);
+            ResultSet rs4 = st4.executeQuery();
+            if (rs4.next()) {
+                name = rs4.getString("chatname");
+            }
+            
+            PreparedStatement st5 = conn.prepareStatement("SELECT * FROM synchat.userchats WHERE chatid = ?");
+            st5.setInt(1, chatID);
+            ResultSet rs5 = st5.executeQuery();
+            while (rs5.next()) {
+                userIDs.add(rs5.getInt("userid"));
+            }
+            
+            IChatHistory ch = new PerChatHistory(msgLoadedCount, msgList);
+            IPrivateChat newchat = new PerPrivateChat(userIDs, chatID, name, ch);
+            
+            return newchat;
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return null;
+    }
+    
+    IPrivateChat addToPrivateChat(IPrivateChat prichat) {
+        try (Connection conn = DriverManager.getConnection(url, dbUsername, dbPassword)) {
+            
+            // add to existing chat entry in db
+            
+        
+            
+            IPrivateChat newchat = loadPrivateChat(prichat.getChatID());
+            
+            return newchat;
+        
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return null;
     }
 
 }
