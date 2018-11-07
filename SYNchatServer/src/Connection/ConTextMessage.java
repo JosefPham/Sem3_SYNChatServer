@@ -1,10 +1,12 @@
 package Connection;
 
+import Acquaintance.ITextMessage;
+
 /**
  *
  * @author Group 9
  */
-public class ConTextMessage extends ConMessage {
+public class ConTextMessage extends ConMessage implements ITextMessage {
 
     private String msg;
 
