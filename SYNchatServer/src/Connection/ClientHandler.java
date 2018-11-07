@@ -8,6 +8,11 @@ package Connection;
 import Acquaintance.ILogin;
 import Acquaintance.IMessage;
 import Acquaintance.IUser;
+/*
+import Acquaintance.IManagement;
+import Acquaintance.IProfile;
+import Acquaintance.Nationality;
+*/
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -53,7 +58,7 @@ public class ClientHandler extends Thread {
     }
 
     
-    
+    // skal fjernes
     public void sendCreateUser(Boolean b) {
         try {
             output.writeObject(b);
@@ -62,6 +67,28 @@ public class ClientHandler extends Thread {
             Logger.getLogger(ClientHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    // fjern /\
+    
+    
+        public void sendBoolReturn(Boolean b) {
+        try {
+            output.writeObject(b);
+            System.out.println("Sendte en boolean");
+        } catch (IOException ex) {
+            Logger.getLogger(ClientHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+        
+        
+        
+        public void sendChangeInfoUpdate(int value) {
+        try {
+            output.writeObject(value);
+            System.out.println("Sendte en int");
+        } catch (IOException ex) {
+            Logger.getLogger(ClientHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }    
 
     
     
@@ -108,6 +135,16 @@ public class ClientHandler extends Thread {
                     }
 
                 }
+                /*
+                else if(obj instanceof IManagement){
+                    IManagement management = new ConManagement(((IManagement) o).getAction(), ((IManagement) o).getUserID(), ((IManagement) o).getPw(), ((IManagement) o).getString1());
+                    sendChangeInfoUpdate(ConnectionFacade.getInstance().changeInfo(management));
+                }
+                else if(obj instanceof IProfile){
+                    IProfile profile = new ConProfile(((IProfile) o).getFirstName(), ((IProfile) o).getLastName(), ((IProfile) o).getNationality(), ((IProfile) o).getProfileText());
+                    sendBoolReturn(ConnectionFacade.getInstance().updateProfile(profile));
+                }
+                */
             } catch (IOException ex) {
                 Logger.getLogger(ClientHandler.class.getName()).log(Level.SEVERE, null, ex);
             } catch (ClassNotFoundException ex) {
