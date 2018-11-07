@@ -13,8 +13,8 @@ public class User implements IUser {
     private List<Integer> chats;
     private IProfile profile;
 
-    public User(String firstName, String lastName, Nationality nationality) {
-        new Profile(firstName, lastName, nationality);
+    public User(String firstName, String lastName, Nationality nationality, String profileText) {
+        new Profile(firstName, lastName, nationality, "");
     }
 
     public User(int userID, boolean banned, int reports, List<Integer> chats) {
@@ -47,6 +47,26 @@ public class User implements IUser {
     @Override
     public IProfile getProfile() {
         return profile;
+    }
+
+    public void setUserID(int userID) {
+        this.userID = userID;
+    }
+
+    public void setBanned(boolean banned) {
+        this.banned = banned;
+    }
+
+    public void setReports(int reports) {
+        this.reports = reports;
+    }
+
+    public void setChats(List<Integer> chats) {
+        this.chats = chats;
+    }
+
+    public void setProfile(IProfile profile) {
+        this.profile = profile;
     }
 
 }

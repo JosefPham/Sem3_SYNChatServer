@@ -49,4 +49,24 @@ public class ConUser implements IUser {
     public IProfile getProfile() {
         return profile;
     }
+
+    public void setUserID(int userID) {
+        this.userID = userID;
+    }
+
+    public void setBanned(boolean banned) {
+        this.banned = banned;
+    }
+
+    public void setReports(int reports) {
+        this.reports = reports;
+    }
+
+    public void setChats(List<Integer> chats) {
+        this.chats = chats;
+    }
+
+    public void setProfile(IProfile profile) {
+        this.profile = profile;
+    }
 }

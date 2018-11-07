@@ -4,6 +4,7 @@ import Acquaintance.ILogin;
 import Acquaintance.IManagement;
 import Acquaintance.IProfile;
 import Acquaintance.IUser;
+import Acquaintance.Nationality;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,7 +30,12 @@ public class ServerSystem {
         ILogin DBlog = BusinessFacade.getInstance().checkLoginDB(login);
 
         if (DBlog.getLoginvalue() == 2) {
-            onlineUsers.put(DBlog.getUser().getUserID(), (User) DBlog.getUser());
+            User onlineUser = new User(DBlog.getUser().getProfile().getFirstName(), DBlog.getUser().getProfile().getLastName(), DBlog.getUser().getProfile().getNationality(), DBlog.getUser().getProfile().getProfileText());
+            onlineUser.setUserID(DBlog.getUser().getUserID());
+            onlineUser.setReports(DBlog.getUser().getReports());
+            onlineUser.setBanned(DBlog.getUser().isBanned());
+            onlineUser.setChats(DBlog.getUser().getChats());
+            onlineUsers.put(onlineUser.getUserID(), onlineUser);
             // add user to server
             // maybe check stuff? Does the user have any chats?
         }

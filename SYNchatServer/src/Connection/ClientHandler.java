@@ -12,7 +12,6 @@ import Acquaintance.IUser;
 import Acquaintance.IManagement;
 import Acquaintance.IProfile;
 import Acquaintance.Nationality;
-import Business.User;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -112,8 +111,11 @@ public class ClientHandler extends Thread {
 
                 if (obj instanceof IUser) {
                     System.out.println("Det er en User");
-                    IUser user = new User(((IProfile) obj).getFirstName(), ((IProfile) obj).getLastName(), ((IProfile) obj).getNationality());
-                    user.getProfile().setProfileText(((IProfile) obj).getProfileText());
+                    ConUser user = new ConUser(((IProfile) obj).getFirstName(), ((IProfile) obj).getLastName(), ((IProfile) obj).getNationality(), ((IUser) obj).getProfile().getProfileText());
+                    user.setUserID(((IUser) obj).getUserID());
+                    user.setChats(((IUser) obj).getChats());
+                    user.setReports(((IUser) obj).getReports());
+                    user.setBanned(((IUser) obj).isBanned());
                     sendBool(ConnectionFacade.getInstance().updateProfile(user));
                     
                     

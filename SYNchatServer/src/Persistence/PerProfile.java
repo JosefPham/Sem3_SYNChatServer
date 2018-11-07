@@ -5,6 +5,7 @@
  */
 package Persistence;
 
+import Acquaintance.IProfile;
 import Acquaintance.Nationality;
 import Acquaintance.Nationality;
 import javafx.scene.image.Image;
@@ -13,7 +14,7 @@ import javafx.scene.image.Image;
  *
  * @author Alexa
  */
-public class PerProfile {
+public class PerProfile implements IProfile{
     
     String firstName;
     String lastName;

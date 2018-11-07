@@ -61,9 +61,11 @@ public class DatabaseHandler {
                     } catch (PSQLException | NullPointerException ex) {
                     }
                      IUser returnUser = new PerUser(rs.getInt("userID"), rs.getBoolean("banned"), rs.getInt("reportcount"), tmpList);
-*/
+                     */
 
-                    IUser returnUser = new PerUser(rs.getInt("userID"), rs.getBoolean("banned"), rs.getInt("reportcount"), null);
+                    PerUser returnUser = new PerUser(rs.getInt("userID"), rs.getBoolean("banned"), rs.getInt("reportcount"), null);
+                    IProfile returnProfile = getProfile(returnUser.getUserID());
+                    returnUser.setProfile(returnProfile);
                     ILogin tempLog = new Login(2, returnUser);
                     return tempLog;
                 } else {
@@ -80,16 +82,14 @@ public class DatabaseHandler {
         ILogin tempLog = new Login(0, null);
         return tempLog;
     }
-    
-    
-    
-    private IProfile getProfile(int userID){
+
+    private IProfile getProfile(int userID) {
         try (Connection conn = DriverManager.getConnection(url, dbUsername, dbPassword)) {
             IProfile profile = (IProfile) new PerProfile("", "", Nationality.Denmark);
             Class.forName("org.postgresql.Driver");
 
             PreparedStatement st = conn.prepareStatement("Select profiles.firstname, profiles.lastname, profiles.profile_text, profiles.nationality FROM Synchat.profiles WHERE profiles.userid = ?;");
-            st.setString(1, userID+"");
+            st.setInt(1, userID);
             ResultSet rs = st.executeQuery();
             while (rs.next()) {
                 profile.setFirstName(rs.getString("firstname"));
@@ -98,18 +98,19 @@ public class DatabaseHandler {
                 String tmpNationolaty = rs.getString("nationality");
                 profile.setNationality(Nationality.valueOf(tmpNationolaty));
             }
-            
+
         } catch (SQLException ex) {
             Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         return null;
     }
 
-    Boolean createUser(ILogin login) {
-        Boolean createBoolean = false;
+    boolean createUser(ILogin login) {
+        boolean createBoolean = false;
+        boolean createProfileBoolean = false;
         try (Connection conn = DriverManager.getConnection(url, dbUsername, dbPassword)) {
             PreparedStatement st0 = conn.prepareStatement("Select * FROM Synchat.users WHERE users.mail = ?;");
             st0.setString(1, login.gethMail());
@@ -122,10 +123,35 @@ public class DatabaseHandler {
                 st1.executeUpdate();
                 createBoolean = true;
             }
+            createProfileBoolean = createProfile(login);
+
         } catch (SQLException ex) {
             Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return createBoolean;
+        return createBoolean && createProfileBoolean;
+    }
+
+    private boolean createProfile(ILogin login) {
+
+        boolean success = false;
+        try (Connection conn = DriverManager.getConnection(url, dbUsername, dbPassword)) {
+            PreparedStatement st0 = conn.prepareStatement("Select * FROM Synchat.profiles WHERE profiles.userid = ?;");
+            st0.setInt(1, login.getUser().getUserID());
+            ResultSet rs0 = st0.executeQuery();
+            if (!rs0.next()) {
+                PreparedStatement st1 = conn.prepareStatement("INSERT INTO SYNCHAT.profiles (firstname, lastname, nationality) VALUES(?,?,?)");
+                st1.setString(1, login.getUser().getProfile().getFirstName());
+                st1.setString(2, login.getUser().getProfile().getLastName());
+                st1.setString(3, login.getUser().getProfile().getNationality().toString());
+
+                st1.executeUpdate();
+                success = true;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return success;
     }
 
     int verifyPw(int userID, String hashedPw) {
@@ -253,5 +279,3 @@ public class DatabaseHandler {
     }
 
 }
-
-
