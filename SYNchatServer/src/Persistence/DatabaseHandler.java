@@ -123,7 +123,8 @@ public class DatabaseHandler {
                 st1.executeUpdate();
                 createBoolean = true;
             }
-            createProfileBoolean = createProfile(login);
+            int profileID = getUserIDfromDB(login.gethMail());
+            createProfileBoolean = createProfile(login, profileID);
 
         } catch (SQLException ex) {
             Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
@@ -131,7 +132,7 @@ public class DatabaseHandler {
         return createBoolean && createProfileBoolean;
     }
 
-    private boolean createProfile(ILogin login) {
+    private boolean createProfile(ILogin login, int profileID) {
 
         boolean success = false;
         try (Connection conn = DriverManager.getConnection(url, dbUsername, dbPassword)) {
@@ -139,10 +140,11 @@ public class DatabaseHandler {
             st0.setInt(1, login.getUser().getUserID());
             ResultSet rs0 = st0.executeQuery();
             if (!rs0.next()) {
-                PreparedStatement st1 = conn.prepareStatement("INSERT INTO SYNCHAT.profiles (firstname, lastname, nationality) VALUES(?,?,?)");
+                PreparedStatement st1 = conn.prepareStatement("INSERT INTO SYNCHAT.profiles (firstname, lastname, nationality, userid) VALUES(?,?,?,?)");
                 st1.setString(1, login.getUser().getProfile().getFirstName());
                 st1.setString(2, login.getUser().getProfile().getLastName());
                 st1.setString(3, login.getUser().getProfile().getNationality().toString());
+                st1.setInt(4, profileID);
 
                 st1.executeUpdate();
                 success = true;
@@ -152,6 +154,23 @@ public class DatabaseHandler {
         }
 
         return success;
+    }
+
+    private int getUserIDfromDB(String hashedMail) {
+        int userID = -1;
+
+        try (Connection conn = DriverManager.getConnection(url, dbUsername, dbPassword)) {
+            PreparedStatement st0 = conn.prepareStatement("Select * FROM Synchat.users WHERE users.mail = ?;");
+            st0.setString(1, hashedMail);
+            ResultSet rs0 = st0.executeQuery();
+            if (rs0.next()) {
+                userID = rs0.getInt("userid");
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return userID;
     }
 
     int verifyPw(int userID, String hashedPw) {
