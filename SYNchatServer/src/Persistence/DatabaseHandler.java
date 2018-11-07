@@ -1,6 +1,8 @@
 package Persistence;
 
 import Acquaintance.ILogin;
+import Acquaintance.IManagement;
+import Acquaintance.IProfile;
 import Acquaintance.IUser;
 import java.sql.*;
 import java.sql.DriverManager;
@@ -95,4 +97,131 @@ public class DatabaseHandler {
         }
         return createBoolean;
     }
+
+    int verifyPw(int userID, String hashedPw) {
+        int returnstatus = 0;
+
+        try (Connection conn = DriverManager.getConnection(url, dbUsername, dbPassword)) {
+            Class.forName("org.postgresql.Driver");
+
+            PreparedStatement st = conn.prepareStatement("SELECT users.password FROM SYNchat.users WHERE users.userid = ?;");
+            st.setString(1, (userID + ""));
+
+            ResultSet rs = st.executeQuery();
+            if (rs.next()) {
+                if (rs.getString("password").equals(hashedPw.toString())) {
+                    //if passwords match retur 1 for success.
+                    returnstatus = 1;
+                } else if (!rs.getString("password").equals(hashedPw.toString())) {
+                    returnstatus = 3;
+                } else {
+                    returnstatus = 2;
+                }
+            }
+
+        } catch (SQLException | ClassNotFoundException ex) {
+            Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        //If password is incorrect retur 2 for error
+        return returnstatus;
+
+        //Return 1 = success;
+        //return 2 = unknown error with verifcation;
+        //return 3 = Password does no match and access is denied;
+    }
+
+    int changePw(IManagement management) {
+        int passwordverification = verifyPw(management.getUserID(), management.getPw());
+        int returnstatus = 2;
+
+        switch (passwordverification) {
+            case 1:
+                //password success, edit database entries
+                try (Connection conn = DriverManager.getConnection(url, dbUsername, dbPassword)) {
+                    Class.forName("org.postgresql.Driver");
+
+                    PreparedStatement st = conn.prepareStatement("UPDATE SYNchat.users SET password = ? WHERE users.userid = ?;");
+                    st.setString(1, management.getString1());
+                    st.setString(2, (management.getUserID() + ""));
+
+                    st.executeUpdate();
+                    //success retrun 1.
+                    returnstatus = 1;
+
+                } catch (SQLException | ClassNotFoundException ex) {
+                    Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                break;
+            case 2:
+                //password verification failed
+                returnstatus = 4;
+                break;
+            case 3:
+                //Passwords did not match
+                returnstatus = 3;
+                break;
+            default:
+                returnstatus = 2;
+        }
+
+        return returnstatus;
+    }
+
+    int changeMail(IManagement management) {
+        int passwordverification = verifyPw(management.getUserID(), management.getPw());
+        int returnStatus = 2;
+
+        switch (passwordverification) {
+            case 1:
+                //password success, edit database entries
+                try (Connection conn = DriverManager.getConnection(url, dbUsername, dbPassword)) {
+                    Class.forName("org.postgresql.Driver");
+
+                    PreparedStatement st = conn.prepareStatement("UPDATE SYNchat.users SET mail = ? WHERE users.userid = ?;");
+                    st.setString(1, management.getString1());
+                    st.setString(2, (management.getUserID() + ""));
+
+                    st.executeUpdate();
+                    //success return 1.
+                    returnStatus = 1;
+
+                } catch (SQLException | ClassNotFoundException ex) {
+                    Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                break;
+            case 2:
+                //password verification faliure
+                returnStatus = 4;
+                break;
+            case 3:
+                //passwords did not match
+                returnStatus = 3;
+                break;
+            default:
+                returnStatus = 2;
+        }
+        return returnStatus;
+    }
+
+    boolean alterProfile(IUser user) {
+        Boolean updateBoolean = false;
+        try (Connection conn = DriverManager.getConnection(url, dbUsername, dbPassword)) {
+            Class.forName("org.postgresql.Driver");
+            PreparedStatement st0 = conn.prepareStatement("UPDATE synchat.profiles SET firstname = '?', lastname = '?', nationality = '?', profiletext = '?' WHERE synchat.userid = ?;");
+            st0.setString(1, user.getProfile().getFirstName());
+            st0.setString(2, user.getProfile().getLastName());
+            st0.setString(3, user.getProfile().getNationality().toString());
+            st0.setString(4, user.getProfile().getProfileText());
+            st0.setString(5, (user.getUserID() + ""));
+
+            st0.executeUpdate();
+            updateBoolean = true;
+        } catch (SQLException | ClassNotFoundException ex) {
+            Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return updateBoolean;
+    }
+
+}
+
 }

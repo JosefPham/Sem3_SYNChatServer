@@ -2,7 +2,9 @@ package Business;
 
 import Acquaintance.IBusiness;
 import Acquaintance.ILogin;
+import Acquaintance.IManagement;
 import Acquaintance.IPersistence;
+import Acquaintance.IProfile;
 import Acquaintance.IUser;
 
 public class BusinessFacade implements IBusiness {
@@ -68,6 +70,31 @@ public class BusinessFacade implements IBusiness {
     @Override
     public Boolean createUser(ILogin login) {
         return persistence.createUser(login);
+    }
+    
+    @Override
+    public int changeInfo(IManagement management) {
+        return serversys.changeInfo(management);
+    }
+    
+    @Override
+    public boolean updateProfile(IUser user) {
+        return serversys.updateProfile(user);
+    }
+    
+    @Override
+    public boolean alterProfile(IUser user) {
+        return persistence.alterProfile(user);
+    }
+    
+    @Override
+    public int updateMailSQL(IManagement management) {
+        return persistence.changeMail(management);
+    }
+    
+    @Override
+    public int updatePwSQL(IManagement management) {
+        return persistence.changePw(management);
     }
 
 }

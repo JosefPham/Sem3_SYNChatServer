@@ -25,11 +25,6 @@ public class PerUser implements IUser {
     }
 
     @Override
-    public String getTmpName() {
-        return tmpName;
-    }
-
-    @Override
     public boolean isBanned() {
         return banned;
     }
