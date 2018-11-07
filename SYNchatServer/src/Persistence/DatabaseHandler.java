@@ -82,8 +82,7 @@ public class DatabaseHandler {
     
     private IProfile getProfile(int userID){
         try (Connection conn = DriverManager.getConnection(url, dbUsername, dbPassword)) {
-            IProfile profile = (IProfile) new PerProfile("", "", "");
-            
+            IProfile profile = (IProfile) new PerProfile("", "", Nationality.Denmark);
             Class.forName("org.postgresql.Driver");
 
             PreparedStatement st = conn.prepareStatement("Select profiles.firstname, profiles.lastname, profiles.profile_text, profiles.nationality FROM Synchat.profiles WHERE profiles.userid = ?;");
@@ -93,7 +92,8 @@ public class DatabaseHandler {
                 profile.setFirstName(rs.getString("firstname"));
                 profile.setLastName(rs.getString("lastname"));
                 profile.setProfileText(rs.getString("profiletext"));
-                profile.setNationality(rs.getString("nationality"));
+                String tmpNationolaty = rs.getString("nationality");
+                profile.setNationality(Nationality.valueOf(tmpNationolaty));
             }
             
         } catch (SQLException ex) {

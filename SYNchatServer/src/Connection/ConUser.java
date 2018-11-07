@@ -13,7 +13,7 @@ public class ConUser implements IUser {
     private List<Integer> chats;
     private ConProfile profile;
 
-    public ConUser(String firstName, String lastName, String nationality) {
+    public ConUser(String firstName, String lastName, Nationality nationality) {
        this.profile = new ConProfile(firstName, lastName, nationality);
     }
 

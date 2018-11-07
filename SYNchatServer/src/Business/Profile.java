@@ -16,17 +16,17 @@ public class Profile {
     
     String firstName;
     String lastName;
-    String nationality;
+    Nationality nationality;
     Image picture; //Watch out for the datatype!
     String profileText;
 
-    public Profile(String firstName, String lastName, String nationality) {
+    public Profile(String firstName, String lastName, Nationality nationality) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.nationality = nationality;
     }
     
-    public Profile(String firstName, String lastName, String nationality, String profileText) {
+    public Profile(String firstName, String lastName, Nationality nationality, String profileText) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.nationality = nationality;
@@ -41,7 +41,7 @@ public class Profile {
         this.lastName = lastName;
     }
 
-    public void setNationality(String nationality) {
+    public void setNationality(Nationality nationality) {
         this.nationality = nationality;
     }
 
@@ -57,7 +57,7 @@ public class Profile {
         return lastName;
     }
 
-    public String getNationality() {
+    public Nationality getNationality() {
         return nationality;
     }
 

@@ -13,7 +13,7 @@ public class User implements IUser {
     private List<Integer> chats;
     private IProfile profile;
 
-    public User(String firstName, String lastName, String nationality) {
+    public User(String firstName, String lastName, Nationality nationality) {
         new Profile(firstName, lastName, nationality);
     }
 
