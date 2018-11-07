@@ -416,12 +416,18 @@ public class DatabaseHandler {
     IPrivateChat addToPrivateChat(IPrivateChat prichat) {
         try (Connection conn = DriverManager.getConnection(url, dbUsername, dbPassword)) {
             
-            // add to existing chat entry in db
+            int msgIndex = prichat.getCh().getMsgList().size()-1;
+            Timestamp time = Timestamp.from(prichat.getCh().getMsgList().get(msgIndex).getTimestamp());
             
+            // add to existing chat entry in db
+            PreparedStatement st0 = conn.prepareStatement("INSERT INTO synchat.chatmessages (chatid, message, timestamp, senderid) VALUES(?,?,?,?)");
+            st0.setInt(1, prichat.getChatID());
+            st0.setString(2, prichat.getCh().getMsgList().get(msgIndex).getContext());
+            st0.setTimestamp(3, time);
+            st0.setInt(4, prichat.getCh().getMsgList().get(msgIndex).getSenderID());
         
             
             IPrivateChat newchat = loadPrivateChat(prichat.getChatID());
-            
             return newchat;
         
         } catch (SQLException ex) {
