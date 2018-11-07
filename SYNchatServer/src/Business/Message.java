@@ -3,6 +3,7 @@ package Business;
 import Acquaintance.IMessage;
 import java.io.Serializable;
 import java.time.Instant;
+import java.sql.Timestamp;
 import java.util.Date;
 
 /**
@@ -17,6 +18,11 @@ public abstract class Message implements Serializable, IMessage {
     public Message(int senderID) {
         this.senderID = senderID;
         timestamp = Instant.now();
+    }
+    
+    @Override
+    public void updateTimestamp() {
+        this.timestamp = Instant.now();
     }
 
     @Override

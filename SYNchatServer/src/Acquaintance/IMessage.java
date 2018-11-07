@@ -14,4 +14,6 @@ public interface IMessage {
     Instant getTimestamp();
     
     String getContext();
+    
+    void updateTimestamp();
 }

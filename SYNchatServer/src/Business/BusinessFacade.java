@@ -104,7 +104,11 @@ public class BusinessFacade implements IBusiness {
     }
 
     IPrivateChat createNewPrivateChat(IPrivateChat prichat) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Not supported yet."); // create new chat entry in db
+    }
+
+    IPrivateChat addToPrivateChat(IPrivateChat prichat) {
+        throw new UnsupportedOperationException("Not supported yet."); // add new message to existing chat in db
     }
 
    
