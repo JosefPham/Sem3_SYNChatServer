@@ -11,7 +11,7 @@ import java.util.Map;
 public class ServerSystem {
 
     private static ServerSystem instance = null;
-    private static Map<Integer, User> onlineUsers;
+    private  Map<Integer, User> onlineUsers;
 
     private ServerSystem() {
         onlineUsers = new HashMap();
@@ -74,6 +74,14 @@ public class ServerSystem {
         
         return false;
         
+    }
+    
+    User getUser(int userID){
+        return onlineUsers.get(userID);
+    }
+
+     Map<Integer, User> getOnlineUsers() {
+        return onlineUsers;
     }
     
     

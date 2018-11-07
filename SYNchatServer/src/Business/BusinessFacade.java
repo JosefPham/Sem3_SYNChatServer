@@ -4,6 +4,7 @@ import Acquaintance.IBusiness;
 import Acquaintance.ILogin;
 import Acquaintance.IManagement;
 import Acquaintance.IPersistence;
+import Acquaintance.IPrivateChat;
 import Acquaintance.IProfile;
 import Acquaintance.IUser;
 
@@ -96,5 +97,16 @@ public class BusinessFacade implements IBusiness {
     public int updatePwSQL(IManagement management) {
         return persistence.changePw(management);
     }
+
+    @Override
+    public IPrivateChat handlerPrivateChat(IPrivateChat conPrivateChat) {
+        return serversys.getUser(conPrivateChat.getCh().getMsgList().get(0).getSenderID()).handlePrivateChat(conPrivateChat);
+    }
+
+    IPrivateChat createNewPrivateChat(IPrivateChat prichat) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+   
 
 }

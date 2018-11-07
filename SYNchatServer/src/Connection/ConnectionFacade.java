@@ -4,6 +4,7 @@ import Acquaintance.IBusiness;
 import Acquaintance.IConnection;
 import Acquaintance.ILogin;
 import Acquaintance.IManagement;
+import Acquaintance.IPrivateChat;
 import Acquaintance.IProfile;
 import Acquaintance.IUser;
 
@@ -72,5 +73,9 @@ public class ConnectionFacade implements IConnection {
     @Override
     public boolean updateProfile(IUser user) {
         return business.updateProfile(user);
+    }
+    
+    IPrivateChat handlePrivateChat(IPrivateChat conPrivateChat) {
+        return business.handlerPrivateChat(conPrivateChat);
     }
 }
