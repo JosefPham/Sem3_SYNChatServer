@@ -39,65 +39,97 @@ public class DatabaseHandler {
     }
      */
     ILogin Login(ILogin login) {
+        //User only for initializing purposes
+        PerUser user = new PerUser(-1, true, -1, null);
+
+        List<Integer> tmpList = new ArrayList<Integer>();
+
+     //  int userid = -1;
+        String password = "";
+        int countChats = -1;
 
         try (Connection conn = DriverManager.getConnection(url, dbUsername, dbPassword)) {
             Class.forName("org.postgresql.Driver");
 
-            PreparedStatement st = conn.prepareStatement("Select * FROM Synchat.users WHERE users.mail = ?;");
-            st.setString(1, login.gethMail());
+            PreparedStatement st1 = conn.prepareStatement("SELECT users.userid, users.password FROM synchat.users WHERE users.mail = ?;");
+            st1.setString(1, login.gethMail());
 
-            ResultSet rs = st.executeQuery();
-            while (rs.next()) {
-                if (login.gethPW().equals(rs.getString("password"))) {
-                    // for converting sqlarray to int List
-                    /*
-                    List<Integer> tmpList = new ArrayList<>();
-                    Array chats = rs.getArray("chats");
-                    try {
-                        Integer[] intChats = (Integer[]) chats.getArray();
-                        for (int i = 0; i < intChats.length; i++) {
-                            tmpList.add(intChats[i]);
-                        }
-                    } catch (PSQLException | NullPointerException ex) {
-                    }
-                     IUser returnUser = new PerUser(rs.getInt("userID"), rs.getBoolean("banned"), rs.getInt("reportcount"), tmpList);
-                     */
+            ResultSet rs1 = st1.executeQuery();
+            while (rs1.next()) {
+                user.setUserID(rs1.getInt("userid"));
+                password = rs1.getString("password");
+                
+            }
+            if (login.gethPW().equals(password)) {
+                PreparedStatement st2 = conn.prepareStatement("SELECT * FROM synchat.users "
+                        + "WHERE users.userid = ?;");
 
-                    PerUser returnUser = new PerUser(rs.getInt("userID"), rs.getBoolean("banned"), rs.getInt("reportcount"), null);
-                    IProfile returnProfile = getProfile(returnUser.getUserID());
-                    returnUser.setProfile(returnProfile);
-                    ILogin tempLog = new Login(2, returnUser);
-                    return tempLog;
-                } else {
-                    ILogin tempLog = new Login(1, null);
-                    return tempLog;
+                
+                
+                //   st2.setString(1, login.gethMail());
+                st2.setInt(1, user.getUserID());
+
+                ResultSet rs2 = st2.executeQuery();
+                while (rs2.next()) {
+
+                    user.setBanned(rs2.getBoolean("banned"));
+                    user.setReports(rs2.getInt("reportcount"));
+                    user.setUserID(rs2.getInt("userid"));
                 }
 
+                PreparedStatement st3 = conn.prepareStatement("SELECT userchats.chatid FROM synchat.userchats WHERE userchats.userid = ?;");
+
+                st3.setInt(1, user.getUserID());
+                ResultSet rs3 = st3.executeQuery();
+                
+                    while (rs3.next()) {
+                        tmpList.add(rs3.getInt("chatid"));
+                    }
+                    user.setChats(tmpList);
+                    System.out.println("users userID: " + user.getUserID());
+                    login.setUser(user);
+                
+                    
+                    IProfile returnProfile = getProfile(user.getUserID());
+                    user.setProfile(returnProfile);
+                   // ILogin tempLog = new Login(2, returnUser);
+                    login.setLoginvalue(2);
+                    System.out.println("About to return login with: " + login.getUser().getUserID());
+                    return login;
+                
+
+            } else {
+
+                login.setLoginvalue(1);
+                return login;
             }
 
         } catch (SQLException | ClassNotFoundException ex) {
             Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        ILogin tempLog = new Login(0, null);
-        return tempLog;
+        login.setLoginvalue(0);
+        return login;
     }
 
     private IProfile getProfile(int userID) {
+        
+        
         try (Connection conn = DriverManager.getConnection(url, dbUsername, dbPassword)) {
             IProfile profile = (IProfile) new PerProfile("", "", Nationality.Denmark);
             Class.forName("org.postgresql.Driver");
 
-            PreparedStatement st = conn.prepareStatement("Select profiles.firstname, profiles.lastname, profiles.profile_text, profiles.nationality FROM Synchat.profiles WHERE profiles.userid = ?;");
+            PreparedStatement st = conn.prepareStatement("Select profiles.firstname, profiles.lastname, profiles.profile_text, profiles.nationality FROM synchat.profiles WHERE profiles.userid = ?;");
             st.setInt(1, userID);
             ResultSet rs = st.executeQuery();
             while (rs.next()) {
                 profile.setFirstName(rs.getString("firstname"));
                 profile.setLastName(rs.getString("lastname"));
-                profile.setProfileText(rs.getString("profiletext"));
+                profile.setProfileText(rs.getString("profile_text"));
                 String tmpNationolaty = rs.getString("nationality");
                 profile.setNationality(Nationality.valueOf(tmpNationolaty));
             }
+            return profile;
 
         } catch (SQLException ex) {
             Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
@@ -140,11 +172,12 @@ public class DatabaseHandler {
             st0.setInt(1, login.getUser().getUserID());
             ResultSet rs0 = st0.executeQuery();
             if (!rs0.next()) {
-                PreparedStatement st1 = conn.prepareStatement("INSERT INTO SYNCHAT.profiles (firstname, lastname, nationality, userid) VALUES(?,?,?,?)");
+                PreparedStatement st1 = conn.prepareStatement("INSERT INTO SYNCHAT.profiles (firstname, lastname, nationality, userid, profile_text) VALUES(?,?,?,?,?)");
                 st1.setString(1, login.getUser().getProfile().getFirstName());
                 st1.setString(2, login.getUser().getProfile().getLastName());
                 st1.setString(3, login.getUser().getProfile().getNationality().toString());
                 st1.setInt(4, profileID);
+                st1.setString(5, "");
 
                 st1.executeUpdate();
                 success = true;

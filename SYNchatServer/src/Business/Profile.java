@@ -5,6 +5,7 @@
  */
 package Business;
 
+import Acquaintance.IProfile;
 import Acquaintance.Nationality;
 import javafx.scene.image.Image;
 
@@ -12,7 +13,7 @@ import javafx.scene.image.Image;
  *
  * @author Alexa
  */
-public class Profile {
+public class Profile implements IProfile {
     
     String firstName;
     String lastName;

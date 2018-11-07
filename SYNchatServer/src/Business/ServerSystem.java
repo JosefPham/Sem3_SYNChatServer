@@ -30,8 +30,11 @@ public class ServerSystem {
         ILogin DBlog = BusinessFacade.getInstance().checkLoginDB(login);
 
         if (DBlog.getLoginvalue() == 2) {
+            System.out.println("DBlog: " + DBlog);
+            System.out.println(DBlog.getUser().getUserID());
             User onlineUser = new User(DBlog.getUser().getProfile().getFirstName(), DBlog.getUser().getProfile().getLastName(), DBlog.getUser().getProfile().getNationality(), DBlog.getUser().getProfile().getProfileText());
             onlineUser.setUserID(DBlog.getUser().getUserID());
+            onlineUser.setProfile(DBlog.getUser().getProfile());
             onlineUser.setReports(DBlog.getUser().getReports());
             onlineUser.setBanned(DBlog.getUser().isBanned());
             onlineUser.setChats(DBlog.getUser().getChats());

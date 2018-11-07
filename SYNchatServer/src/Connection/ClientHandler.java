@@ -31,7 +31,7 @@ public class ClientHandler extends Thread {
     ObjectInputStream input;
     ObjectOutputStream output;
 
-    Integer userID = 5;
+    Integer userID = -1;
 
     public static HashMap<Integer, ClientHandler> clients = new HashMap<Integer, ClientHandler>();
 
@@ -163,7 +163,7 @@ public class ClientHandler extends Thread {
 
                 if (l != null) {
                     if (l.getLoginvalue() == 2) {
-                        clients.put(userID, this);
+                        clients.put(l.getUser().getUserID(), this);
                         readStream();
                         l = null;
                     }
