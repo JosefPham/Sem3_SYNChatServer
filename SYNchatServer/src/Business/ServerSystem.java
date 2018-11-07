@@ -3,6 +3,7 @@ package Business;
 import Acquaintance.ILogin;
 import Acquaintance.IManagement;
 import Acquaintance.IProfile;
+import Acquaintance.IUser;
 
 public class ServerSystem {
 
@@ -44,8 +45,8 @@ public class ServerSystem {
         return returnstatus;
     }
 
-    protected boolean updateProfile(IProfile profile) {
-        return BusinessFacade.getInstance().alterProfile(profile);
+    protected boolean updateProfile(IUser user) {
+        return BusinessFacade.getInstance().alterProfile(user);
     }
 
 }

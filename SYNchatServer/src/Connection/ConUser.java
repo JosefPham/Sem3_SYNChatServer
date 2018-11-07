@@ -18,12 +18,15 @@ public class ConUser implements IUser {
         new Profile(firstName, lastName, nationality);
     }
 
-    public ConUser(int userID, boolean banned, int reports, List<Integer> chats) {
+    public ConUser(int userID, boolean banned, int reports, List<Integer> chats, IProfile profile) {
         this.userID = userID;
         this.banned = banned;
         this.reports = reports;
         this.chats = chats;
+        this.profile = profile;
     }
+
+    
 
     @Override
     public int getUserID() {
@@ -44,5 +47,11 @@ public class ConUser implements IUser {
     public List<Integer> getChats() {
         return chats;
     }
+
+    public IProfile getProfile() {
+        return profile;
+    }
+    
+    
 
 }

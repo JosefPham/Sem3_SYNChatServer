@@ -78,13 +78,13 @@ public class BusinessFacade implements IBusiness {
     }
     
     @Override
-    public boolean updateProfile(IProfile profile) {
-        return serversys.updateProfile(profile);
+    public boolean updateProfile(IUser user) {
+        return serversys.updateProfile(user);
     }
     
     @Override
-    public boolean alterProfile(IProfile profile) {
-        return persistence.alterProfile(profile);
+    public boolean alterProfile(IUser user) {
+        return persistence.alterProfile(user);
     }
     
     @Override

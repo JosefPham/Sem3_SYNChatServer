@@ -8,6 +8,7 @@ package Connection;
 import Acquaintance.ILogin;
 import Acquaintance.IManagement;
 import Acquaintance.IProfile;
+import Acquaintance.IUser;
 import Acquaintance.Nationality;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -131,10 +132,10 @@ public class ClientHandler extends Thread {
                                 System.out.println("Det er en Management");
                                 IManagement management = new ConManagement(((IManagement) o).getAction(), ((IManagement) o).getUserID(), ((IManagement) o).getPw(), ((IManagement) o).getString1());
                                 sendChangeInfoUpdate(ConnectionFacade.getInstance().changeInfo(management));
-                            } else if (o instanceof IProfile) {
-                                System.out.println("Det er en Profile");
-                                IProfile profile = new ConProfile(((IProfile) o).getFirstName(), ((IProfile) o).getLastName(), ((IProfile) o).getNationality(), ((IProfile) o).getProfileText());
-                                sendBoolReturn(ConnectionFacade.getInstance().updateProfile(profile));
+                            } else if (o instanceof IUser) {
+                                System.out.println("Det er en User");
+                                IUser user = new ConUser(((IUser) o).getUserID(), ((IUser) o).isBanned(), ((IUser) o).getReports(), ((IUser) o).getChats(), ((IUser) o).getProfile());
+                                sendBoolReturn(ConnectionFacade.getInstance().updateProfile(user));
                             } 
                             else if (o instanceof String) {
                                 String msg = (String) o;

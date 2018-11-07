@@ -10,6 +10,6 @@ public interface IConnection {
     
     public int changeInfo(IManagement management);
     
-    public boolean updateProfile(IProfile profile);
+    public boolean updateProfile(IUser user);
 
 }

@@ -203,16 +203,16 @@ public class DatabaseHandler {
         return returnStatus;
     }
 
-    boolean alterProfile(IProfile profile) {
+    boolean alterProfile(IUser user) {
         Boolean updateBoolean = false;
         try (Connection conn = DriverManager.getConnection(url, dbUsername, dbPassword)) {
             Class.forName("org.postgresql.Driver");
             PreparedStatement st0 = conn.prepareStatement("UPDATE synchat.profiles SET firstname = '?', lastname = '?', nationality = '?', profiletext = '?' WHERE synchat.userid = ?;");
-            st0.setString(1, profile.getFirstName());
-            st0.setString(2, profile.getLastName());
-            st0.setString(3, profile.getNationality().toString());
-            st0.setString(4, profile.getProfileText());
-            st0.setString(5, profile.getSomethingThatCanIdentifyTheUser());
+            st0.setString(1, user.getProfile().getFirstName());
+            st0.setString(2, user.getProfile().getLastName());
+            st0.setString(3, user.getProfile().getNationality().toString());
+            st0.setString(4, user.getProfile().getProfileText());
+            st0.setString(5, (user.getUserID() + ""));
 
             st0.executeUpdate();
             updateBoolean = true;

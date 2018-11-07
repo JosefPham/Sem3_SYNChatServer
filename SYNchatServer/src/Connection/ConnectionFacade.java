@@ -47,7 +47,7 @@ public class ConnectionFacade implements IConnection {
     public ILogin checkLogin(ILogin login) {
         ILogin l = business.checkLogin(login);
         if(l.getLoginvalue() == 2){
-        IUser retUser = new ConUser(l.getUser().getUserID(), l.getUser().isBanned(), l.getUser().getReports(), l.getUser().getChats());
+        IUser retUser = new ConUser(l.getUser().getUserID(), l.getUser().isBanned(), l.getUser().getReports(), l.getUser().getChats(), l.getUser().getProfile());
         ILogin log = new ConLogin(l.gethMail(), l.gethPW(), l.getLoginvalue(), retUser);  
          return log;
         }
@@ -70,7 +70,7 @@ public class ConnectionFacade implements IConnection {
     }
     
     @Override
-    public boolean updateProfile(IProfile profile) {
-        return business.updateProfile(profile);
+    public boolean updateProfile(IUser user) {
+        return business.updateProfile(user);
     }
 }

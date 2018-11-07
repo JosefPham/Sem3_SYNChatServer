@@ -10,6 +10,6 @@ public interface IPersistence {
     
     public int changePw(IManagement management);
     
-    public boolean alterProfile(IProfile profile);
+    public boolean alterProfile(IUser user);
     
 }
