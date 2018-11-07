@@ -352,7 +352,7 @@ public class DatabaseHandler {
             
             
             // creating new (updated) IPrivateChat for the return
-            IPrivateChat newchat = loadPrivateChat(chatID);
+            IPrivateChat newchat = loadPrivateChat(chatID, 1);
             return newchat;
             
         } catch (SQLException ex) {
@@ -362,11 +362,17 @@ public class DatabaseHandler {
         return null;
     }
     
-    IPrivateChat loadPrivateChat(int chatID) {
+    /**
+     * chatID for the wanted chat, loadMsgCount for amount of messages loaded (I believe loadMsgCount can be higher than amount of messages in chat, with no errors)
+     * @param chatID
+     * @param loadMsgCount
+     * @return 
+     */
+    IPrivateChat loadPrivateChat(int chatID, int loadMsgCount) {
         try (Connection conn = DriverManager.getConnection(url, dbUsername, dbPassword)) {
             
             // all the variables needed to create IPrivateChat (including IMessages and IChatHistory)
-            int msgLoadedCount = 10; // this decides how many messages are loaded at a time
+            int msgLoadedCount = loadMsgCount;
             List<Integer> userIDs = new ArrayList<>();
             String name = "";
             List<IMessage> msgList = new ArrayList<>();
@@ -375,6 +381,7 @@ public class DatabaseHandler {
             String text;
             
             
+            // **** denne skal laves om - sortér messages efter timestamp, og indlæs det øverste antal baseret på loadMsgCount
             PreparedStatement st3 = conn.prepareStatement("SELECT * FROM SYNCHAT.chatmessages WHERE chatid = ?");
             st3.setInt(1, chatID);
             
@@ -439,7 +446,7 @@ public class DatabaseHandler {
         
             st0.executeUpdate();
             
-            IPrivateChat newchat = loadPrivateChat(prichat.getChatID());
+            IPrivateChat newchat = loadPrivateChat(prichat.getChatID(), 1);         // I think loadMsgCount is always 1 in this case, depending on implementation of other layers?
             return newchat;
         
         } catch (SQLException ex) {
