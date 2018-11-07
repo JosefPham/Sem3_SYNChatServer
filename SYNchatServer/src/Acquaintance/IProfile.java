@@ -3,13 +3,16 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+
 package Acquaintance;
 
+import java.io.Serializable;
+
+
 /**
- *
- * @author Alexa
+ * @author Group 9
  */
-public interface IProfile {
+public interface IProfile extends Serializable {
     
     public void setFirstName(String firstName);
     
@@ -26,4 +29,5 @@ public interface IProfile {
     public Nationality getNationality();
 
     public String getProfileText();
+    
 }

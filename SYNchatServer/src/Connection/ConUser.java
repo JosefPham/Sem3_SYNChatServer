@@ -11,10 +11,10 @@ public class ConUser implements IUser {
     private boolean banned; // a flag for if the user is banned
     private int reports;    // the amount of reprts a user have recived
     private List<Integer> chats;
-    private ConProfile profile;
+    private IProfile profile;
 
-    public ConUser(String firstName, String lastName, Nationality nationality) {
-       this.profile = new ConProfile(firstName, lastName, nationality);
+    public ConUser(String firstName, String lastName, Nationality nationality, String profileText) {
+        profile = new ConProfile(firstName, lastName, nationality, "");
     }
 
     public ConUser(int userID, boolean banned, int reports, List<Integer> chats, IProfile profile) {
@@ -22,11 +22,8 @@ public class ConUser implements IUser {
         this.banned = banned;
         this.reports = reports;
         this.chats = chats;
-        this.profile = (ConProfile) profile;
-        
+        this.profile = profile;
     }
-
-    
 
     @Override
     public int getUserID() {
@@ -48,10 +45,8 @@ public class ConUser implements IUser {
         return chats;
     }
 
+    @Override
     public IProfile getProfile() {
         return profile;
     }
-    
-    
-
 }

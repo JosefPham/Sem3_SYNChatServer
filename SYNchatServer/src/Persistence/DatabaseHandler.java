@@ -50,6 +50,7 @@ public class DatabaseHandler {
             while (rs.next()) {
                 if (login.gethPW().equals(rs.getString("password"))) {
                     // for converting sqlarray to int List
+                    /*
                     List<Integer> tmpList = new ArrayList<>();
                     Array chats = rs.getArray("chats");
                     try {
@@ -59,8 +60,10 @@ public class DatabaseHandler {
                         }
                     } catch (PSQLException | NullPointerException ex) {
                     }
+                     IUser returnUser = new PerUser(rs.getInt("userID"), rs.getBoolean("banned"), rs.getInt("reportcount"), tmpList);
+*/
 
-                    IUser returnUser = new PerUser(rs.getInt("userID"), rs.getBoolean("banned"), rs.getInt("reportcount"), tmpList);
+                    IUser returnUser = new PerUser(rs.getInt("userID"), rs.getBoolean("banned"), rs.getInt("reportcount"), null);
                     ILogin tempLog = new Login(2, returnUser);
                     return tempLog;
                 } else {
