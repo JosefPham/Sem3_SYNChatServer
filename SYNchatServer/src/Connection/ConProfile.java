@@ -17,17 +17,17 @@ public class ConProfile implements IProfile {
     
     String firstName;
     String lastName;
-    Nationality nationality;
+    String nationality;
     Image picture; //Watch out for the datatype!
     String profileText;
 
-    public ConProfile(String firstName, String lastName, Nationality nationality) {
+    public ConProfile(String firstName, String lastName, String nationality) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.nationality = nationality;
     }
     
-    public ConProfile(String firstName, String lastName, Nationality nationality, String profileText) {
+    public ConProfile(String firstName, String lastName, String nationality, String profileText) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.nationality = nationality;
@@ -42,7 +42,7 @@ public class ConProfile implements IProfile {
         this.lastName = lastName;
     }
 
-    public void setNationality(Nationality nationality) {
+    public void setNationality(String nationality) {
         this.nationality = nationality;
     }
 
@@ -58,7 +58,7 @@ public class ConProfile implements IProfile {
         return lastName;
     }
 
-    public Nationality getNationality() {
+    public String getNationality() {
         return nationality;
     }
 

@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Business;
+package Persistence;
 
+import Acquaintance.Nationality;
 import Acquaintance.Nationality;
 import javafx.scene.image.Image;
 
@@ -12,7 +13,7 @@ import javafx.scene.image.Image;
  *
  * @author Alexa
  */
-public class Profile {
+public class PerProfile {
     
     String firstName;
     String lastName;
@@ -20,13 +21,13 @@ public class Profile {
     Image picture; //Watch out for the datatype!
     String profileText;
 
-    public Profile(String firstName, String lastName, String nationality) {
+    public PerProfile(String firstName, String lastName, String nationality) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.nationality = nationality;
     }
     
-    public Profile(String firstName, String lastName, String nationality, String profileText) {
+    public PerProfile(String firstName, String lastName, String nationality, String profileText) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.nationality = nationality;

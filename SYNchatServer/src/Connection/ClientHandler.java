@@ -8,11 +8,12 @@ package Connection;
 import Acquaintance.ILogin;
 import Acquaintance.IMessage;
 import Acquaintance.IUser;
-/*
+
 import Acquaintance.IManagement;
 import Acquaintance.IProfile;
 import Acquaintance.Nationality;
-*/
+import Business.User;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -31,9 +32,9 @@ public class ClientHandler extends Thread {
     ObjectInputStream input;
     ObjectOutputStream output;
 
-    String userName = "";
+    Integer userID = 5;
 
-    public static HashMap<String, ClientHandler> clients = new HashMap<String, ClientHandler>();
+    public static HashMap<Integer, ClientHandler> clients = new HashMap<Integer, ClientHandler>();
 
     public ClientHandler(Socket s) {
         try {
@@ -58,19 +59,8 @@ public class ClientHandler extends Thread {
     }
 
     
-    // skal fjernes
-    public void sendCreateUser(Boolean b) {
-        try {
-            output.writeObject(b);
-            System.out.println("Sendte en boolean");
-        } catch (IOException ex) {
-            Logger.getLogger(ClientHandler.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-    // fjern /\
     
-    
-        public void sendBoolReturn(Boolean b) {
+        public void sendBool(Boolean b) {
         try {
             output.writeObject(b);
             System.out.println("Sendte en boolean");
@@ -81,7 +71,7 @@ public class ClientHandler extends Thread {
         
         
         
-        public void sendChangeInfoUpdate(int value) {
+        public void sendInt(int value) {
         try {
             output.writeObject(value);
             System.out.println("Sendte en int");
@@ -106,8 +96,7 @@ public class ClientHandler extends Thread {
             } else {
                 Boolean b = ConnectionFacade.getInstance().createUser((ILogin) obj);
                 System.out.println("Sender: " + b);
-                this.userName = ((ILogin) obj).getUser().getTmpName();
-                sendCreateUser(b);
+                sendBool(b);
             }
         }
 
@@ -123,6 +112,11 @@ public class ClientHandler extends Thread {
 
                 if (obj instanceof IUser) {
                     System.out.println("Det er en User");
+                    IUser user = new User(((IProfile) obj).getFirstName(), ((IProfile) obj).getLastName(), ((IProfile) obj).getNationality());
+                    user.getProfile().setProfileText(((IProfile) obj).getProfileText());
+                    sendBool(ConnectionFacade.getInstance().updateProfile(user));
+                    
+                    
                 } else if (obj instanceof IMessage) {
                     ConMessage msg = new ConTextMessage(((IMessage) obj).getSenderID(), ((IMessage) obj).getContext());
                     
@@ -133,18 +127,11 @@ public class ClientHandler extends Thread {
                     } else {
                         sendPublicMessage(msg);
                     }
-
                 }
-                /*
                 else if(obj instanceof IManagement){
-                    IManagement management = new ConManagement(((IManagement) o).getAction(), ((IManagement) o).getUserID(), ((IManagement) o).getPw(), ((IManagement) o).getString1());
-                    sendChangeInfoUpdate(ConnectionFacade.getInstance().changeInfo(management));
+                    IManagement management = new ConManagement(((IManagement) obj).getAction(), ((IManagement) obj).getUserID(), ((IManagement) obj).getPw(), ((IManagement) obj).getString1());
+                    sendInt(ConnectionFacade.getInstance().changeInfo(management));
                 }
-                else if(obj instanceof IProfile){
-                    IProfile profile = new ConProfile(((IProfile) o).getFirstName(), ((IProfile) o).getLastName(), ((IProfile) o).getNationality(), ((IProfile) o).getProfileText());
-                    sendBoolReturn(ConnectionFacade.getInstance().updateProfile(profile));
-                }
-                */
             } catch (IOException ex) {
                 Logger.getLogger(ClientHandler.class.getName()).log(Level.SEVERE, null, ex);
             } catch (ClassNotFoundException ex) {
@@ -153,6 +140,9 @@ public class ClientHandler extends Thread {
         }
     }
 
+    
+    
+    
     public void run() {
 
         ILogin l = null;
@@ -171,7 +161,7 @@ public class ClientHandler extends Thread {
 
                 if (l != null) {
                     if (l.getLoginvalue() == 2) {
-                        clients.put(userName, this);
+                        clients.put(userID, this);
                         readStream();
                         l = null;
                     }
@@ -181,10 +171,10 @@ public class ClientHandler extends Thread {
             } catch (ClassNotFoundException ex) {
                 Logger.getLogger(ClientHandler.class.getName()).log(Level.SEVERE, null, ex);
             } finally {
-                for (String s : clients.keySet()) {
-                    if (clients.get(s).equals(this)) {
-                        System.out.println("removing: " + s);
-                        clients.remove(s);
+                for (Integer i : clients.keySet()) {
+                    if (clients.get(i).equals(this)) {
+                        System.out.println("removing: " + i);
+                        clients.remove(i);
                     }
                 }
 
@@ -200,12 +190,12 @@ public class ClientHandler extends Thread {
 
     }
 
-    protected static void sendPrivateMessage(String message, String reciever) {
+    protected static void sendPrivateMessage(String message, Integer reciever) {
 
-        for (String s : clients.keySet()) {
-            if (s.equals(reciever)) {
+        for (Integer i : clients.keySet()) {
+            if (i.equals(reciever)) {
                 try {
-                    ClientHandler ch = clients.get(s);
+                    ClientHandler ch = clients.get(i);
                     ch.output.writeObject(message);
                     ch.output.flush();
 
@@ -221,8 +211,8 @@ public class ClientHandler extends Thread {
         synchronized (clients) {
             System.out.println("Trying to send a message!");
 
-            for (String s : clients.keySet()) {
-                ClientHandler ch = (ClientHandler) clients.get(s);
+            for (Integer i : clients.keySet()) {
+                ClientHandler ch = (ClientHandler) clients.get(i);
                 try {
                     synchronized (ch.output) {
                         System.out.println("About to write: " + message.getContext());

@@ -15,7 +15,7 @@ public interface IProfile {
     
     public void setLastName(String lastName);
 
-    public void setNationality(Nationality nationality);
+    public void setNationality(String nationality);
 
     public void setProfileText(String profileText);
 
@@ -23,7 +23,7 @@ public interface IProfile {
     
     public String getLastName();
 
-    public Nationality getNationality();
+    public String getNationality();
 
     public String getProfileText();
 }

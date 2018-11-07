@@ -4,6 +4,7 @@ import Acquaintance.ILogin;
 import Acquaintance.IManagement;
 import Acquaintance.IProfile;
 import Acquaintance.IUser;
+import Acquaintance.Nationality;
 import java.sql.*;
 import java.sql.DriverManager;
 import java.util.ArrayList;
@@ -59,7 +60,7 @@ public class DatabaseHandler {
                     } catch (PSQLException | NullPointerException ex) {
                     }
 
-                    IUser returnUser = new PerUser(rs.getInt("userID"), rs.getString("tmpname"), rs.getBoolean("banned"), rs.getInt("reportcount"), tmpList);
+                    IUser returnUser = new PerUser(rs.getInt("userID"), rs.getBoolean("banned"), rs.getInt("reportcount"), tmpList);
                     ILogin tempLog = new Login(2, returnUser);
                     return tempLog;
                 } else {
@@ -76,6 +77,33 @@ public class DatabaseHandler {
         ILogin tempLog = new Login(0, null);
         return tempLog;
     }
+    
+    
+    
+    private IProfile getProfile(int userID){
+        try (Connection conn = DriverManager.getConnection(url, dbUsername, dbPassword)) {
+            IProfile profile = (IProfile) new PerProfile("", "", "");
+            
+            Class.forName("org.postgresql.Driver");
+
+            PreparedStatement st = conn.prepareStatement("Select profiles.firstname, profiles.lastname, profiles.profile_text, profiles.nationality FROM Synchat.profiles WHERE profiles.userid = ?;");
+            st.setString(1, userID+"");
+            ResultSet rs = st.executeQuery();
+            while (rs.next()) {
+                profile.setFirstName(rs.getString("firstname"));
+                profile.setLastName(rs.getString("lastname"));
+                profile.setProfileText(rs.getString("profiletext"));
+                profile.setNationality(rs.getString("nationality"));
+            }
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return null;
+    }
 
     Boolean createUser(ILogin login) {
         Boolean createBoolean = false;
@@ -84,10 +112,9 @@ public class DatabaseHandler {
             st0.setString(1, login.gethMail());
             ResultSet rs0 = st0.executeQuery();
             if (!rs0.next()) {
-                PreparedStatement st1 = conn.prepareStatement("INSERT INTO SYNCHAT.users (mail, password, tmpName) VALUES(?,?,?)");
+                PreparedStatement st1 = conn.prepareStatement("INSERT INTO SYNCHAT.users (mail, password) VALUES(?,?)");
                 st1.setString(1, login.gethMail());
                 st1.setString(2, login.gethPW());
-                st1.setString(3, login.getUser().getTmpName());
 
                 st1.executeUpdate();
                 createBoolean = true;
@@ -224,4 +251,4 @@ public class DatabaseHandler {
 
 }
 
-}
+

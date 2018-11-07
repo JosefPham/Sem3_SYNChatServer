@@ -3,7 +3,6 @@ package Connection;
 import Acquaintance.IProfile;
 import Acquaintance.IUser;
 import Acquaintance.Nationality;
-import Business.Profile;
 import java.util.List;
 
 public class ConUser implements IUser {
@@ -12,10 +11,10 @@ public class ConUser implements IUser {
     private boolean banned; // a flag for if the user is banned
     private int reports;    // the amount of reprts a user have recived
     private List<Integer> chats;
-    private IProfile profile;
+    private ConProfile profile;
 
-    public ConUser(String firstName, String lastName, Nationality nationality) {
-        new Profile(firstName, lastName, nationality);
+    public ConUser(String firstName, String lastName, String nationality) {
+       this.profile = new ConProfile(firstName, lastName, nationality);
     }
 
     public ConUser(int userID, boolean banned, int reports, List<Integer> chats, IProfile profile) {
@@ -23,7 +22,8 @@ public class ConUser implements IUser {
         this.banned = banned;
         this.reports = reports;
         this.chats = chats;
-        this.profile = profile;
+        this.profile = (ConProfile) profile;
+        
     }
 
     

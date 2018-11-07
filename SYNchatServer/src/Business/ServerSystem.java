@@ -4,12 +4,16 @@ import Acquaintance.ILogin;
 import Acquaintance.IManagement;
 import Acquaintance.IProfile;
 import Acquaintance.IUser;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ServerSystem {
 
     private static ServerSystem instance = null;
+    private static Map<Integer, User> onlineUsers;
 
     private ServerSystem() {
+        onlineUsers = new HashMap();
     }
 
     static ServerSystem getInstance() {
@@ -25,6 +29,7 @@ public class ServerSystem {
         ILogin DBlog = BusinessFacade.getInstance().checkLoginDB(login);
 
         if (DBlog.getLoginvalue() == 2) {
+            onlineUsers.put(DBlog.getUser().getUserID(), (User) DBlog.getUser());
             // add user to server
             // maybe check stuff? Does the user have any chats?
         }
@@ -46,7 +51,25 @@ public class ServerSystem {
     }
 
     protected boolean updateProfile(IUser user) {
-        return BusinessFacade.getInstance().alterProfile(user);
+        IUser oldUser = onlineUsers.get(user.getUserID());
+        
+        if(!oldUser.getProfile().getFirstName().equals(user.getProfile().getFirstName())){
+            return BusinessFacade.getInstance().alterProfile(user);
+        }
+        if(!oldUser.getProfile().getLastName().equals(user.getProfile().getLastName())){
+            return BusinessFacade.getInstance().alterProfile(user);
+        }
+        if(!oldUser.getProfile().getProfileText().equals(user.getProfile().getProfileText())){
+            return BusinessFacade.getInstance().alterProfile(user);
+        }
+        if(!oldUser.getProfile().getNationality().equals(user.getProfile().getNationality())){
+            return BusinessFacade.getInstance().alterProfile(user);
+        }
+        
+        return false;
+        
     }
+    
+    
 
 }

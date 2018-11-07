@@ -13,7 +13,7 @@ public class User implements IUser {
     private List<Integer> chats;
     private IProfile profile;
 
-    public User(String firstName, String lastName, Nationality nationality) {
+    public User(String firstName, String lastName, String nationality) {
         new Profile(firstName, lastName, nationality);
     }
 
@@ -42,6 +42,11 @@ public class User implements IUser {
     @Override
     public List<Integer> getChats() {
         return chats;
+    }
+
+    @Override
+    public IProfile getProfile() {
+        return profile;
     }
 
 }
