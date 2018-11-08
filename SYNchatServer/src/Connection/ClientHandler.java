@@ -96,102 +96,106 @@ public class ClientHandler extends Thread {
     }
 
     public boolean readStream(Object obj) {
-     //   while (s.isConnected()) {
+        //   while (s.isConnected()) {
 
-         //   try {
-             //   Object obj = null;
-             //   if ((obj =input.readObject())!= null) {
-                // obj = input.readObject();
-                
+        //   try {
+        //   Object obj = null;
+        //   if ((obj =input.readObject())!= null) {
+        // obj = input.readObject();
+        System.out.println("Waiting");
 
-                    System.out.println("Waiting");
+        if (obj instanceof IUser) {
+            System.out.println("Det er en User");
+            ConUser user = new ConUser(((IProfile) obj).getFirstName(), ((IProfile) obj).getLastName(), ((IProfile) obj).getNationality(), ((IUser) obj).getProfile().getProfileText());
+            user.setUserID(((IUser) obj).getUserID());
+            user.setChats(((IUser) obj).getChats());
+            user.setReports(((IUser) obj).getReports());
+            user.setBanned(((IUser) obj).isBanned());
+            sendBool(ConnectionFacade.getInstance().updateProfile(user));
+            return true;
 
-                    if (obj instanceof IUser) {
-                        System.out.println("Det er en User");
-                        ConUser user = new ConUser(((IProfile) obj).getFirstName(), ((IProfile) obj).getLastName(), ((IProfile) obj).getNationality(), ((IUser) obj).getProfile().getProfileText());
-                        user.setUserID(((IUser) obj).getUserID());
-                        user.setChats(((IUser) obj).getChats());
-                        user.setReports(((IUser) obj).getReports());
-                        user.setBanned(((IUser) obj).isBanned());
-                        sendBool(ConnectionFacade.getInstance().updateProfile(user));
-                        return true;
+        } else if (obj instanceof IMessage) {
+            ConMessage msg = new ConTextMessage(((IMessage) obj).getSenderID(), ((IMessage) obj).getContext());
 
-                    } else if (obj instanceof IMessage) {
-                        ConMessage msg = new ConTextMessage(((IMessage) obj).getSenderID(), ((IMessage) obj).getContext());
-
-                        System.out.println("msg: " + msg.getContext());
-                        if (msg.getContext().contains("!SYN!-logout-!SYN!")) {
-                            return false;
-                        } else {
-                            sendPublicMessage(msg);
-                            return true;
-                        }
-                    } else if (obj instanceof IManagement) {
-                        IManagement management = new ConManagement(((IManagement) obj).getAction(), ((IManagement) obj).getUserID(), ((IManagement) obj).getPw(), ((IManagement) obj).getString1());
-                        sendInt(ConnectionFacade.getInstance().changeInfo(management));
-                        return true;
-                    }
-           //     }
-           /*
+            System.out.println("msg: " + msg.getContext() + " at time: " + msg.getTimestamp().toString());
+            if (msg.getContext().contains("!SYN!-logout-!SYN!")) {
+                return false;
+            } else {
+                sendPublicMessage(msg);
+                return true;
+            }
+        } else if (obj instanceof IManagement) {
+            IManagement management = new ConManagement(((IManagement) obj).getAction(), ((IManagement) obj).getUserID(), ((IManagement) obj).getPw(), ((IManagement) obj).getString1());
+            sendInt(ConnectionFacade.getInstance().changeInfo(management));
+            return true;
+        }
+        //     }
+        /*
             } catch (IOException ex) {
                 Logger.getLogger(ClientHandler.class.getName()).log(Level.SEVERE, null, ex);
             } catch (ClassNotFoundException ex) {
                 Logger.getLogger(ClientHandler.class.getName()).log(Level.SEVERE, null, ex);
             }
-*/
-       // }
-       return true;
+         */
+        // }
+        return true;
     }
 
     public void run() {
 
         ILogin l = null;
 
-      //  while ((l == null || l.getLoginvalue() != 2)) {
-            while(s.isConnected()){
+        //  while ((l == null || l.getLoginvalue() != 2)) {
+        try {
+            while (!s.isClosed()) {
 
                 /*
             if (s.isClosed()) {
                 System.out.println("CLOSED!");
                 break;
             }
-*/
-            try {
-                Object obj = null;
-                obj = input.readObject();
+                 */
+                Object obj;
+                if (( obj = input.readObject()) != null) {
 
-                l = checkLogin(obj);
-
-                if (l != null) {
-                    if (l.getLoginvalue() == 2) {
-                        clients.put(l.getUser().getUserID(), this);
-                        if(!(obj instanceof ILogin)){
-                       if( !readStream(obj)){
-                           l = null;
-                       }
-                      //  l = null;
-                    }
-                    }
-                }
-            } catch (IOException ex) {
-                Logger.getLogger(ClientHandler.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (ClassNotFoundException ex) {
-                Logger.getLogger(ClientHandler.class.getName()).log(Level.SEVERE, null, ex);
-            } finally {
-                for (Integer i : clients.keySet()) {
-                    if (clients.get(i).equals(this)) {
-                        System.out.println("removing: " + i);
-                        clients.remove(i);
+                    if (l != null) {
+                        if (l.getLoginvalue() == 2) {
+                            
+                            if(!(clients.containsKey(l.getUser().getUserID()))){
+                            clients.put(l.getUser().getUserID(), this);
+                            }
+                            
+                            
+                            if ( (obj != null) && (!(obj instanceof ILogin))) {
+                                if (!readStream(obj)) {
+                                    l = null;
+                                }
+                                //  l = null;
+                            }
+                        }
+                    } else if (l == null && obj != null) {
+                        l = checkLogin(obj);
                     }
                 }
 
-                try {
-                    s.close();
-                } catch (IOException ex) {
-                    ex.printStackTrace();
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(ClientHandler.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(ClientHandler.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            for (Integer i : clients.keySet()) {
+                if (clients.get(i).equals(this)) {
+                    System.out.println("removing: " + i);
+                    clients.remove(i);
                 }
             }
 
+            try {
+                s.close();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
         }
 
     }
