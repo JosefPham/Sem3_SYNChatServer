@@ -33,13 +33,14 @@ public class ServerSystem {
         if (DBlog.getLoginvalue() == 2) {
             System.out.println("DBlog: " + DBlog);
             System.out.println(DBlog.getUser().getUserID());
+            Friends friends = new Friends(DBlog.getUser().getFriends().getFriendlist());
             User onlineUser = new User(DBlog.getUser().getProfile().getFirstName(), DBlog.getUser().getProfile().getLastName(), DBlog.getUser().getProfile().getNationality(), DBlog.getUser().getProfile().getProfileText());
             onlineUser.setUserID(DBlog.getUser().getUserID());
             onlineUser.setProfile(DBlog.getUser().getProfile());
             onlineUser.setReports(DBlog.getUser().getReports());
             onlineUser.setBanned(DBlog.getUser().isBanned());
             onlineUser.setChats(DBlog.getUser().getChats());
-            onlineUser.setFriends(DBlog.getUser().getFriends());
+            onlineUser.setFriends(friends);
             onlineUsers.put(onlineUser.getUserID(), onlineUser);
             // add user to server
             // maybe check stuff? Does the user have any chats?

@@ -18,6 +18,14 @@ public class Friends implements IFriends {
 
     Map<Integer,String> friendList = new HashMap<>();
     
+    
+        public Friends(Map<Integer, String> friendlist) {
+        for (Integer key : friendlist.keySet()) {
+            this.friendList.put(key, friendlist.get(key));
+        }
+    }
+    
+    
     @Override
     public Map<Integer, String> getFriendlist() {
         return friendList;
