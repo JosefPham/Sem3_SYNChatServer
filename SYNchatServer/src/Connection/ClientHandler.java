@@ -129,6 +129,7 @@ public class ClientHandler extends Thread {
 
             System.out.println("msg: " + msg.getContext() + " at time: " + msg.getTimestamp().toString());
             if (msg.getContext().contains("!SYN!-logout-!SYN!")) {
+                System.out.println("Modtog logout");
                 return false;
             } else {
                 sendPublicMessage(msg);
@@ -138,6 +139,10 @@ public class ClientHandler extends Thread {
             IManagement management = new ConManagement(((IManagement) obj).getAction(), ((IManagement) obj).getUserID(), ((IManagement) obj).getPw(), ((IManagement) obj).getString1());
             sendInt(ConnectionFacade.getInstance().changeInfo(management));
             return true;
+        }
+        else if(obj instanceof String){
+            System.out.println("Modtog logout");
+             return false;
         }
         //     }
         /*
@@ -178,6 +183,7 @@ public class ClientHandler extends Thread {
 
                             if ((obj != null) && (!(obj instanceof ILogin))) {
                                 if (!readStream(obj)) {
+                                    System.out.println("Logged out");
                                     l = null;
                                 }
                                 //  l = null;
