@@ -16,5 +16,5 @@ public interface ILogin extends Serializable {
 
     public void setUser(IUser user);
 
-    public int login(int loginValue);
+    public int login(ILogin finalLogin);
 }

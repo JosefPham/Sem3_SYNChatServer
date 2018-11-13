@@ -1,5 +1,6 @@
 package Persistence;
 
+import Acquaintance.IFriends;
 import Acquaintance.IProfile;
 import Acquaintance.IUser;
 import Acquaintance.Nationality;
@@ -12,12 +13,14 @@ public class PerUser implements IUser {
     private int reports;    // the amount of reprts a user have recived
     private List<Integer> chats;  //
     private IProfile profile;
+    private IFriends friends;
 
     public PerUser(int userID, boolean banned, int reports, List<Integer> chats) {
         this.userID = userID;
         this.banned = banned;
         this.reports = reports;
         this.chats = chats;
+        
     }
     
      public PerUser(String firstName, String lastName, Nationality nationality, String profileText) {
@@ -67,6 +70,15 @@ public class PerUser implements IUser {
 
     public void setProfile(IProfile profile) {
         this.profile = profile;
+    }
+
+    @Override
+    public IFriends getFriends() {
+        return friends;
+    }
+    
+    public void setFriends(IFriends friends){
+        this.friends = friends;
     }
 
 }

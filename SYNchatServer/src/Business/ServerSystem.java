@@ -38,6 +38,7 @@ public class ServerSystem {
             onlineUser.setReports(DBlog.getUser().getReports());
             onlineUser.setBanned(DBlog.getUser().isBanned());
             onlineUser.setChats(DBlog.getUser().getChats());
+            onlineUser.setFriends(DBlog.getUser().getFriends());
             onlineUsers.put(onlineUser.getUserID(), onlineUser);
             // add user to server
             // maybe check stuff? Does the user have any chats?

@@ -5,13 +5,15 @@ import java.util.List;
 
 public interface IUser extends Serializable {
 
-    public int getUserID();
+    int getUserID();
 
-    public boolean isBanned();
+    boolean isBanned();
 
-    public int getReports();
+    int getReports();
 
-    public List<Integer> getChats();
-    
-    public IProfile getProfile();
+    List<Integer> getChats();
+
+    IProfile getProfile();
+
+    IFriends getFriends();
 }

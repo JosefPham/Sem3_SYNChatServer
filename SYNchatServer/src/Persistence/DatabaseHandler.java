@@ -1,5 +1,6 @@
 package Persistence;
 
+import Acquaintance.IFriends;
 import Acquaintance.ILogin;
 import Acquaintance.IManagement;
 import Acquaintance.IProfile;
@@ -8,10 +9,11 @@ import Acquaintance.Nationality;
 import java.sql.*;
 import java.sql.DriverManager;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.postgresql.util.PSQLException;
 
 public class DatabaseHandler {
 
@@ -91,7 +93,11 @@ public class DatabaseHandler {
                 
                     
                     IProfile returnProfile = getProfile(user.getUserID());
+                    IFriends returnFriends = getFriends(user.getUserID());
+                    
                     user.setProfile(returnProfile);
+                    user.setFriends(returnFriends);
+                    
                    // ILogin tempLog = new Login(2, returnUser);
                     login.setLoginvalue(2);
                     System.out.println("About to return login with: " + login.getUser().getUserID());
@@ -143,6 +149,7 @@ public class DatabaseHandler {
     boolean createUser(ILogin login) {
         boolean createBoolean = false;
         boolean createProfileBoolean = false;
+       // Map<Integer, String> friendList;
         try (Connection conn = DriverManager.getConnection(url, dbUsername, dbPassword)) {
             PreparedStatement st0 = conn.prepareStatement("Select * FROM Synchat.users WHERE users.mail = ?;");
             st0.setString(1, login.gethMail());
@@ -155,14 +162,53 @@ public class DatabaseHandler {
                 st1.executeUpdate();
                 createBoolean = true;
             }
-            int profileID = getUserIDfromDB(login.gethMail());
-            createProfileBoolean = createProfile(login, profileID);
+            int userID = getUserIDfromDB(login.gethMail());
+            createProfileBoolean = createProfile(login, userID);
+            //friendList = getFriends(userID);
+            
 
         } catch (SQLException ex) {
             Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return createBoolean && createProfileBoolean;
+        return (createBoolean && createProfileBoolean);
     }
+    
+    
+    
+    
+    private IFriends getFriends(int userID){
+        
+      
+        Map<Integer, String> friends = new HashMap<>();
+        try (Connection conn = DriverManager.getConnection(url, dbUsername, dbPassword)) {
+
+            PreparedStatement st1 = conn.prepareStatement("SELECT friendlists.friendid FROM synchat.friendlists WHERE userid = ?;");
+            st1.setInt(1, userID);
+
+            ResultSet rs = st1.executeQuery();
+
+//            if(rs.next() == false){
+//                friends.put(userID, "initialFriend");
+//            }
+            
+            while(rs.next()){
+             //   friends.addFriend(rs.getInt("friendid"),rs.getString("friendName"));
+                friends.put(rs.getInt("friendid"), rs.getString("friendName"));
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+         PerFriends returnFriends = new PerFriends(friends);
+        
+        return returnFriends;
+    }
+            
+            
+            
+            
+            
 
     private boolean createProfile(ILogin login, int profileID) {
 

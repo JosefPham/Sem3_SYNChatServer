@@ -12,9 +12,9 @@ import Acquaintance.IUser;
  *
  * @author Peter
  */
-public class ConLogin implements ILogin{
+public class ConLogin implements ILogin {
 
-     private String hMail = null;
+    private String hMail = null;
     private String hPW = null;
     private int loginvalue;
     private IUser user;
@@ -60,14 +60,14 @@ public class ConLogin implements ILogin{
         return user;
     }
 
-   @Override
-    public int login(int loginValue) {
+    @Override
+    public int login(ILogin finalLogin) {
 
-        if (loginValue == 2) {
+        if (finalLogin.getLoginvalue() == 2) {
 
             //fetch and inplement user object through socket
         }
-        return loginValue;
+        return finalLogin.getLoginvalue();
     }
 
     @Override
@@ -79,5 +79,5 @@ public class ConLogin implements ILogin{
     public void setUser(IUser user) {
         this.user = user;
     }
-    
+
 }

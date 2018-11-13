@@ -1,5 +1,6 @@
 package Business;
 
+import Acquaintance.IFriends;
 import Acquaintance.IProfile;
 import Acquaintance.IUser;
 import Acquaintance.Nationality;
@@ -11,6 +12,7 @@ public class User implements IUser {
     private boolean banned; // a flag for if the user is banned
     private int reports;    // the amount of reprts a user have recived
     private List<Integer> chats;
+    private IFriends friends;
     private IProfile profile;
 
     public User(String firstName, String lastName, Nationality nationality, String profileText) {
@@ -67,6 +69,15 @@ public class User implements IUser {
 
     public void setProfile(IProfile profile) {
         this.profile = profile;
+    }
+
+    @Override
+    public IFriends getFriends() {
+        return friends;
+    }
+    
+     public void setFriends(IFriends friends){
+        this.friends = friends;
     }
 
 }

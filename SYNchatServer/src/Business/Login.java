@@ -63,12 +63,7 @@ public class Login implements ILogin, Serializable {
     }
 
     @Override
-    public int login(int loginValue) {
-
-        if (loginValue == 2) {
-
-            //fetch and inplement user object through socket
-        }
-        return loginValue;
+    public int login(ILogin finalLogin) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }
