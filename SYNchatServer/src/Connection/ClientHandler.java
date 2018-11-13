@@ -66,11 +66,11 @@ public class ClientHandler extends Thread {
             Logger.getLogger(ClientHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     boolean sendFriends(IFriends friends) {
-        int userID = clients.get(s);
+       
         try {
-            Boolean b = ConnectionFacade.getInstance().updateFriends(friends,userID);
+            Boolean b = ConnectionFacade.getInstance().updateFriends(friends, userID);
         } catch (Exception e) {
         }
         return true;
@@ -166,17 +166,17 @@ public class ClientHandler extends Thread {
             }
                  */
                 Object obj;
-                if (( obj = input.readObject()) != null) {
+                if ((obj = input.readObject()) != null) {
 
                     if (l != null) {
                         if (l.getLoginvalue() == 2) {
-                            
-                            if(!(clients.containsKey(l.getUser().getUserID()))){
-                            clients.put(l.getUser().getUserID(), this);
+
+                            if (!(clients.containsKey(l.getUser().getUserID()))) {
+                                userID = l.getUser().getUserID();
+                                clients.put(l.getUser().getUserID(), this);
                             }
-                            
-                            
-                            if ( (obj != null) && (!(obj instanceof ILogin))) {
+
+                            if ((obj != null) && (!(obj instanceof ILogin))) {
                                 if (!readStream(obj)) {
                                     l = null;
                                 }

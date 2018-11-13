@@ -33,5 +33,5 @@ public class ConFriends implements IFriends{
     public void removeFriend(int userID) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
 
-
+    }
 }

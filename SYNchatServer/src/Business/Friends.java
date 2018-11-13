@@ -43,4 +43,15 @@ public class Friends implements IFriends {
         return false;
     }
 
+    @Override
+    public boolean addFriend(int userID, String profileName) {
+        friendList.put(userID, profileName);
+        return true;
+    }
+
+    @Override
+    public void removeFriend(int userID) {
+        friendList.remove(userID);
+    }
+
 }

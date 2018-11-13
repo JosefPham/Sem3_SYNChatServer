@@ -79,7 +79,8 @@ public class User implements IUser {
     }
     
      public void setFriends(IFriends friends){
-        this.friends = friends;
+        this.friends = (Friends) friends;
+     }
 
     Boolean updateFriends(IFriends newFriends, int userID) {
         return friends.updateFriends(newFriends, userID);

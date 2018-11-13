@@ -54,7 +54,7 @@ public class PersistenceFacade implements IPersistence {
     @Override
     public boolean alterProfile(IUser user) {
         return sqlDatabase.alterProfile(user);
-
+    }
 
     @Override
     public boolean addFriend(int userID, int newFriendID) {
