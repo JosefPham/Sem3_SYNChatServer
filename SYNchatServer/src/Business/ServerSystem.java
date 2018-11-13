@@ -1,5 +1,6 @@
 package Business;
 
+import Acquaintance.IFriends;
 import Acquaintance.ILogin;
 import Acquaintance.IManagement;
 import Acquaintance.IProfile;
@@ -8,11 +9,11 @@ import Acquaintance.Nationality;
 import java.util.HashMap;
 import java.util.Map;
 
+
 public class ServerSystem {
 
     private static ServerSystem instance = null;
-    private static Map<Integer, User> onlineUsers;
-
+    private Map<Integer,User> onlineUsers;
     private ServerSystem() {
         onlineUsers = new HashMap();
     }
@@ -47,6 +48,7 @@ public class ServerSystem {
         return DBlog;
     }
 
+
     protected int changeInfo(IManagement management) {
         int returnstatus = 0;
         IManagement tmpManagement = new Management(management.getAction(), management.getUserID(), management.getPw(), management.getString1());
@@ -80,6 +82,14 @@ public class ServerSystem {
         
     }
     
-    
 
+    Boolean updateFriends(IFriends friends, int userID) {
+        if(!onlineUsers.containsKey(userID)) {
+            System.out.println("User not found in onlineUsers!");
+        } else {
+            return onlineUsers.get(userID).updateFriends(friends, userID);
+        }
+        return false;
+    }
+    
 }

@@ -1,6 +1,7 @@
 package Business;
 
 import Acquaintance.IBusiness;
+import Acquaintance.IFriends;
 import Acquaintance.ILogin;
 import Acquaintance.IManagement;
 import Acquaintance.IPersistence;
@@ -95,6 +96,19 @@ public class BusinessFacade implements IBusiness {
     @Override
     public int updatePwSQL(IManagement management) {
         return persistence.changePw(management);
+    }
+
+    @Override
+    public Boolean updateFriends(IFriends friends, int userID) {
+        return ServerSystem.getInstance().updateFriends(friends, userID);
+    }
+
+    boolean addFriend(int userID, int newFriendID) {
+        return persistence.addFriend(userID, newFriendID);
+    }
+
+    boolean removeFriend(int userID, int oldFriendID) {
+        return persistence.removeFriend(userID, oldFriendID);
     }
 
 }

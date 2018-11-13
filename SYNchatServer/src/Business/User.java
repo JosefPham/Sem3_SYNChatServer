@@ -12,18 +12,20 @@ public class User implements IUser {
     private boolean banned; // a flag for if the user is banned
     private int reports;    // the amount of reprts a user have recived
     private List<Integer> chats;
-    private IFriends friends;
     private IProfile profile;
+    private Friends friends;
 
     public User(String firstName, String lastName, Nationality nationality, String profileText) {
         profile = new Profile(firstName, lastName, nationality, profileText);
     }
 
-    public User(int userID, boolean banned, int reports, List<Integer> chats) {
+
+    public User(int userID, String tmpName, boolean banned, int reports, List<Integer> chats, Friends newFriends) {
         this.userID = userID;
         this.banned = banned;
         this.reports = reports;
         this.chats = chats;
+        this.friends = newFriends;
     }
 
     @Override
@@ -78,6 +80,9 @@ public class User implements IUser {
     
      public void setFriends(IFriends friends){
         this.friends = friends;
+
+    Boolean updateFriends(IFriends newFriends, int userID) {
+        return friends.updateFriends(newFriends, userID);
     }
 
 }

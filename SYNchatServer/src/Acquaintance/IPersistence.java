@@ -11,5 +11,9 @@ public interface IPersistence {
     public int changePw(IManagement management);
     
     public boolean alterProfile(IUser user);
-    
+
+    public boolean addFriend(int userID, int newFriendID);
+
+    public boolean removeFriend(int userID, int oldFriendID);
+
 }

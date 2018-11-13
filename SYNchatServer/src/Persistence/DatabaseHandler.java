@@ -376,4 +376,40 @@ public class DatabaseHandler {
         return updateBoolean;
     }
 
+
+    boolean addFriend(int userID, int newFriendID) {
+        Boolean createBoolean = false;
+        try (Connection conn = DriverManager.getConnection(url, dbUsername, dbPassword)) {
+            PreparedStatement st0 = conn.prepareStatement("INSERT INTO SYNCHAT.friendlists (userid, friendid) VALUES(?,?)");
+            st0.setInt(1, userID);
+            st0.setInt(2, newFriendID);
+            st0.executeUpdate();
+            PreparedStatement st1 = conn.prepareStatement("INSERT INTO SYNCHAT.friendlists (userid, friendid) VALUES(?,?)");
+            st1.setInt(1, newFriendID);
+            st1.setInt(2, userID);
+            st1.executeUpdate();
+            createBoolean = true;
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return createBoolean;
+    }
+
+    boolean removeFriend(int userID, int oldFriendID) {
+        Boolean createBoolean = false;
+        try (Connection conn = DriverManager.getConnection(url, dbUsername, dbPassword)) {
+            PreparedStatement st0 = conn.prepareStatement("DELETE FROM SYNCHAT.friendlists WHERE userid = ? AND friendid = ?");
+            st0.setInt(1, userID);
+            st0.setInt(2, oldFriendID);
+            st0.executeUpdate();
+            PreparedStatement st1 = conn.prepareStatement("DELETE FROM SYNCHAT.friendlists WHERE userid = ? AND friendid = ?");
+            st1.setInt(1, oldFriendID);
+            st1.setInt(2, userID);
+            st1.executeUpdate();
+            createBoolean = true;
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return createBoolean;
+    }
 }

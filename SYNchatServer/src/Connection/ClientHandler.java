@@ -5,6 +5,7 @@
  */
 package Connection;
 
+import Acquaintance.IFriends;
 import Acquaintance.ILogin;
 import Acquaintance.IMessage;
 import Acquaintance.IUser;
@@ -64,6 +65,15 @@ public class ClientHandler extends Thread {
         } catch (IOException ex) {
             Logger.getLogger(ClientHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+    
+    boolean sendFriends(IFriends friends) {
+        int userID = clients.get(s);
+        try {
+            Boolean b = ConnectionFacade.getInstance().updateFriends(friends,userID);
+        } catch (Exception e) {
+        }
+        return true;
     }
 
     public void sendInt(int value) {

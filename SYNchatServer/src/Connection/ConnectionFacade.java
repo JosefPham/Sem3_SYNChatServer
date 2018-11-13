@@ -2,6 +2,7 @@ package Connection;
 
 import Acquaintance.IBusiness;
 import Acquaintance.IConnection;
+import Acquaintance.IFriends;
 import Acquaintance.ILogin;
 import Acquaintance.IManagement;
 import Acquaintance.IProfile;
@@ -67,6 +68,7 @@ public class ConnectionFacade implements IConnection {
     public Boolean createUser(ILogin login) {
         return business.createUser(login);
     }
+
     
     @Override
     public int changeInfo(IManagement management) {
@@ -76,5 +78,9 @@ public class ConnectionFacade implements IConnection {
     @Override
     public boolean updateProfile(IUser user) {
         return business.updateProfile(user);
+
+
+    Boolean updateFriends(IFriends friends, int userID) {
+        return business.updateFriends(friends, userID);
     }
 }
