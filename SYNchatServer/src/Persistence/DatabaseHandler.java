@@ -11,7 +11,9 @@ import Acquaintance.Nationality;
 import java.sql.*;
 import java.sql.DriverManager;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.postgresql.util.PSQLException;
@@ -444,6 +446,29 @@ public class DatabaseHandler {
         }
 
         return null;
+    }
+    /**
+     * metod that returns a hasmap containing id and name of all chats that are affiliated with the given user id
+     * @param userID
+     * @return 
+     */
+    Map<Integer, String> getPrivateChats(int userID){
+        Map<Integer, String> chatMap = new HashMap<>();
+        try (Connection conn = DriverManager.getConnection(url, dbUsername, dbPassword)) {
+            
+            PreparedStatement st1 = conn.prepareStatement("SELECT chatinfo.chatid, chatinfo.chatname FROM synchat.chatinfo INNER JOIN userchats ON userchats.chatid = chatinfo.chatid INNER JOIN users ON userchats.userid = users.userid WHERE userid = ?;");
+            st1.setInt(1, userID);
+            
+            ResultSet rs = st1.executeQuery();
+            
+            while(rs.next()){
+                chatMap.put(rs.getInt("chatid"), rs.getString("chatname"));
+            }
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return chatMap;
     }
 
 }
