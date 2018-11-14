@@ -6,7 +6,8 @@
 package Persistence;
 
 import Acquaintance.IFriends;
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -16,24 +17,23 @@ import java.util.Map;
 public class PerFriends implements IFriends {
 
     
-    Map<Integer, String> friendlist = new HashMap<>();
+    List<Integer> friendlist = new ArrayList<>();
     
     
-    public PerFriends(Map<Integer, String> friendlist) {
-        for (Integer key : friendlist.keySet()) {
-            this.friendlist.put(key, friendlist.get(key));
+    public PerFriends(List<Integer> friendlist) {
+        for (Integer key : friendlist) {
+            this.friendlist.add(key);
         }
     }
     
     @Override
-    public Map<Integer, String> getFriendlist() {
+    public List<Integer> getFriendlist() {
         return friendlist;
     }
 
-    @Override
     public boolean addFriend(int userID, String profileName) {
-        if (!friendlist.containsKey(userID)) {
-            friendlist.put(userID, profileName);
+        if (!friendlist.contains(userID)) {
+            friendlist.add(userID);
             return true;
         } else {
             System.out.println("user is already in friendlist");
@@ -42,7 +42,6 @@ public class PerFriends implements IFriends {
     
     }
 
-    @Override
     public void removeFriend(int userID) {
         friendlist.remove(userID);
     }

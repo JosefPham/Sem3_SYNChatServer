@@ -4,6 +4,7 @@ import Acquaintance.IFriends;
 import Acquaintance.IProfile;
 import Acquaintance.IUser;
 import Acquaintance.Nationality;
+import java.util.ArrayList;
 import java.util.List;
 
 public class User implements IUser {
@@ -82,8 +83,19 @@ public class User implements IUser {
         this.friends = (Friends) friends;
      }
 
-    Boolean updateFriends(IFriends newFriends, int userID) {
-        return friends.updateFriends(newFriends, userID);
+    IFriends updateFriends(IFriends newFriends, int userID) {
+        int friendID = friends.updateFriends(newFriends, userID);
+        if(friendID == -1) {
+            System.out.println("No friend to add");
+            return new Friends(new ArrayList<>());
+        } else {
+            if(ServerSystem.getInstance().getOnlineUsers().containsKey(friendID)) {
+                List<Integer> tmpList = new ArrayList<>();
+                tmpList.add(friendID);
+                return new Friends(tmpList);
+            }
+        }
+        return new Friends(new ArrayList<>());
     }
 
 }

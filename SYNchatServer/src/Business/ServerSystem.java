@@ -3,9 +3,8 @@ package Business;
 import Acquaintance.IFriends;
 import Acquaintance.ILogin;
 import Acquaintance.IManagement;
-import Acquaintance.IProfile;
 import Acquaintance.IUser;
-import Acquaintance.Nationality;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -85,13 +84,17 @@ public class ServerSystem {
     }
     
 
-    Boolean updateFriends(IFriends friends, int userID) {
+    IFriends updateFriends(IFriends friends, int userID) {
         if(!onlineUsers.containsKey(userID)) {
             System.out.println("User not found in onlineUsers!");
+            return new Friends(new ArrayList<>());
         } else {
             return onlineUsers.get(userID).updateFriends(friends, userID);
         }
-        return false;
+    }
+    
+    Map<Integer, User> getOnlineUsers() {
+        return onlineUsers;
     }
     
 }

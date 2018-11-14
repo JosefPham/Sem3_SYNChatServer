@@ -18,6 +18,6 @@ public interface IBusiness {
     
     public int updatePwSQL(IManagement management);
 
-    public Boolean updateFriends(IFriends friends, int userID);
+    public IFriends updateFriends(IFriends friends, int userID);
 
 }

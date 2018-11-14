@@ -12,13 +12,14 @@ import Acquaintance.IUser;
 
 import Acquaintance.IManagement;
 import Acquaintance.IProfile;
-import Acquaintance.Nationality;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -70,7 +71,20 @@ public class ClientHandler extends Thread {
     boolean sendFriends(IFriends friends) {
        
         try {
-            Boolean b = ConnectionFacade.getInstance().updateFriends(friends, userID);
+            IFriends b = ConnectionFacade.getInstance().updateFriends(friends, userID);
+            int friendID = b.getFriendlist().get(0);
+            List<Integer> tmpList = new ArrayList<>();
+            tmpList.add(userID);
+            ConFriends sendFriends = new ConFriends(tmpList);
+            ClientHandler ch = (ClientHandler) clients.get(friendID);
+                try {
+                    synchronized (ch.output) {
+                        ch.output.writeObject(sendFriends);
+                    }
+                    ch.output.flush();
+                } catch (IOException ex) {
+                    ch.interrupt();
+                }
         } catch (Exception e) {
         }
         return true;

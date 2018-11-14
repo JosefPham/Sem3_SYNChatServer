@@ -1,13 +1,10 @@
 package Acquaintance;
 
 import java.io.Serializable;
-import java.util.Map;
+import java.util.List;
 
 public interface IFriends extends Serializable{
 
-    Map<Integer, String> getFriendlist();
+    List<Integer> getFriendlist();
 
-    boolean addFriend(int userID, String profileName);
-    
-    void removeFriend(int userID);
 }
