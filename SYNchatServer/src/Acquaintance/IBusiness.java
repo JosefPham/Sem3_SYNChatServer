@@ -20,4 +20,5 @@ public interface IBusiness {
 
     public Boolean updateFriends(IFriends friends, int userID);
 
+    public IPrivateChat handlePrivateChat(IPrivateChat conPrivateChat);
 }

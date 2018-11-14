@@ -13,7 +13,9 @@ import java.util.Map;
 public class ServerSystem {
 
     private static ServerSystem instance = null;
+
     private Map<Integer,User> onlineUsers;
+
     private ServerSystem() {
         onlineUsers = new HashMap();
     }
@@ -82,7 +84,14 @@ public class ServerSystem {
         return false;
         
     }
-    
+
+    User getUser(int userID){
+        return onlineUsers.get(userID);
+    }
+
+     Map<Integer, User> getOnlineUsers() {
+        return onlineUsers;
+    }
 
     Boolean updateFriends(IFriends friends, int userID) {
         if(!onlineUsers.containsKey(userID)) {
@@ -91,6 +100,5 @@ public class ServerSystem {
             return onlineUsers.get(userID).updateFriends(friends, userID);
         }
         return false;
-    }
-    
+    }  
 }

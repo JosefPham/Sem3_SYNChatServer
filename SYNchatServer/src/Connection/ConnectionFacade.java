@@ -5,6 +5,7 @@ import Acquaintance.IConnection;
 import Acquaintance.IFriends;
 import Acquaintance.ILogin;
 import Acquaintance.IManagement;
+import Acquaintance.IPrivateChat;
 import Acquaintance.IProfile;
 import Acquaintance.IUser;
 
@@ -82,5 +83,9 @@ public class ConnectionFacade implements IConnection {
 
     boolean updateFriends(IFriends friends, int userID) {
         return business.updateFriends(friends, userID);
+	}
+
+    IPrivateChat handlePrivateChat(IPrivateChat conPrivateChat) {
+        return business.handlePrivateChat(conPrivateChat);
     }
 }

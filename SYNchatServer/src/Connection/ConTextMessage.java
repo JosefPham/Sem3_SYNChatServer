@@ -27,4 +27,9 @@ public class ConTextMessage extends ConMessage implements ITextMessage {
     public String getContext() {
         return msg;
     }
+
+    @Override
+    public void updateTimestamp() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

@@ -1,8 +1,12 @@
 package Persistence;
 
+
 import Acquaintance.IFriends;
+import Acquaintance.IChatHistory;
 import Acquaintance.ILogin;
 import Acquaintance.IManagement;
+import Acquaintance.IMessage;
+import Acquaintance.IPrivateChat;
 import Acquaintance.IProfile;
 import Acquaintance.IUser;
 import Acquaintance.Nationality;
@@ -412,4 +416,174 @@ public class DatabaseHandler {
         }
         return createBoolean;
     }
+	
+    IPrivateChat createNewPrivateChat(IPrivateChat prichat) {
+
+        // convert the message timestamp to java.sql.Timestamp datatype
+        Timestamp time = Timestamp.from(prichat.getCh().getMsgList().get(0).getTimestamp());
+
+        try (Connection conn = DriverManager.getConnection(url, dbUsername, dbPassword)) {
+
+            // creating chatid with name
+            int chatID = -1;
+            PreparedStatement st2 = conn.prepareStatement("INSERT INTO SYNCHAT.chatinfo (chatname) VALUES(?)", PreparedStatement.RETURN_GENERATED_KEYS);
+            st2.setString(1, prichat.getName());
+            
+            st2.executeUpdate();
+            ResultSet rs2 = st2.getGeneratedKeys();
+            if (rs2.next()) {
+                chatID = rs2.getInt(1);
+            }
+
+
+            // inserting the table with most values first, so db can assign chatID with lowest chance of duplicates
+            PreparedStatement st0 = conn.prepareStatement("INSERT INTO SYNCHAT.chatmessages (chatid, message, timestamp, senderid) VALUES(?,?,?,?)");
+            st0.setInt(1, chatID);
+            st0.setString(2, prichat.getCh().getMsgList().get(0).getContext());
+            st0.setTimestamp(3, time);
+            st0.setInt(4, prichat.getCh().getMsgList().get(0).getSenderID());
+
+            st0.executeUpdate();
+
+
+            // iterating for all users participating in this chat, storing assigned chatID with the connected userIDs
+            for (Integer userID : prichat.getUserIDs()) {
+                PreparedStatement st1 = conn.prepareStatement("INSERT INTO SYNCHAT.userchats (chatid, userid) VALUES(?,?)");
+
+                st1.setInt(1, chatID);
+                st1.setInt(2, userID);
+
+                st1.executeUpdate();
+            }
+
+            
+
+            // creating new (updated) IPrivateChat for the return
+            IPrivateChat newchat = loadPrivateChat(chatID, 1);
+            return newchat;
+
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return null;
+    }
+
+    /**
+     * chatID for the wanted chat, loadMsgCount for amount of messages loaded (I
+     * believe loadMsgCount can be higher than amount of messages in chat, with
+     * no errors)
+     *
+     * @param chatID
+     * @param loadMsgCount
+     * @return
+     */
+    IPrivateChat loadPrivateChat(int chatID, int loadMsgCount) {
+        try (Connection conn = DriverManager.getConnection(url, dbUsername, dbPassword)) {
+
+            // all the variables needed to create IPrivateChat (including IMessages and IChatHistory)
+            List<Integer> userIDs = new ArrayList<>();
+            String name = "";
+            List<IMessage> msgList = new ArrayList<>();
+            int senderID;
+            Timestamp time;
+            String text;
+
+            // **** denne skal laves om - sortér messages efter timestamp, og indlæs det øverste antal baseret på loadMsgCount
+            PreparedStatement st3 = conn.prepareStatement("SELECT TOP ? * FROM SYNCHAT.chatmessages WHERE chatid = ? ORDER BY timestamp DESC;");
+            st3.setInt(1, loadMsgCount);
+            st3.setInt(2, chatID);
+
+            ResultSet rs3 = st3.executeQuery();
+
+            // iterating to get the last x=msgLoadedCount messages added to msgList
+            while (rs3.next()) {
+                text = rs3.getString("message");
+                senderID = rs3.getInt("senderid");
+                time = rs3.getTimestamp("timestamp");   // this is converted from Timestamp to Instant in the PerMessage-constructor, thus no conversion here
+
+                // ****NB!* Check for hvorvidt det er en textmessage!
+                IMessage msg = new PerTextMessage(senderID, time, text);
+                msgList.add(msg);
+            }
+
+            // getting chatname
+            PreparedStatement st4 = conn.prepareStatement("SELECT * FROM synchat.chatinfo WHERE chatid = ?");
+            st4.setInt(1, chatID);
+            ResultSet rs4 = st4.executeQuery();
+            if (rs4.next()) {
+                name = rs4.getString("chatname");
+            }
+
+            PreparedStatement st5 = conn.prepareStatement("SELECT * FROM synchat.userchats WHERE chatid = ?");
+            st5.setInt(1, chatID);
+            ResultSet rs5 = st5.executeQuery();
+
+            // while-loop to interate over all users connecting to this chatid
+            while (rs5.next()) {
+                userIDs.add(rs5.getInt("userid"));
+            }
+
+            IChatHistory ch = new PerChatHistory(loadMsgCount, msgList);
+            IPrivateChat newchat = new PerPrivateChat(userIDs, chatID, name, ch);
+
+            return newchat;
+
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return null;
+    }
+
+    IPrivateChat addToPrivateChat(IPrivateChat prichat) {
+        try (Connection conn = DriverManager.getConnection(url, dbUsername, dbPassword)) {
+
+            // the last index of msgList to get the latest message - the one that needs to be added to db
+            int msgIndex = prichat.getCh().getMsgList().size() - 1;
+            // converting Instant to Timestamp
+            Timestamp time = Timestamp.from(prichat.getCh().getMsgList().get(msgIndex).getTimestamp());
+
+            // add to existing chat entry in db
+            PreparedStatement st0 = conn.prepareStatement("INSERT INTO synchat.chatmessages (chatid, message, timestamp, senderid) VALUES(?,?,?,?)");
+            st0.setInt(1, prichat.getChatID());
+            st0.setString(2, prichat.getCh().getMsgList().get(msgIndex).getContext());
+            st0.setTimestamp(3, time);
+            st0.setInt(4, prichat.getCh().getMsgList().get(msgIndex).getSenderID());
+
+            st0.executeUpdate();
+
+            IPrivateChat newchat = loadPrivateChat(prichat.getChatID(), 1);         // I think loadMsgCount is always 1 in this case, depending on implementation of other layers?
+            return newchat;
+
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return null;
+    }
+    /**
+     * metod that returns a hasmap containing id and name of all chats that are affiliated with the given user id
+     * @param userID
+     * @return 
+     */
+    Map<Integer, String> getPrivateChats(int userID){
+        Map<Integer, String> chatMap = new HashMap<>();
+        try (Connection conn = DriverManager.getConnection(url, dbUsername, dbPassword)) {
+            
+            PreparedStatement st1 = conn.prepareStatement("SELECT chatinfo.chatid, chatinfo.chatname FROM synchat.chatinfo INNER JOIN userchats ON userchats.chatid = chatinfo.chatid INNER JOIN users ON userchats.userid = users.userid WHERE userid = ?;");
+            st1.setInt(1, userID);
+            
+            ResultSet rs = st1.executeQuery();
+            
+            while(rs.next()){
+                chatMap.put(rs.getInt("chatid"), rs.getString("chatname"));
+            }
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return chatMap;
+    }
+
 }

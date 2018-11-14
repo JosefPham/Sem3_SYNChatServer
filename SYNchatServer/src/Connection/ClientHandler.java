@@ -11,6 +11,7 @@ import Acquaintance.IMessage;
 import Acquaintance.IUser;
 
 import Acquaintance.IManagement;
+import Acquaintance.IPrivateChat;
 import Acquaintance.IProfile;
 import Acquaintance.Nationality;
 
@@ -250,6 +251,12 @@ public class ClientHandler extends Thread {
                 }
             }
         }
+    }
+    
+    void handlePrivateChat(IPrivateChat priChat){
+        IPrivateChat conPrivateChat = new ConPrivateChat(priChat.getUserIDs(), priChat.getChatID(), priChat.getName(), priChat.getCh());
+        IPrivateChat sendChat = ConnectionFacade.getInstance().handlePrivateChat(conPrivateChat);
+        
     }
 
 }

@@ -12,8 +12,14 @@ public interface IPersistence {
     
     public boolean alterProfile(IUser user);
 
+
     public boolean addFriend(int userID, int newFriendID);
 
     public boolean removeFriend(int userID, int oldFriendID);
+
+    public IPrivateChat addToPrivateChat(IPrivateChat prichat);
+
+    public IPrivateChat createNewPrivateChat(IPrivateChat prichat);
+    
 
 }
