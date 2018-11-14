@@ -4,14 +4,14 @@ import Acquaintance.IFriends;
 import Acquaintance.IProfile;
 import Acquaintance.IUser;
 import Acquaintance.Nationality;
-import java.util.List;
+import java.util.Map;
 
 public class ConUser implements IUser {
 
     private int userID;
     private boolean banned; // a flag for if the user is banned
     private int reports;    // the amount of reprts a user have recived
-    private List<Integer> chats;
+    private Map<Integer, String> chats;
     private IFriends friends;
     private IProfile profile;
 
@@ -19,7 +19,7 @@ public class ConUser implements IUser {
         profile = new ConProfile(firstName, lastName, nationality, "");
     }
 
-    public ConUser(int userID, boolean banned, int reports, List<Integer> chats, IFriends friends, IProfile profile) {
+    public ConUser(int userID, boolean banned, int reports, Map<Integer, String> chats, IFriends friends, IProfile profile) {
         this.userID = userID;
         this.banned = banned;
         this.reports = reports;
@@ -44,7 +44,7 @@ public class ConUser implements IUser {
     }
 
     @Override
-    public List<Integer> getChats() {
+    public Map<Integer, String> getChats() {
         return chats;
     }
 
@@ -65,7 +65,7 @@ public class ConUser implements IUser {
         this.reports = reports;
     }
 
-    public void setChats(List<Integer> chats) {
+    public void setChats(Map<Integer, String> chats) {
         this.chats = chats;
     }
 
@@ -78,7 +78,7 @@ public class ConUser implements IUser {
         return friends;
     }
     
-     public void setFriends(IFriends friends) {
+    public void setFriends(IFriends friends) {
         this.friends = friends;
     }
 }

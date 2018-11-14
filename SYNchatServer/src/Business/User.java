@@ -16,7 +16,7 @@ public class User implements IUser {
     private int userID;
     private boolean banned; // a flag for if the user is banned
     private int reports;    // the amount of reprts a user have recived
-    private List<Integer> chats;
+    private Map<Integer, String> chats;
     private IProfile profile;
 
     private Friends friends;
@@ -27,7 +27,7 @@ public class User implements IUser {
     }
 
 
-    public User(int userID, String tmpName, boolean banned, int reports, List<Integer> chats, Friends newFriends) {
+    public User(int userID, String tmpName, boolean banned, int reports, Map<Integer, String> chats, Friends newFriends) {
         this.userID = userID;
         this.banned = banned;
         this.reports = reports;
@@ -51,7 +51,7 @@ public class User implements IUser {
     }
 
     @Override
-    public List<Integer> getChats() {
+    public Map<Integer, String> getChats() {
         return chats;
     }
 
@@ -72,7 +72,7 @@ public class User implements IUser {
         this.reports = reports;
     }
 
-    public void setChats(List<Integer> chats) {
+    public void setChats(Map<Integer, String> chats) {
         this.chats = chats;
     }
 
@@ -138,7 +138,7 @@ public class User implements IUser {
         for (Integer userID : newchat.getUserIDs()) {
             if (ServerSystem.getInstance().getOnlineUsers().containsKey(userID)) {
                 if (prichat.getChatID() == -1) {
-                    ServerSystem.getInstance().getUser(userID).addChat(newchat.getChatID());
+                    ServerSystem.getInstance().getUser(userID).addChat(newchat.getChatID(), newchat.getName());
                 }
             } else {
                 newchat.getUserIDs().remove(userID);    // remove users from the list if they are offline, the clienthandler will send out the meesage to all users still in the list.
@@ -149,7 +149,7 @@ public class User implements IUser {
         return null;
     }
 
-    private void addChat(int chatID) {
-        chats.add(chatID);
+    private void addChat(int chatID, String name) {
+        chats.put(userID, name);
     }
 }

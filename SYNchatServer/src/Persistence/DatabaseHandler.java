@@ -83,15 +83,8 @@ public class DatabaseHandler {
                     user.setUserID(rs2.getInt("userid"));
                 }
 
-                PreparedStatement st3 = conn.prepareStatement("SELECT userchats.chatid FROM synchat.userchats WHERE userchats.userid = ?;");
-
-                st3.setInt(1, user.getUserID());
-                ResultSet rs3 = st3.executeQuery();
-                
-                    while (rs3.next()) {
-                        tmpList.add(rs3.getInt("chatid"));
-                    }
-                    user.setChats(tmpList);
+                    user.setChats(getPrivateChats(user.getUserID()));
+                    
                     System.out.println("users userID: " + user.getUserID());
                     login.setUser(user);
                 
