@@ -237,11 +237,11 @@ public class ClientHandler extends Thread {
 
     }
 
-    protected static void sendPublicMessage(IMessage message) {
+    protected void sendPublicMessage(IMessage message) {
         synchronized (clients) {
             System.out.println("Trying to send a message!");
 
-            for (Integer i : clients.keySet()) {
+            for (Integer i : currentPublicChatMap.keySet()) {
                 ClientHandler ch = (ClientHandler) clients.get(i);
                 try {
                     synchronized (ch.output) {
