@@ -29,7 +29,7 @@ public interface IProfile extends Serializable {
 
     public String getProfileText();
 
-    public Image getPicture();
+    public String getPicture();
 
-    public void setPicture(Image picture);
+    public void setPicture(String picture);
 }

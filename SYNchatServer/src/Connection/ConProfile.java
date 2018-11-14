@@ -17,7 +17,7 @@ public class ConProfile implements IProfile {
     private String firstName;
     private String lastName;
     private Nationality nationality;
-    private Image picture; //Watch out for the datatype!
+    private String picture; //Watch out for the datatype!
     private String profileText;
     
     public ConProfile(String firstName, String lastName, Nationality nationality, String profileText) {
@@ -68,12 +68,12 @@ public class ConProfile implements IProfile {
     }
 
     @Override
-    public Image getPicture() {
+    public String getPicture() {
         return picture;
     }
 
     @Override
-    public void setPicture(Image picture) {
+    public void setPicture(String picture) {
         this.picture = picture;
     }
 }

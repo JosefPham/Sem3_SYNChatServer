@@ -19,7 +19,7 @@ public class PerProfile implements IProfile{
     String firstName;
     String lastName;
     Nationality nationality;
-    Image picture; //Watch out for the datatype!
+    String picture; //Watch out for the datatype!
     String profileText;
 
     public PerProfile(String firstName, String lastName, Nationality nationality) {
@@ -68,12 +68,12 @@ public class PerProfile implements IProfile{
     }
     
     @Override
-    public Image getPicture() {
+    public String getPicture() {
         return picture;
     }
 
     @Override
-    public void setPicture(Image picture) {
+    public void setPicture(String picture) {
         this.picture = picture;
     }
 }

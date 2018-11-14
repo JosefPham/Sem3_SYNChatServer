@@ -18,7 +18,7 @@ public class Profile implements IProfile {
     String firstName;
     String lastName;
     Nationality nationality;
-    Image picture; //Watch out for the datatype!
+    String picture; //Watch out for the datatype!
     String profileText;
 
     public Profile(String firstName, String lastName, Nationality nationality) {
@@ -67,12 +67,12 @@ public class Profile implements IProfile {
     }
     
     @Override
-    public Image getPicture() {
+    public String getPicture() {
         return picture;
     }
 
     @Override
-    public void setPicture(Image picture) {
+    public void setPicture(String picture) {
         this.picture = picture;
     }
 }

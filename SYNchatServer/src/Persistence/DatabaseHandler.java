@@ -125,7 +125,7 @@ public class DatabaseHandler {
             IProfile profile = (IProfile) new PerProfile("", "", Nationality.Denmark);
             Class.forName("org.postgresql.Driver");
 
-            PreparedStatement st = conn.prepareStatement("Select profiles.firstname, profiles.lastname, profiles.profile_text, profiles.nationality FROM synchat.profiles WHERE profiles.userid = ?;");
+            PreparedStatement st = conn.prepareStatement("Select profiles.firstname, profiles.lastname, profiles.profile_text, profiles.nationality, profiles.picture_reference FROM synchat.profiles WHERE profiles.userid = ?;");
             st.setInt(1, userID);
             ResultSet rs = st.executeQuery();
             while (rs.next()) {
@@ -133,10 +133,11 @@ public class DatabaseHandler {
                 profile.setLastName(rs.getString("lastname"));
                 profile.setProfileText(rs.getString("profile_text"));
                 String tmpNationolaty = rs.getString("nationality");
-             //  profile.setPicture();
+                profile.setPicture(rs.getString("picture_reference"));
                 
                 profile.setNationality(Nationality.valueOf(tmpNationolaty));
             }
+            
             return profile;
 
         } catch (SQLException ex) {
@@ -220,12 +221,13 @@ public class DatabaseHandler {
             st0.setInt(1, login.getUser().getUserID());
             ResultSet rs0 = st0.executeQuery();
             if (!rs0.next()) {
-                PreparedStatement st1 = conn.prepareStatement("INSERT INTO SYNCHAT.profiles (firstname, lastname, nationality, userid, profile_text) VALUES(?,?,?,?,?)");
+                PreparedStatement st1 = conn.prepareStatement("INSERT INTO SYNCHAT.profiles (firstname, lastname, nationality, userid, profile_text, picture_reference) VALUES(?,?,?,?,?,?)");
                 st1.setString(1, login.getUser().getProfile().getFirstName());
                 st1.setString(2, login.getUser().getProfile().getLastName());
                 st1.setString(3, login.getUser().getProfile().getNationality().toString());
                 st1.setInt(4, profileID);
                 st1.setString(5, "");
+                st1.setString(6, "src/Assets/Avatar_0.png");
 
                 st1.executeUpdate();
                 success = true;
@@ -363,12 +365,13 @@ public class DatabaseHandler {
         Boolean updateBoolean = false;
         try (Connection conn = DriverManager.getConnection(url, dbUsername, dbPassword)) {
             Class.forName("org.postgresql.Driver");
-            PreparedStatement st0 = conn.prepareStatement("UPDATE synchat.profiles SET firstname = '?', lastname = '?', nationality = '?', profiletext = '?' WHERE synchat.userid = ?;");
+            PreparedStatement st0 = conn.prepareStatement("UPDATE synchat.profiles SET firstname = '?', lastname = '?', nationality = '?', profiletext = '?', picture_reference = '?' WHERE synchat.userid = ?;");
             st0.setString(1, user.getProfile().getFirstName());
             st0.setString(2, user.getProfile().getLastName());
             st0.setString(3, user.getProfile().getNationality().toString());
             st0.setString(4, user.getProfile().getProfileText());
-            st0.setString(5, (user.getUserID() + ""));
+            st0.setInt(5, (user.getUserID()));
+            st0.setString(6, user.getProfile().getPicture());
 
             st0.executeUpdate();
             updateBoolean = true;

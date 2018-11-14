@@ -49,6 +49,8 @@ public class ConnectionFacade implements IConnection {
         ILogin l = business.checkLogin(login);
         if(l.getLoginvalue() == 2){
         IProfile profile = new ConProfile(l.getUser().getProfile().getFirstName(), l.getUser().getProfile().getLastName(), l.getUser().getProfile().getNationality(), l.getUser().getProfile().getProfileText());
+        
+        profile.setPicture(l.getUser().getProfile().getPicture());
         ConFriends friends = new ConFriends(l.getUser().getFriends().getFriendlist());
         ConUser retUser = new ConUser(l.getUser().getUserID(), l.getUser().isBanned(), l.getUser().getReports(), l.getUser().getChats(), l.getUser().getFriends(), profile);
         
