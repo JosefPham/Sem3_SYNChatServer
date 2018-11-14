@@ -7,6 +7,7 @@ import Acquaintance.ILogin;
 import Acquaintance.IManagement;
 import Acquaintance.IProfile;
 import Acquaintance.IUser;
+import java.util.Map;
 
 public class ConnectionFacade implements IConnection {
 
@@ -84,5 +85,14 @@ public class ConnectionFacade implements IConnection {
 
     boolean updateFriends(IFriends friends, int userID) {
         return business.updateFriends(friends, userID);
+    }
+    
+    public void removeOnlineUser(int userID){
+        business.removeOnlineUser(userID);
+    }
+
+    @Override
+    public Map updatePublicChatUsers(int userID) {
+       return business.updatePublicChatUsers(userID);
     }
 }

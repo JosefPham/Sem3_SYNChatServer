@@ -19,6 +19,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -28,6 +29,7 @@ import java.util.logging.Logger;
  */
 public class ClientHandler extends Thread {
 
+    private Map<Integer, IUser> currentPublicChatMap;
     private Socket s;
     ObjectInputStream input;
     ObjectOutputStream output;
@@ -68,7 +70,7 @@ public class ClientHandler extends Thread {
     }
 
     boolean sendFriends(IFriends friends) {
-       
+
         try {
             Boolean b = ConnectionFacade.getInstance().updateFriends(friends, userID);
         } catch (Exception e) {
@@ -80,6 +82,15 @@ public class ClientHandler extends Thread {
         try {
             output.writeObject(value);
             System.out.println("Sendte en int");
+        } catch (IOException ex) {
+            Logger.getLogger(ClientHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void sendMap(Map m) {
+        try {
+            output.writeObject(m);
+            System.out.println("Sendte en map");
         } catch (IOException ex) {
             Logger.getLogger(ClientHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -106,12 +117,7 @@ public class ClientHandler extends Thread {
     }
 
     public boolean readStream(Object obj) {
-        //   while (s.isConnected()) {
 
-        //   try {
-        //   Object obj = null;
-        //   if ((obj =input.readObject())!= null) {
-        // obj = input.readObject();
         System.out.println("Waiting");
 
         if (obj instanceof IUser) {
@@ -139,20 +145,21 @@ public class ClientHandler extends Thread {
             IManagement management = new ConManagement(((IManagement) obj).getAction(), ((IManagement) obj).getUserID(), ((IManagement) obj).getPw(), ((IManagement) obj).getString1());
             sendInt(ConnectionFacade.getInstance().changeInfo(management));
             return true;
-        }
-        else if(obj instanceof String){
-            System.out.println("Modtog logout");
-             return false;
-        }
-        //     }
-        /*
-            } catch (IOException ex) {
-                Logger.getLogger(ClientHandler.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (ClassNotFoundException ex) {
-                Logger.getLogger(ClientHandler.class.getName()).log(Level.SEVERE, null, ex);
+        } else if (obj instanceof String) {
+            if (obj.toString().equals("!SYN!-logout-!SYN!")) {
+                return false;
             }
-         */
-        // }
+
+            if (obj.toString().equals("!SYN!-PublicChat-!SYN!")) {
+                System.out.println("Entered public chat with " + userID);
+                Map m = ConnectionFacade.getInstance().updatePublicChatUsers(userID);
+                currentPublicChatMap = m;
+                if (!m.containsKey(userID)) {
+                    sendMap(m);
+                }
+            }
+        }
+
         return true;
     }
 
@@ -160,16 +167,9 @@ public class ClientHandler extends Thread {
 
         ILogin l = null;
 
-        //  while ((l == null || l.getLoginvalue() != 2)) {
         try {
             while (!s.isClosed()) {
 
-                /*
-            if (s.isClosed()) {
-                System.out.println("CLOSED!");
-                break;
-            }
-                 */
                 Object obj;
                 if ((obj = input.readObject()) != null) {
 
@@ -204,6 +204,10 @@ public class ClientHandler extends Thread {
                 if (clients.get(i).equals(this)) {
                     System.out.println("removing: " + i);
                     clients.remove(i);
+                    ConnectionFacade.getInstance().removeOnlineUser(0);
+                    if (currentPublicChatMap.containsKey(userID)) {
+                        ConnectionFacade.getInstance().updatePublicChatUsers(userID);
+                    }
                 }
             }
 
@@ -250,6 +254,30 @@ public class ClientHandler extends Thread {
                 }
             }
         }
+    }
+
+    protected void sendPublicChatUser(int userID) {
+        IUser newUser = currentPublicChatMap.get(userID);
+        IProfile sendProfile = new ConProfile(newUser.getProfile().getFirstName(), newUser.getProfile().getLastName(), newUser.getProfile().getNationality(), newUser.getProfile().getProfileText());
+        sendProfile.setPicture(newUser.getProfile().getPicture());
+        IUser sendUser = new ConUser(newUser.getUserID(), newUser.isBanned(), newUser.getReports(), newUser.getChats(), newUser.getFriends(), sendProfile);
+        synchronized (currentPublicChatMap) {
+            for (Integer i : currentPublicChatMap.keySet()) {
+                if (i != userID) {
+
+                    ClientHandler ch = (ClientHandler) clients.get(i);
+                    try {
+                        synchronized (ch.output) {
+                            ch.output.writeObject(sendUser);
+                        }
+                        ch.output.flush();
+                    } catch (IOException ex) {
+                        ch.interrupt();
+                    }
+                }
+            }
+        }
+
     }
 
 }

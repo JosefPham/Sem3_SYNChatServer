@@ -5,8 +5,8 @@ import Acquaintance.IFriends;
 import Acquaintance.ILogin;
 import Acquaintance.IManagement;
 import Acquaintance.IPersistence;
-import Acquaintance.IProfile;
 import Acquaintance.IUser;
+import java.util.Map;
 
 public class BusinessFacade implements IBusiness {
 
@@ -109,6 +109,16 @@ public class BusinessFacade implements IBusiness {
 
     boolean removeFriend(int userID, int oldFriendID) {
         return persistence.removeFriend(userID, oldFriendID);
+    }
+
+    @Override
+    public void removeOnlineUser(int userID) {
+        serversys.removeOnlineUser(userID);
+    }
+    
+    @Override
+    public Map updatePublicChatUsers(int userID){
+        return serversys.updatePublicChatUsers(userID);
     }
 
 }

@@ -14,8 +14,10 @@ public class ServerSystem {
 
     private static ServerSystem instance = null;
     private Map<Integer,User> onlineUsers;
+    private Map<Integer, IUser> publicChatUser;
     private ServerSystem() {
         onlineUsers = new HashMap();
+        publicChatUser = new HashMap<>();
     }
 
     static ServerSystem getInstance() {
@@ -31,8 +33,6 @@ public class ServerSystem {
         ILogin DBlog = BusinessFacade.getInstance().checkLoginDB(login);
 
         if (DBlog.getLoginvalue() == 2) {
-//            System.out.println("DBlog: " + DBlog);
-//            System.out.println(DBlog.getUser().getUserID());
             Friends friends = new Friends(DBlog.getUser().getFriends().getFriendlist());
             User onlineUser = new User(DBlog.getUser().getProfile().getFirstName(), DBlog.getUser().getProfile().getLastName(), DBlog.getUser().getProfile().getNationality(), DBlog.getUser().getProfile().getProfileText());
             onlineUser.setUserID(DBlog.getUser().getUserID());
@@ -48,6 +48,12 @@ public class ServerSystem {
         }
 
         return DBlog;
+    }
+    
+    
+    public void removeOnlineUser(int userID){
+        onlineUsers.remove(userID);
+        
     }
 
 
@@ -84,7 +90,6 @@ public class ServerSystem {
         
     }
     
-
     Boolean updateFriends(IFriends friends, int userID) {
         if(!onlineUsers.containsKey(userID)) {
             System.out.println("User not found in onlineUsers!");
@@ -92,6 +97,19 @@ public class ServerSystem {
             return onlineUsers.get(userID).updateFriends(friends, userID);
         }
         return false;
+    }
+    
+    public synchronized Map updatePublicChatUsers(int userID){
+        if(publicChatUser.containsKey(userID)){
+            publicChatUser.remove(userID);
+            return publicChatUser;
+        } else{
+            publicChatUser.put(userID, onlineUsers.get(userID));
+            return publicChatUser;
+            // send tilbage til sigurd
+        }
+        
+        
     }
     
 }

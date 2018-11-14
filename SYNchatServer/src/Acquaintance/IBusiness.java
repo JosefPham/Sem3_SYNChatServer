@@ -1,5 +1,7 @@
 package Acquaintance;
 
+import java.util.Map;
+
 public interface IBusiness {
 
     public void injectPersistence(IPersistence per);
@@ -19,5 +21,9 @@ public interface IBusiness {
     public int updatePwSQL(IManagement management);
 
     public Boolean updateFriends(IFriends friends, int userID);
+    
+    public void removeOnlineUser(int userID);
+    
+    public Map updatePublicChatUsers(int userID);
 
 }
