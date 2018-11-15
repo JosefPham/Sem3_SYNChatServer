@@ -62,9 +62,9 @@ public class ServerSystem {
         //Action 1 = changeMail
         //Action 2 = changePw
         if (tmpManagement.getAction() == 1) {
-            returnstatus = BusinessFacade.getInstance().updateMailSQL(management);
+            returnstatus = BusinessFacade.getInstance().updateMailSQL(management, userID);
         } else if (tmpManagement.getAction() == 2) {
-            returnstatus = BusinessFacade.getInstance().updatePwSQL(management);
+            returnstatus = BusinessFacade.getInstance().updatePwSQL(management, userID);
         }
         return returnstatus;
     }

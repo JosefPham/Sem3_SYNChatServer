@@ -16,9 +16,9 @@ public interface IBusiness {
     
     public boolean alterProfile(IUser user);
     
-    public int updateMailSQL(IManagement management);
+    public int updateMailSQL(IManagement management, int userID);
     
-    public int updatePwSQL(IManagement management);
+    public int  updatePwSQL(IManagement management, int userID);
     
     public void removeOnlineUser(int userID);
     

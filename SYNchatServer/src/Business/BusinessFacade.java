@@ -89,13 +89,13 @@ public class BusinessFacade implements IBusiness {
     }
     
     @Override
-    public int updateMailSQL(IManagement management) {
-        return persistence.changeMail(management);
+    public int updateMailSQL(IManagement management, int userID) {
+        return persistence.changeMail(management, userID);
     }
     
     @Override
-    public int updatePwSQL(IManagement management) {
-        return persistence.changePw(management);
+    public int updatePwSQL(IManagement management, int userID) {
+        return persistence.changePw(management, userID);
     }
 
     @Override
