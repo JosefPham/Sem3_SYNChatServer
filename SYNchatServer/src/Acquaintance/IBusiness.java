@@ -19,11 +19,10 @@ public interface IBusiness {
     public int updateMailSQL(IManagement management);
     
     public int updatePwSQL(IManagement management);
-
-    public Boolean updateFriends(IFriends friends, int userID);
     
     public void removeOnlineUser(int userID);
     
     public Map updatePublicChatUsers(int userID);
 
+    public IFriends updateFriends(IFriends friends, int userID);
 }

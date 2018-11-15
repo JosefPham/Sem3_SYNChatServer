@@ -9,9 +9,7 @@ import Acquaintance.Nationality;
 import java.sql.*;
 import java.sql.DriverManager;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -177,41 +175,7 @@ public class DatabaseHandler {
     }
     
     
-    
-    
-    private IFriends getFriends(int userID){
-        
       
-        Map<Integer, String> friends = new HashMap<>();
-        try (Connection conn = DriverManager.getConnection(url, dbUsername, dbPassword)) {
-
-            PreparedStatement st1 = conn.prepareStatement("SELECT friend_lists.friendid FROM synchat.friend_lists WHERE userid = ?;");
-            st1.setInt(1, userID);
-
-            ResultSet rs = st1.executeQuery();
-
-//            if(rs.next() == false){
-//                friends.put(userID, "initialFriend");
-//            }
-            
-            while(rs.next()){
-             //   friends.addFriend(rs.getInt("friendid"),rs.getString("friendName"));
-                friends.put(rs.getInt("friendid"), rs.getString("friendName"));
-            }
-
-        } catch (SQLException ex) {
-            Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-         PerFriends returnFriends = new PerFriends(friends);
-        
-        return returnFriends;
-    }
-            
-            
-            
-            
-            
 
     private boolean createProfile(ILogin login, int profileID) {
 
@@ -379,6 +343,35 @@ public class DatabaseHandler {
             Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
         return updateBoolean;
+    }
+    
+    private IFriends getFriends(int userID){
+        
+      
+        List<Integer> friends = new ArrayList<>();
+        try (Connection conn = DriverManager.getConnection(url, dbUsername, dbPassword)) {
+
+            PreparedStatement st1 = conn.prepareStatement("SELECT friend_lists.friendid FROM synchat.friend_lists WHERE userid = ?;");
+            st1.setInt(1, userID);
+
+            ResultSet rs = st1.executeQuery();
+
+//            if(rs.next() == false){
+//                friends.put(userID, "initialFriend");
+//            }
+            
+            while(rs.next()){
+             //   friends.addFriend(rs.getInt("friendid"),rs.getString("friendName"));
+                friends.add(rs.getInt("friendid"));
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+         PerFriends returnFriends = new PerFriends(friends);
+        
+        return returnFriends;
     }
 
 

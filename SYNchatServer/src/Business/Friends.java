@@ -7,7 +7,8 @@
 package Business;
 
 import Acquaintance.IFriends;
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -16,48 +17,48 @@ import java.util.Map;
  */
 public class Friends implements IFriends {
 
-    Map<Integer,String> friendList = new HashMap<>();
+    List<Integer> friendList = new ArrayList<>();
     
     
-        public Friends(Map<Integer, String> friendlist) {
-        for (Integer key : friendlist.keySet()) {
-            this.friendList.put(key, friendlist.get(key));
+        public Friends(List<Integer> friendlist) {
+        for (Integer key : friendlist) {
+            this.friendList.add(key);
         }
     }
     
     
     @Override
-    public Map<Integer, String> getFriendlist() {
+    public List<Integer> getFriendlist() {
         return friendList;
     }
     
-    boolean updateFriends(IFriends newFriends, int userID) {
+    int updateFriends(IFriends newFriends, int userID) {
         if(this.friendList.size() < newFriends.getFriendlist().size()) {
-            for (Integer newID : newFriends.getFriendlist().keySet()) {
-                if(!this.friendList.containsKey(newID)) {
-                    this.friendList.put(newID, newFriends.getFriendlist().get(newID));
+            for (Integer newID : newFriends.getFriendlist()) {
+                if(!this.friendList.contains(newID)) {
+                    this.friendList.add(newID);
                     
-                    return BusinessFacade.getInstance().addFriend(userID, (int) newID);
+                    BusinessFacade.getInstance().addFriend(userID, (int) newID);
+                    return newID;
                 }
             }
         } else {
-            for (Integer ID : this.friendList.keySet()) {
-                if(!newFriends.getFriendlist().containsKey(ID)) {
+            for (Integer ID : this.friendList) {
+                if(!newFriends.getFriendlist().contains(ID)) {
                     this.friendList.remove(ID);
-                    return BusinessFacade.getInstance().removeFriend(userID, (int) ID);
+                    BusinessFacade.getInstance().removeFriend(userID, (int) ID);
+                    return ID;
                 }
             }
         }
-        return false;
+        return -1;
     }
 
-    @Override
-    public boolean addFriend(int userID, String profileName) {
-        friendList.put(userID, profileName);
+    public boolean addFriend(int userID) {
+        friendList.add(userID);
         return true;
     }
 
-    @Override
     public void removeFriend(int userID) {
         friendList.remove(userID);
     }

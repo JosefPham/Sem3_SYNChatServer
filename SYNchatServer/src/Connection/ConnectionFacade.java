@@ -83,7 +83,7 @@ public class ConnectionFacade implements IConnection {
         return business.updateProfile(user);
     }
 
-    boolean updateFriends(IFriends friends, int userID) {
+    IFriends updateFriends(IFriends friends, int userID) {
         return business.updateFriends(friends, userID);
     }
     

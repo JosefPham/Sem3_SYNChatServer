@@ -99,7 +99,7 @@ public class BusinessFacade implements IBusiness {
     }
 
     @Override
-    public Boolean updateFriends(IFriends friends, int userID) {
+    public IFriends updateFriends(IFriends friends, int userID) {
         return ServerSystem.getInstance().updateFriends(friends, userID);
     }
 
