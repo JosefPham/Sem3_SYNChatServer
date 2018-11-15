@@ -57,9 +57,9 @@ public class ServerSystem {
     }
 
 
-    protected int changeInfo(IManagement management) {
+    protected int changeInfo(IManagement management, int userID) {
         int returnstatus = 0;
-        IManagement tmpManagement = new Management(management.getAction(), management.getUserID(), management.getPw(), management.getString1());
+        IManagement tmpManagement = new Management(management.getAction(), management.getPw(), management.getString1());
         //Action 1 = changeMail
         //Action 2 = changePw
         if (tmpManagement.getAction() == 1) {

@@ -142,8 +142,8 @@ public class ClientHandler extends Thread {
                 return true;
             }
         } else if (obj instanceof IManagement) {
-            IManagement management = new ConManagement(((IManagement) obj).getAction(), ((IManagement) obj).getUserID(), ((IManagement) obj).getPw(), ((IManagement) obj).getString1());
-            sendInt(ConnectionFacade.getInstance().changeInfo(management));
+            IManagement management = new ConManagement(((IManagement) obj).getAction(), ((IManagement) obj).getPw(), ((IManagement) obj).getString1());
+            sendInt(ConnectionFacade.getInstance().changeInfo(management, this.userID));
             return true;
         } else if (obj instanceof String) {
             if (obj.toString().equals("!SYN!-logout-!SYN!")) {

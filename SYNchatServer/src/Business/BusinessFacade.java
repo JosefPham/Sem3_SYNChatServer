@@ -74,8 +74,8 @@ public class BusinessFacade implements IBusiness {
     }
     
     @Override
-    public int changeInfo(IManagement management) {
-        return serversys.changeInfo(management);
+    public int changeInfo(IManagement management, int userID) {
+        return serversys.changeInfo(management, userID);
     }
     
     @Override

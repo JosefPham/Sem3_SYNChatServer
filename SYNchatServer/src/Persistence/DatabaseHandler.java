@@ -288,8 +288,8 @@ public class DatabaseHandler {
         //return 3 = Password does no match and access is denied;
     }
 
-    int changePw(IManagement management) {
-        int passwordverification = verifyPw(management.getUserID(), management.getPw());
+    int changePw(IManagement management, int userID) {
+        int passwordverification = verifyPw(userID, management.getPw());
         int returnstatus = 2;
 
         switch (passwordverification) {
@@ -300,7 +300,7 @@ public class DatabaseHandler {
 
                     PreparedStatement st = conn.prepareStatement("UPDATE SYNchat.users SET password = ? WHERE users.userid = ?;");
                     st.setString(1, management.getString1());
-                    st.setString(2, (management.getUserID() + ""));
+                    st.setString(2, (userID + ""));
 
                     st.executeUpdate();
                     //success retrun 1.
@@ -325,8 +325,8 @@ public class DatabaseHandler {
         return returnstatus;
     }
 
-    int changeMail(IManagement management) {
-        int passwordverification = verifyPw(management.getUserID(), management.getPw());
+    int changeMail(IManagement management, int userID) {
+        int passwordverification = verifyPw(userID, management.getPw());
         int returnStatus = 2;
 
         switch (passwordverification) {
@@ -337,7 +337,7 @@ public class DatabaseHandler {
 
                     PreparedStatement st = conn.prepareStatement("UPDATE SYNchat.users SET mail = ? WHERE users.userid = ?;");
                     st.setString(1, management.getString1());
-                    st.setString(2, (management.getUserID() + ""));
+                    st.setString(2, (userID + ""));
 
                     st.executeUpdate();
                     //success return 1.

@@ -6,9 +6,9 @@ public interface IPersistence {
 
     public Boolean createUser(ILogin login);
     
-    public int changeMail(IManagement management);
+    public int changeMail(IManagement management, int userID);
     
-    public int changePw(IManagement management);
+    public int changePw(IManagement management, int userID);
     
     public boolean alterProfile(IUser user);
 

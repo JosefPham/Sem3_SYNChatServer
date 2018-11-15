@@ -10,7 +10,7 @@ public interface IConnection {
 
     public Boolean createUser(ILogin login);
     
-    public int changeInfo(IManagement management);
+    public int changeInfo(IManagement management, int userID);
     
     public boolean updateProfile(IUser user);
     

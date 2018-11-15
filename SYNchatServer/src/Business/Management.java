@@ -14,15 +14,13 @@ import Acquaintance.IManagement;
 public class Management implements IManagement {
     
     int action;
-    int userID;
     String newPw;
     String pw;
     String string1;
 
     //Method for creating an object of Management for changeMail purposes
-    public Management(int action, int userID, String pw, String string1) {
+    public Management(int action, String pw, String string1) {
         this.action = action;
-        this.userID = userID;
         this.pw = pw;
         this.string1 = string1;
     }
@@ -32,10 +30,6 @@ public class Management implements IManagement {
         return action;
     }
 
-    @Override
-    public int getUserID() {
-        return userID;
-    }
 
     @Override
     public String getPw() {

@@ -74,8 +74,8 @@ public class ConnectionFacade implements IConnection {
 
     
     @Override
-    public int changeInfo(IManagement management) {
-        return business.changeInfo(management);
+    public int changeInfo(IManagement management, int userID) {
+        return business.changeInfo(management, userID);
     }
     
     @Override
