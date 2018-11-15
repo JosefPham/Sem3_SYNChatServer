@@ -42,13 +42,17 @@ public class PersistenceFacade implements IPersistence {
 
     
     @Override
-    public int changeMail(IManagement management, int userID) {
+    public boolean changeMail(IManagement management, int userID) {
         return sqlDatabase.changeMail(management, userID);
     }
     
     @Override
-    public int changePw(IManagement management, int userID) {
+    public boolean changePw(IManagement management, int userID) {
         return sqlDatabase.changePw(management, userID);
+    }
+    
+    public boolean verify(IManagement management, int userID) {
+        return sqlDatabase.verify(management, userID);
     }
     
     @Override

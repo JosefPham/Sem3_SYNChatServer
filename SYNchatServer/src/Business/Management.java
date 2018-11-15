@@ -6,6 +6,7 @@
 package Business;
 
 import Acquaintance.IManagement;
+import Acquaintance.IProfile;
 
 /**
  *
@@ -14,15 +15,13 @@ import Acquaintance.IManagement;
 public class Management implements IManagement {
     
     int action;
-    String newPw;
     String pw;
-    String string1;
+    String mail;
+    IProfile profile;
 
     //Method for creating an object of Management for changeMail purposes
-    public Management(int action, String pw, String string1) {
+    public Management(int action) {
         this.action = action;
-        this.pw = pw;
-        this.string1 = string1;
     }
 
     @Override
@@ -37,8 +36,28 @@ public class Management implements IManagement {
     }
 
     @Override
-    public String getString1() {
-        return string1;
+    public String getMail() {
+        return mail;
+    }
+
+    @Override
+    public IProfile getProfile() {
+        return profile;
+    }
+
+    @Override
+    public void setPw(String pw) {
+        this.pw = pw;
+    }
+
+    @Override
+    public void setMail(String mail) {
+        this.mail = mail;
+    }
+
+    @Override
+    public void setProfile(IProfile profile) {
+        this.profile = profile;
     }
     
     

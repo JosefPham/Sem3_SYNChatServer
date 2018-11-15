@@ -26,7 +26,7 @@ public class ServerSystem {
         return instance;
     }
 
-    ILogin login(ILogin log) {
+   synchronized ILogin login(ILogin log) {
         ILogin login = new Login(log.gethMail(), log.gethPW());
 
         ILogin DBlog = BusinessFacade.getInstance().checkLoginDB(login);
@@ -50,26 +50,38 @@ public class ServerSystem {
     }
     
     
-    public void removeOnlineUser(int userID){
+    public synchronized void removeOnlineUser(int userID){
         onlineUsers.remove(userID);
         
     }
 
 
-    protected int changeInfo(IManagement management, int userID) {
-        int returnstatus = 0;
-        IManagement tmpManagement = new Management(management.getAction(), management.getPw(), management.getString1());
-        //Action 1 = changeMail
-        //Action 2 = changePw
-        if (tmpManagement.getAction() == 1) {
-            returnstatus = BusinessFacade.getInstance().updateMailSQL(management, userID);
-        } else if (tmpManagement.getAction() == 2) {
-            returnstatus = BusinessFacade.getInstance().updatePwSQL(management, userID);
+    protected synchronized boolean changeInfo(IManagement management, int userID) {
+        boolean returnstatus = false;
+        IManagement tmpManagement = new Management(management.getAction());
+        if (tmpManagement.getAction() == 0) {
+            returnstatus = BusinessFacade.getInstance().verify(management, userID);
+        } else if (tmpManagement.getAction() == 1) {
+            returnstatus = BusinessFacade.getInstance().verify(management, userID);
+        }
+        else if (tmpManagement.getAction() == 2){
+            returnstatus = BusinessFacade.getInstance().alterProfile(onlineUsers.get(userID));
+            if(!tmpManagement.getMail().isEmpty()){
+                returnstatus = BusinessFacade.getInstance().updateMailSQL(management, userID);
+            }
+            else if(tmpManagement.getPw().isEmpty()){
+               returnstatus = BusinessFacade.getInstance().updatePwSQL(management, userID);
+            }
         }
         return returnstatus;
+        
+        
+        //0 check pw
+        //1 check mail
+        //2 update all
     }
 
-    protected boolean updateProfile(IUser user) {
+    protected synchronized boolean updateProfile(IUser user) {
         IUser oldUser = onlineUsers.get(user.getUserID());
         
         if(!oldUser.getProfile().getFirstName().equals(user.getProfile().getFirstName())){
@@ -89,7 +101,7 @@ public class ServerSystem {
         
     }
     
-    IFriends updateFriends(IFriends friends, int userID) {
+    synchronized IFriends updateFriends(IFriends friends, int userID) {
         if(!onlineUsers.containsKey(userID)) {
             System.out.println("User not found in onlineUsers!");
             return new Friends(new ArrayList<>());
@@ -98,7 +110,7 @@ public class ServerSystem {
         }
     }
     
-    Map<Integer, User> getOnlineUsers() {
+   synchronized Map<Integer, User> getOnlineUsers() {
         return onlineUsers;
     }
     

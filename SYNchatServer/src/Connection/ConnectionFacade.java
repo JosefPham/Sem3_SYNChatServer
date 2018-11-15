@@ -63,10 +63,9 @@ public class ConnectionFacade implements IConnection {
          ILogin log = new ConLogin(l.getLoginvalue(), null);
           return log;
         }
-        
-       
     }
 
+    
     @Override
     public Boolean createUser(ILogin login) {
         return business.createUser(login);
@@ -74,7 +73,7 @@ public class ConnectionFacade implements IConnection {
 
     
     @Override
-    public int changeInfo(IManagement management, int userID) {
+    public boolean changeInfo(IManagement management, int userID) {
         return business.changeInfo(management, userID);
     }
     

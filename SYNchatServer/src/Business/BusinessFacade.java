@@ -74,7 +74,7 @@ public class BusinessFacade implements IBusiness {
     }
     
     @Override
-    public int changeInfo(IManagement management, int userID) {
+    public boolean changeInfo(IManagement management, int userID) {
         return serversys.changeInfo(management, userID);
     }
     
@@ -89,12 +89,12 @@ public class BusinessFacade implements IBusiness {
     }
     
     @Override
-    public int updateMailSQL(IManagement management, int userID) {
+    public boolean updateMailSQL(IManagement management, int userID) {
         return persistence.changeMail(management, userID);
     }
     
     @Override
-    public int updatePwSQL(IManagement management, int userID) {
+    public boolean updatePwSQL(IManagement management, int userID) {
         return persistence.changePw(management, userID);
     }
 
@@ -119,6 +119,11 @@ public class BusinessFacade implements IBusiness {
     @Override
     public Map updatePublicChatUsers(int userID){
         return serversys.updatePublicChatUsers(userID);
+    }
+
+    @Override
+    public boolean verify(IManagement management, int userID) {
+       return persistence.verify(management, userID);
     }
 
 }

@@ -134,30 +134,31 @@ public class ClientHandler extends Thread {
 
         System.out.println("Waiting");
 
-        if (obj instanceof IUser) {
-            System.out.println("Det er en User");
+        if (obj instanceof IMessage) {
+            ConMessage msg = new ConTextMessage(((IMessage) obj).getSenderID(), ((IMessage) obj).getContext());
+
+            System.out.println("msg: " + msg.getContext() + " at time: " + msg.getTimestamp().toString());
+            if (msg.getContext().contains("!SYN!-logout-!SYN!")) {
+                
+                sendPublicMessage(msg);
+                return true;
+            }
+        } else if (obj instanceof IManagement) {
+            
+            IManagement management = new ConManagement(((IManagement) obj).getAction(), ((IManagement) obj).getPw(), ((IManagement) obj).getMail(), ((IManagement) obj).getProfile());
+            sendBool(ConnectionFacade.getInstance().changeInfo(management, this.userID));
+            
+            
             ConUser user = new ConUser(((IProfile) obj).getFirstName(), ((IProfile) obj).getLastName(), ((IProfile) obj).getNationality(), ((IUser) obj).getProfile().getProfileText());
             user.setUserID(((IUser) obj).getUserID());
             user.setChats(((IUser) obj).getChats());
             user.setReports(((IUser) obj).getReports());
             user.setBanned(((IUser) obj).isBanned());
             sendBool(ConnectionFacade.getInstance().updateProfile(user));
-            return true;
-
-        } else if (obj instanceof IMessage) {
-            ConMessage msg = new ConTextMessage(((IMessage) obj).getSenderID(), ((IMessage) obj).getContext());
-
-            System.out.println("msg: " + msg.getContext() + " at time: " + msg.getTimestamp().toString());
-            if (msg.getContext().contains("!SYN!-logout-!SYN!")) {
-                System.out.println("Modtog logout");
-                return false;
-            } else {
-                sendPublicMessage(msg);
-                return true;
-            }
-        } else if (obj instanceof IManagement) {
-            IManagement management = new ConManagement(((IManagement) obj).getAction(), ((IManagement) obj).getPw(), ((IManagement) obj).getString1());
-            sendInt(ConnectionFacade.getInstance().changeInfo(management, this.userID));
+            
+            
+            
+            
             return true;
         } else if (obj instanceof String) {
             if (obj.toString().equals("!SYN!-logout-!SYN!")) {

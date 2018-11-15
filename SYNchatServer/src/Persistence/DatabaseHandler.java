@@ -220,108 +220,101 @@ public class DatabaseHandler {
         return userID;
     }
 
-    int verifyPw(int userID, String hashedPw) {
-        int returnstatus = 0;
+    boolean verify(IManagement management, int userID) {
+        
+        boolean returnstatus = false;
 
-        try (Connection conn = DriverManager.getConnection(url, dbUsername, dbPassword)) {
+        if(management.getAction() == 0){
+            System.out.println("Checking pw");
+            try (Connection conn = DriverManager.getConnection(url, dbUsername, dbPassword)) {
             Class.forName("org.postgresql.Driver");
 
             PreparedStatement st = conn.prepareStatement("SELECT users.password FROM SYNchat.users WHERE users.userid = ?;");
-            st.setString(1, (userID + ""));
+            st.setInt(1, (userID));
 
             ResultSet rs = st.executeQuery();
             if (rs.next()) {
-                if (rs.getString("password").equals(hashedPw.toString())) {
-                    //if passwords match retur 1 for success.
-                    returnstatus = 1;
-                } else if (!rs.getString("password").equals(hashedPw.toString())) {
-                    returnstatus = 3;
+                if (rs.getString("password").equals(management.getPw())) {
+                    //if passwords match return 1 for success.
+                    returnstatus = true;
                 } else {
-                    returnstatus = 2;
+                    returnstatus = false;
                 }
             }
 
         } catch (SQLException | ClassNotFoundException ex) {
             Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
-        //If password is incorrect retur 2 for error
-        return returnstatus;
+        }
+        else if(management.getAction() == 1){
+            System.out.println("Checking mail");
+            try (Connection conn = DriverManager.getConnection(url, dbUsername, dbPassword)) {
+            Class.forName("org.postgresql.Driver");
 
-        //Return 1 = success;
-        //return 2 = unknown error with verifcation;
-        //return 3 = Password does no match and access is denied;
+            PreparedStatement st = conn.prepareStatement("SELECT users.mail FROM SYNchat.users WHERE users.userid = ?;");
+            st.setInt(1, (userID));
+
+            ResultSet rs = st.executeQuery();
+            if (rs.next()) {
+                if (rs.getString("mail").equals(management.getMail())) {
+                    //if passwords match return 1 for success.
+                    returnstatus = true;
+                } else {
+                    returnstatus = false;
+                }
+            }
+
+        } catch (SQLException | ClassNotFoundException ex) {
+            Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        }
+        
+       
+        return returnstatus;
     }
 
-    int changePw(IManagement management, int userID) {
-        int passwordverification = verifyPw(userID, management.getPw());
-        int returnstatus = 2;
+    boolean changePw(IManagement management, int userID) {
+      //  int passwordverification = verifyPw(userID, management.getPw());
+        boolean returnstatus = false;
 
-        switch (passwordverification) {
-            case 1:
+    
                 //password success, edit database entries
                 try (Connection conn = DriverManager.getConnection(url, dbUsername, dbPassword)) {
                     Class.forName("org.postgresql.Driver");
 
                     PreparedStatement st = conn.prepareStatement("UPDATE SYNchat.users SET password = ? WHERE users.userid = ?;");
-                    st.setString(1, management.getString1());
-                    st.setString(2, (userID + ""));
+                    st.setString(1, management.getPw());
+                    st.setInt(2, (userID));
 
                     st.executeUpdate();
-                    //success retrun 1.
-                    returnstatus = 1;
+                    returnstatus = true;
 
                 } catch (SQLException | ClassNotFoundException ex) {
                     Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                break;
-            case 2:
-                //password verification failed
-                returnstatus = 4;
-                break;
-            case 3:
-                //Passwords did not match
-                returnstatus = 3;
-                break;
-            default:
-                returnstatus = 2;
-        }
-
+           
         return returnstatus;
     }
 
-    int changeMail(IManagement management, int userID) {
-        int passwordverification = verifyPw(userID, management.getPw());
-        int returnStatus = 2;
+    boolean changeMail(IManagement management, int userID) {
+        boolean returnStatus = false;
 
-        switch (passwordverification) {
-            case 1:
+      
                 //password success, edit database entries
                 try (Connection conn = DriverManager.getConnection(url, dbUsername, dbPassword)) {
                     Class.forName("org.postgresql.Driver");
 
                     PreparedStatement st = conn.prepareStatement("UPDATE SYNchat.users SET mail = ? WHERE users.userid = ?;");
-                    st.setString(1, management.getString1());
+                    st.setString(1, management.getMail());
                     st.setString(2, (userID + ""));
 
                     st.executeUpdate();
                     //success return 1.
-                    returnStatus = 1;
+                    returnStatus = true;
 
                 } catch (SQLException | ClassNotFoundException ex) {
                     Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                break;
-            case 2:
-                //password verification faliure
-                returnStatus = 4;
-                break;
-            case 3:
-                //passwords did not match
-                returnStatus = 3;
-                break;
-            default:
-                returnStatus = 2;
-        }
         return returnStatus;
     }
 

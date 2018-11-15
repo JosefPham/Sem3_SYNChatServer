@@ -15,6 +15,16 @@ public interface IManagement {
 
     public String getPw();
 
-    public String getString1();
+    public String getMail();
+    
+    public IProfile getProfile();
+    
+    public void setPw(String pw);
+    
+    public void setMail(String mail);
+    
+    public void setProfile(IProfile profile);
+    
+    
     
 }

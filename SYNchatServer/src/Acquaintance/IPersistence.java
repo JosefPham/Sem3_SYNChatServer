@@ -6,14 +6,16 @@ public interface IPersistence {
 
     public Boolean createUser(ILogin login);
     
-    public int changeMail(IManagement management, int userID);
+    public boolean changeMail(IManagement management, int userID);
     
-    public int changePw(IManagement management, int userID);
+    public boolean changePw(IManagement management, int userID);
     
     public boolean alterProfile(IUser user);
 
     public boolean addFriend(int userID, int newFriendID);
 
     public boolean removeFriend(int userID, int oldFriendID);
+    
+    public boolean verify(IManagement management, int userID);
 
 }
