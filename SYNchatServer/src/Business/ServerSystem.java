@@ -58,18 +58,15 @@ public class ServerSystem {
 
     protected synchronized boolean changeInfo(IManagement management, int userID) {
         boolean returnstatus = false;
-        IManagement tmpManagement = new Management(management.getAction());
-        if (tmpManagement.getAction() == 0) {
+        if ((management.getAction() == 0) || (management.getAction() == 1)) {
             returnstatus = BusinessFacade.getInstance().verify(management, userID);
-        } else if (tmpManagement.getAction() == 1) {
-            returnstatus = BusinessFacade.getInstance().verify(management, userID);
-        }
-        else if (tmpManagement.getAction() == 2){
-            returnstatus = BusinessFacade.getInstance().alterProfile(onlineUsers.get(userID));
-            if(!tmpManagement.getMail().isEmpty()){
+        } 
+        else if (management.getAction() == 2){
+            returnstatus = BusinessFacade.getInstance().alterProfile(management, userID);
+            if(!management.getMail().equals("")){
                 returnstatus = BusinessFacade.getInstance().updateMailSQL(management, userID);
             }
-            else if(tmpManagement.getPw().isEmpty()){
+            else if(!management.getPw().equals("")){
                returnstatus = BusinessFacade.getInstance().updatePwSQL(management, userID);
             }
         }
@@ -81,23 +78,10 @@ public class ServerSystem {
         //2 update all
     }
 
-    protected synchronized boolean updateProfile(IUser user) {
-        IUser oldUser = onlineUsers.get(user.getUserID());
-        
-        if(!oldUser.getProfile().getFirstName().equals(user.getProfile().getFirstName())){
-            return BusinessFacade.getInstance().alterProfile(user);
-        }
-        if(!oldUser.getProfile().getLastName().equals(user.getProfile().getLastName())){
-            return BusinessFacade.getInstance().alterProfile(user);
-        }
-        if(!oldUser.getProfile().getProfileText().equals(user.getProfile().getProfileText())){
-            return BusinessFacade.getInstance().alterProfile(user);
-        }
-        if(!oldUser.getProfile().getNationality().equals(user.getProfile().getNationality())){
-            return BusinessFacade.getInstance().alterProfile(user);
-        }
-        
-        return false;
+    protected synchronized boolean updateProfile(IManagement management, int userID) {
+       // IUser oldUser = onlineUsers.get(user.getUserID());
+        boolean status = false;
+        return BusinessFacade.getInstance().alterProfile(management, userID);
         
     }
     

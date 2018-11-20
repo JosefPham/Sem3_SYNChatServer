@@ -145,16 +145,21 @@ public class ClientHandler extends Thread {
             }
         } else if (obj instanceof IManagement) {
             
-            IManagement management = new ConManagement(((IManagement) obj).getAction(), ((IManagement) obj).getPw(), ((IManagement) obj).getMail(), ((IManagement) obj).getProfile());
+            IManagement management = new ConManagement(((IManagement) obj).getAction());
+            management.setPw(((IManagement) obj).getPw());
+            System.out.println("Management pw " + management.getPw());
+            management.setMail(((IManagement) obj).getMail());
+            System.out.println("Management mail " + management.getMail());
+            management.setProfile(((IManagement) obj).getProfile());
             sendBool(ConnectionFacade.getInstance().changeInfo(management, this.userID));
-            
-            
-            ConUser user = new ConUser(((IProfile) obj).getFirstName(), ((IProfile) obj).getLastName(), ((IProfile) obj).getNationality(), ((IUser) obj).getProfile().getProfileText());
-            user.setUserID(((IUser) obj).getUserID());
-            user.setChats(((IUser) obj).getChats());
-            user.setReports(((IUser) obj).getReports());
-            user.setBanned(((IUser) obj).isBanned());
-            sendBool(ConnectionFacade.getInstance().updateProfile(user));
+//            
+//            
+//            ConUser user = new ConUser(((IProfile) obj).getFirstName(), ((IProfile) obj).getLastName(), ((IProfile) obj).getNationality(), ((IUser) obj).getProfile().getProfileText());
+//            user.setUserID(((IUser) obj).getUserID());
+//            user.setChats(((IUser) obj).getChats());
+//            user.setReports(((IUser) obj).getReports());
+//            user.setBanned(((IUser) obj).isBanned());
+//            sendBool(ConnectionFacade.getInstance().updateProfile(management, userID));
             
             
             
@@ -278,7 +283,7 @@ public class ClientHandler extends Thread {
         IUser sendUser = new ConUser(newUser.getUserID(), newUser.isBanned(), newUser.getReports(), newUser.getChats(), newUser.getFriends(), sendProfile);
         synchronized (currentPublicChatMap) {
             for (Integer i : currentPublicChatMap.keySet()) {
-                if (i != userID) {
+              //  if (i != userID) {
 
                     ClientHandler ch = (ClientHandler) clients.get(i);
                     try {
@@ -289,7 +294,7 @@ public class ClientHandler extends Thread {
                     } catch (IOException ex) {
                         ch.interrupt();
                     }
-                }
+               // }
             }
         }
 

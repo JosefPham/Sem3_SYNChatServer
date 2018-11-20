@@ -12,9 +12,9 @@ public interface IBusiness {
     
     public boolean changeInfo(IManagement management, int userID);
     
-    public boolean updateProfile(IUser user);
+    public boolean updateProfile(IManagement management, int userID);
     
-    public boolean alterProfile(IUser user);
+    public boolean alterProfile(IManagement management, int userID);
     
     public boolean updateMailSQL(IManagement management, int userID);
     

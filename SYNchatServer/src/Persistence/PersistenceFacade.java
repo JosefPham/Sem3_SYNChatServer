@@ -56,8 +56,8 @@ public class PersistenceFacade implements IPersistence {
     }
     
     @Override
-    public boolean alterProfile(IUser user) {
-        return sqlDatabase.alterProfile(user);
+    public boolean alterProfile(IManagement management, int userID) {
+        return sqlDatabase.alterProfile(management, userID);
     }
 
     @Override

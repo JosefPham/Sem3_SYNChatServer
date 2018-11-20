@@ -12,7 +12,7 @@ public interface IConnection {
     
     public boolean changeInfo(IManagement management, int userID);
     
-    public boolean updateProfile(IUser user);
+    public boolean updateProfile(IManagement management, int userID);
     
     public Map updatePublicChatUsers(int userID);
 

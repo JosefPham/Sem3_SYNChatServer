@@ -306,7 +306,7 @@ public class DatabaseHandler {
 
                     PreparedStatement st = conn.prepareStatement("UPDATE SYNchat.users SET mail = ? WHERE users.userid = ?;");
                     st.setString(1, management.getMail());
-                    st.setString(2, (userID + ""));
+                    st.setInt(2, (userID));
 
                     st.executeUpdate();
                     //success return 1.
@@ -318,18 +318,20 @@ public class DatabaseHandler {
         return returnStatus;
     }
 
-    boolean alterProfile(IUser user) {
+    boolean alterProfile(IManagement management, int userID) {
+        System.out.println("user: " + management.getProfile().getFirstName() + " " + management.getProfile().getLastName());
         Boolean updateBoolean = false;
         try (Connection conn = DriverManager.getConnection(url, dbUsername, dbPassword)) {
             Class.forName("org.postgresql.Driver");
-            PreparedStatement st0 = conn.prepareStatement("UPDATE synchat.profiles SET firstname = '?', lastname = '?', nationality = '?', profiletext = '?', picture_reference = '?' WHERE synchat.userid = ?;");
-            st0.setString(1, user.getProfile().getFirstName());
-            st0.setString(2, user.getProfile().getLastName());
-            st0.setString(3, user.getProfile().getNationality().toString());
-            st0.setString(4, user.getProfile().getProfileText());
-            st0.setInt(5, (user.getUserID()));
-            st0.setString(6, user.getProfile().getPicture());
-
+            PreparedStatement st0 = conn.prepareStatement("UPDATE synchat.profiles SET firstname = ?, lastname = ?, nationality = ?, profile_text = ?, picture_reference = ? WHERE profiles.userid = ?;");
+            st0.setString(1, management.getProfile().getFirstName());
+            st0.setString(2, management.getProfile().getLastName());
+            st0.setString(3, management.getProfile().getNationality().toString());
+            st0.setString(4, management.getProfile().getProfileText());
+            
+            st0.setString(5, management.getProfile().getPicture());
+            st0.setInt(6, (userID));
+            System.out.println("st0" + st0);
             st0.executeUpdate();
             updateBoolean = true;
         } catch (SQLException | ClassNotFoundException ex) {

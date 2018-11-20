@@ -78,8 +78,8 @@ public class ConnectionFacade implements IConnection {
     }
     
     @Override
-    public boolean updateProfile(IUser user) {
-        return business.updateProfile(user);
+    public boolean updateProfile(IManagement management, int userID) {
+        return business.updateProfile(management, userID);
     }
 
     IFriends updateFriends(IFriends friends, int userID) {

@@ -37,7 +37,7 @@ public class SYNchatServer {
         con.injectBusiness(business);
 
         try {
-            InetAddress ip = (InetAddress) InetAddress.getByName("10.126.33.137");
+            InetAddress ip = (InetAddress) InetAddress.getByName("10.126.41.217");
             int port = 8080;
             Server server = new Server(ip, port);
 
