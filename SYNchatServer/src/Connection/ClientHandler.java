@@ -138,8 +138,7 @@ public class ClientHandler extends Thread {
             ConMessage msg = new ConTextMessage(((IMessage) obj).getSenderID(), ((IMessage) obj).getContext());
 
             System.out.println("msg: " + msg.getContext() + " at time: " + msg.getTimestamp().toString());
-            if (msg.getContext().contains("!SYN!-logout-!SYN!")) {
-                
+            if (!msg.getContext().contains("!SYN!-logout-!SYN!")) {
                 sendPublicMessage(msg);
                 return true;
             }
