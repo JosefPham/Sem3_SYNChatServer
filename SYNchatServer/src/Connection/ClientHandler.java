@@ -163,9 +163,9 @@ public class ClientHandler extends Thread {
                 System.out.println("Entered public chat with " + userID);
                 Map m = ConnectionFacade.getInstance().updatePublicChatUsers(userID);
                 currentPublicChatMap = m;
-                if (!m.containsKey(userID)) {
+               // if (m.containsKey(userID)) {
                     sendMap(m);
-                }
+               // }
             }
         }
 
