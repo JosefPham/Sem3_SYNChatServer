@@ -3,7 +3,6 @@ package Connection;
 import Acquaintance.IFriends;
 import Acquaintance.IProfile;
 import Acquaintance.IUser;
-import Acquaintance.Nationality;
 import java.util.List;
 
 public class ConUser implements IUser {
@@ -15,17 +14,13 @@ public class ConUser implements IUser {
     private IFriends friends;
     private IProfile profile;
 
-    public ConUser(String firstName, String lastName, Nationality nationality, String profileText) {
-        profile = new ConProfile(firstName, lastName, nationality, "");
-    }
-
-    public ConUser(int userID, boolean banned, int reports, List<Integer> chats, IFriends friends, IProfile profile) {
-        this.userID = userID;
-        this.banned = banned;
-        this.reports = reports;
-        this.chats = chats;
-        this.friends = friends;
-        this.profile = profile;
+    public ConUser(IUser user) {
+        profile = new ConProfile(user.getProfile());
+        this.userID = user.getUserID();
+        this.banned = user.isBanned();
+        this.reports = user.getReports();
+        this.chats = user.getChats();
+        this.friends = user.getFriends();
     }
 
     @Override
@@ -77,8 +72,8 @@ public class ConUser implements IUser {
     public IFriends getFriends() {
         return friends;
     }
-    
-     public void setFriends(IFriends friends) {
+
+    public void setFriends(IFriends friends) {
         this.friends = friends;
     }
 }

@@ -119,7 +119,8 @@ public class ClientHandler extends Thread {
 
             if (((ILogin) obj).getUser() == null) {
                 l = ConnectionFacade.getInstance().checkLogin((ILogin) obj);
-                sendLoginInfo(l);
+                ILogin sendConLog = new ConLogin(l);
+                sendLoginInfo(sendConLog);
             } else {
                 Boolean b = ConnectionFacade.getInstance().createUser((ILogin) obj);
                 System.out.println("Sender: " + b);
@@ -151,7 +152,7 @@ public class ClientHandler extends Thread {
             System.out.println("Management mail " + management.getMail());
             management.setProfile(((IManagement) obj).getProfile());
             sendBool(ConnectionFacade.getInstance().changeInfo(management, this.userID));
-//            
+ 
 //            
 //            ConUser user = new ConUser(((IProfile) obj).getFirstName(), ((IProfile) obj).getLastName(), ((IProfile) obj).getNationality(), ((IUser) obj).getProfile().getProfileText());
 //            user.setUserID(((IUser) obj).getUserID());
@@ -275,11 +276,10 @@ public class ClientHandler extends Thread {
         }
     }
 
-    protected void sendPublicChatUser(int userID) {
+    protected void sendPublicChatUser(int userID) { // opdater så den kan sende friends også - sendMap
         IUser newUser = currentPublicChatMap.get(userID);
-        IProfile sendProfile = new ConProfile(newUser.getProfile().getFirstName(), newUser.getProfile().getLastName(), newUser.getProfile().getNationality(), newUser.getProfile().getProfileText());
-        sendProfile.setPicture(newUser.getProfile().getPicture());
-        IUser sendUser = new ConUser(newUser.getUserID(), newUser.isBanned(), newUser.getReports(), newUser.getChats(), newUser.getFriends(), sendProfile);
+        IProfile sendProfile = new ConProfile(newUser.getProfile());
+        IUser sendUser = new ConUser(newUser);
         synchronized (currentPublicChatMap) {
             for (Integer i : currentPublicChatMap.keySet()) {
               //  if (i != userID) {
