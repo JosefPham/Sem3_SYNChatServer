@@ -364,7 +364,7 @@ public class DatabaseHandler {
             Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-         PerFriends returnFriends = new PerFriends(friends);
+         IFriends returnFriends = new PerFriends(friends);
         
         return returnFriends;
     }

@@ -21,6 +21,16 @@ public class Profile implements IProfile {
     String picture; //Watch out for the datatype!
     String profileText;
 
+    
+    
+    public Profile(IProfile profile){
+        this.firstName = profile.getFirstName();
+        this.lastName = profile.getLastName();
+        this.nationality = profile.getNationality();
+        this.picture = profile.getPicture();
+        this.profileText = profile.getProfileText();
+    }
+    
     public Profile(String firstName, String lastName, Nationality nationality) {
         this.firstName = firstName;
         this.lastName = lastName;

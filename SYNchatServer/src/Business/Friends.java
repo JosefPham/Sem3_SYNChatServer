@@ -20,6 +20,10 @@ public class Friends implements IFriends {
     List<Integer> friendList = new ArrayList<>();
     
     
+    public Friends(IFriends friends){
+        this.friendList = friends.getFriendlist();
+    }
+    
         public Friends(List<Integer> friendlist) {
         for (Integer key : friendlist) {
             this.friendList.add(key);

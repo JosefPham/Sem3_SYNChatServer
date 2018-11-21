@@ -28,6 +28,7 @@ public class ConLogin implements ILogin {
         this.hMail = login.gethMail();
         this.hPW = login.gethPW();
         this.loginvalue = login.getLoginvalue();
+        if(login.getUser() != null)
         this.user = new ConUser(login.getUser());
     }
 

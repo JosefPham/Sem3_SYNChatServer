@@ -16,6 +16,17 @@ public class User implements IUser {
     private IProfile profile;
     private Friends friends;
 
+    
+    public User(IUser user){
+        this.userID = user.getUserID();
+        this.banned = user.isBanned();
+        this.reports = user.getReports();
+        this.chats = user.getChats();
+        this.profile = new Profile(user.getProfile());
+        this.friends = new Friends(user.getFriends());
+    }
+    
+    
     public User(String firstName, String lastName, Nationality nationality, String profileText) {
         profile = new Profile(firstName, lastName, nationality, profileText);
     }

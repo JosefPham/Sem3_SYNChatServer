@@ -5,7 +5,9 @@ import Acquaintance.IFriends;
 import Acquaintance.ILogin;
 import Acquaintance.IManagement;
 import Acquaintance.IPersistence;
+import Acquaintance.IProfile;
 import Acquaintance.IUser;
+import Acquaintance.Nationality;
 import java.util.Map;
 
 public class BusinessFacade implements IBusiness {
@@ -65,7 +67,12 @@ public class BusinessFacade implements IBusiness {
     }
     
     ILogin checkLoginDB(ILogin login) {
-        return persistence.Login(login);
+//        IProfile profile = new Profile(login.getUser().getProfile());
+//        IFriends friends = new Friends(login.getUser().getFriends());
+//        IUser user = new User(login.getUser());
+        ILogin tmpLogin = persistence.Login(login);
+        ILogin returnLogin = new Login(tmpLogin);
+        return returnLogin;
     }
 
     @Override

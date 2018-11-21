@@ -15,12 +15,12 @@ public class ConUser implements IUser {
     private IProfile profile;
 
     public ConUser(IUser user) {
-        profile = new ConProfile(user.getProfile());
+        this.profile = new ConProfile(user.getProfile());
         this.userID = user.getUserID();
         this.banned = user.isBanned();
         this.reports = user.getReports();
         this.chats = user.getChats();
-        this.friends = user.getFriends();
+        this.friends = new ConFriends(user.getFriends());
     }
 
     @Override

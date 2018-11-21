@@ -49,11 +49,6 @@ public class ConnectionFacade implements IConnection {
     public ILogin checkLogin(ILogin login) {
         ILogin l = business.checkLogin(login);
         if(l.getLoginvalue() == 2){
-        IProfile profile = new ConProfile(l.getUser().getProfile());
-        ConFriends friends = new ConFriends(l.getUser().getFriends().getFriendlist());
-        ConUser retUser = new ConUser(l.getUser());
-        
-        retUser.setFriends(friends);
         ILogin log = new ConLogin(l);  
          return log;
         }

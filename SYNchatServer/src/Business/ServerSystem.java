@@ -32,16 +32,8 @@ public class ServerSystem {
         ILogin DBlog = BusinessFacade.getInstance().checkLoginDB(login);
 
         if (DBlog.getLoginvalue() == 2) {
-            Friends friends = new Friends(DBlog.getUser().getFriends().getFriendlist());
-            User onlineUser = new User(DBlog.getUser().getProfile().getFirstName(), DBlog.getUser().getProfile().getLastName(), DBlog.getUser().getProfile().getNationality(), DBlog.getUser().getProfile().getProfileText());
-            onlineUser.setUserID(DBlog.getUser().getUserID());
-            onlineUser.setProfile(DBlog.getUser().getProfile());
-            onlineUser.getProfile().setPicture(DBlog.getUser().getProfile().getPicture());
-            onlineUser.setReports(DBlog.getUser().getReports());
-            onlineUser.setBanned(DBlog.getUser().isBanned());
-            onlineUser.setChats(DBlog.getUser().getChats());
-            onlineUser.setFriends(friends);
-            onlineUsers.put(onlineUser.getUserID(), onlineUser);
+            User onlineUser = new User(DBlog.getUser());
+            onlineUsers.put(DBlog.getUser().getUserID(), onlineUser);
             // add user to server
             // maybe check stuff? Does the user have any chats?
         }

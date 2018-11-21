@@ -24,6 +24,14 @@ public class Login implements ILogin, Serializable {
         hMail = mail;
         hPW = pw;
     }
+    
+    public Login(ILogin login){
+        this.hMail = login.gethMail();
+        this.hPW = login.gethPW();
+        this.loginvalue = login.getLoginvalue();
+        if(login.getUser() != null)
+        this.user = new User(login.getUser());
+    }
 
     public Login(int loginvalue, IUser user) {
         this.loginvalue = loginvalue;
