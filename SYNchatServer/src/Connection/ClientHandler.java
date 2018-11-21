@@ -101,10 +101,16 @@ public class ClientHandler extends Thread {
         }
     }
 
-    public void sendMap(Map m) {
+    public void sendMap(Map<Integer, IUser> m) {
         try {
-            output.writeObject(m);
-            System.out.println("Sendte en map");
+            Map<Integer, IUser> conMap = new HashMap<>();
+            for(int i : m.keySet()){
+                conMap.put(i, new ConUser(m.get(i)));
+            }
+            output.writeObject(conMap);
+            
+            System.out.println("Sendte en map " + userID);
+            System.out.println("Map: " + m.get(userID));
         } catch (IOException ex) {
             Logger.getLogger(ClientHandler.class.getName()).log(Level.SEVERE, null, ex);
         }

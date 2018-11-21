@@ -90,6 +90,7 @@ public class ServerSystem {
             return publicChatUser;
         } else {
             publicChatUser.put(userID, onlineUsers.get(userID));
+            System.out.println("Mappet i serverSYs: " + publicChatUser.get(userID));
             return publicChatUser;
             // send tilbage til sigurd
         }

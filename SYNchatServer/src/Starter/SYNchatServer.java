@@ -9,6 +9,7 @@ import Persistence.PersistenceFacade;
 
 import Connection.Server;
 import java.io.IOException;
+import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -36,6 +37,8 @@ public class SYNchatServer {
         con.injectBusiness(business);
 
         try {
+            System.out.println(InetAddress.getLocalHost().getHostAddress());
+            System.out.println(Inet4Address.getLocalHost().getHostAddress());
             InetAddress ip = (InetAddress) InetAddress.getByName("10.126.41.217");
             int port = 8080;
             Server server = new Server(ip, port);
