@@ -3,7 +3,6 @@ package Business;
 import Acquaintance.IMessage;
 import java.io.Serializable;
 import java.time.Instant;
-import java.util.Date;
 
 /**
  *
@@ -28,7 +27,7 @@ public abstract class Message implements Serializable, IMessage {
     public Instant getTimestamp() {
         return timestamp;
     }
-    
+
     @Override
     public String getContext() {
         return "Abstract klasse getContext";

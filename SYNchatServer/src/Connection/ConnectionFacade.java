@@ -5,8 +5,6 @@ import Acquaintance.IConnection;
 import Acquaintance.IFriends;
 import Acquaintance.ILogin;
 import Acquaintance.IManagement;
-import Acquaintance.IProfile;
-import Acquaintance.IUser;
 import java.util.Map;
 
 public class ConnectionFacade implements IConnection {
@@ -48,28 +46,25 @@ public class ConnectionFacade implements IConnection {
     @Override
     public ILogin checkLogin(ILogin login) {
         ILogin l = business.checkLogin(login);
-        if(l.getLoginvalue() == 2){
-        ILogin log = new ConLogin(l);  
-         return log;
-        }
-        else{
-         ILogin log = new ConLogin(l);
-          return log;
+        if (l.getLoginvalue() == 2) {
+            ILogin log = new ConLogin(l);
+            return log;
+        } else {
+            ILogin log = new ConLogin(l);
+            return log;
         }
     }
 
-    
     @Override
     public Boolean createUser(ILogin login) {
         return business.createUser(login);
     }
 
-    
     @Override
     public boolean changeInfo(IManagement management, int userID) {
         return business.changeInfo(management, userID);
     }
-    
+
     @Override
     public boolean updateProfile(IManagement management, int userID) {
         return business.updateProfile(management, userID);
@@ -78,13 +73,13 @@ public class ConnectionFacade implements IConnection {
     IFriends updateFriends(IFriends friends, int userID) {
         return business.updateFriends(friends, userID);
     }
-    
-    public void removeOnlineUser(int userID){
+
+    public void removeOnlineUser(int userID) {
         business.removeOnlineUser(userID);
     }
 
     @Override
     public Map updatePublicChatUsers(int userID) {
-       return business.updatePublicChatUsers(userID);
+        return business.updatePublicChatUsers(userID);
     }
 }

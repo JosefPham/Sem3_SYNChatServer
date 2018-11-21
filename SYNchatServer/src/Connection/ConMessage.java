@@ -3,7 +3,6 @@ package Connection;
 import Acquaintance.IMessage;
 import java.io.Serializable;
 import java.time.Instant;
-import java.util.Date;
 
 /**
  *

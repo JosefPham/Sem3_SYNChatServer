@@ -18,18 +18,19 @@ public class ConLogin implements ILogin {
      * Use for when creating a login object to return back up the system. case 0
      * and 1 return user= null case 2 return user from db
      *
-     * loginvalue shuld be 0 if the email dosent exist, 1 if email and pw
-     * dont match, and 2 if login is sucsessfull.
-     * user case(loginvalue) 0 and 1 return user= null case 2 return user
-     * from db
+     * loginvalue shuld be 0 if the email dosent exist, 1 if email and pw dont
+     * match, and 2 if login is sucsessfull. user case(loginvalue) 0 and 1
+     * return user= null case 2 return user from db
+     *
      * @param login
      */
     public ConLogin(ILogin login) {
         this.hMail = login.gethMail();
         this.hPW = login.gethPW();
         this.loginvalue = login.getLoginvalue();
-        if(login.getUser() != null)
-        this.user = new ConUser(login.getUser());
+        if (login.getUser() != null) {
+            this.user = new ConUser(login.getUser());
+        }
     }
 
     @Override

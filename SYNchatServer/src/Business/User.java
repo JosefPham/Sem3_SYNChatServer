@@ -16,8 +16,7 @@ public class User implements IUser {
     private IProfile profile;
     private Friends friends;
 
-    
-    public User(IUser user){
+    public User(IUser user) {
         this.userID = user.getUserID();
         this.banned = user.isBanned();
         this.reports = user.getReports();
@@ -25,12 +24,10 @@ public class User implements IUser {
         this.profile = new Profile(user.getProfile());
         this.friends = new Friends(user.getFriends());
     }
-    
-    
+
     public User(String firstName, String lastName, Nationality nationality, String profileText) {
         profile = new Profile(firstName, lastName, nationality, profileText);
     }
-
 
     public User(int userID, String tmpName, boolean banned, int reports, List<Integer> chats, Friends newFriends) {
         this.userID = userID;
@@ -89,18 +86,18 @@ public class User implements IUser {
     public IFriends getFriends() {
         return friends;
     }
-    
-     public void setFriends(IFriends friends){
+
+    public void setFriends(IFriends friends) {
         this.friends = (Friends) friends;
-     }
+    }
 
     IFriends updateFriends(IFriends newFriends, int userID) {
         int friendID = friends.updateFriends(newFriends, userID);
-        if(friendID == -1) {
+        if (friendID == -1) {
             System.out.println("No friend to add");
             return new Friends(new ArrayList<>());
         } else {
-            if(ServerSystem.getInstance().getOnlineUsers().containsKey(friendID)) {
+            if (ServerSystem.getInstance().getOnlineUsers().containsKey(friendID)) {
                 List<Integer> tmpList = new ArrayList<>();
                 tmpList.add(friendID);
                 return new Friends(tmpList);

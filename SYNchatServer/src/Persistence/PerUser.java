@@ -20,10 +20,10 @@ public class PerUser implements IUser {
         this.banned = banned;
         this.reports = reports;
         this.chats = chats;
-        
+
     }
-    
-     public PerUser(String firstName, String lastName, Nationality nationality, String profileText) {
+
+    public PerUser(String firstName, String lastName, Nationality nationality, String profileText) {
         profile = new PerProfile(firstName, lastName, nationality, "");
     }
 
@@ -76,8 +76,8 @@ public class PerUser implements IUser {
     public IFriends getFriends() {
         return friends;
     }
-    
-    public void setFriends(IFriends friends){
+
+    public void setFriends(IFriends friends) {
         this.friends = friends;
     }
 

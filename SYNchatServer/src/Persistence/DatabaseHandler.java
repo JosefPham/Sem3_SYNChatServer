@@ -4,7 +4,6 @@ import Acquaintance.IFriends;
 import Acquaintance.ILogin;
 import Acquaintance.IManagement;
 import Acquaintance.IProfile;
-import Acquaintance.IUser;
 import Acquaintance.Nationality;
 import java.sql.*;
 import java.sql.DriverManager;
@@ -44,7 +43,6 @@ public class DatabaseHandler {
 
         List<Integer> tmpList = new ArrayList<Integer>();
 
-     //  int userid = -1;
         String password = "";
         int countChats = -1;
 
@@ -58,15 +56,12 @@ public class DatabaseHandler {
             while (rs1.next()) {
                 user.setUserID(rs1.getInt("userid"));
                 password = rs1.getString("password");
-                
+
             }
             if (login.gethPW().equals(password)) {
                 PreparedStatement st2 = conn.prepareStatement("SELECT * FROM synchat.users "
                         + "WHERE users.userid = ?;");
 
-                
-                
-                //   st2.setString(1, login.gethMail());
                 st2.setInt(1, user.getUserID());
 
                 ResultSet rs2 = st2.executeQuery();
@@ -81,26 +76,24 @@ public class DatabaseHandler {
 
                 st3.setInt(1, user.getUserID());
                 ResultSet rs3 = st3.executeQuery();
-                
-                    while (rs3.next()) {
-                        tmpList.add(rs3.getInt("chatid"));
-                    }
-                    user.setChats(tmpList);
-                    System.out.println("users userID: " + user.getUserID());
-                    login.setUser(user);
-                
-                    
-                    IProfile returnProfile = getProfile(user.getUserID());
-                    IFriends returnFriends = getFriends(user.getUserID());
-                    
-                    user.setProfile(returnProfile);
-                    user.setFriends(returnFriends);
-                    
-                   // ILogin tempLog = new Login(2, returnUser);
-                    login.setLoginvalue(2);
-                    System.out.println("About to return login with: " + login.getUser().getUserID());
-                    return login;
-                
+
+                while (rs3.next()) {
+                    tmpList.add(rs3.getInt("chatid"));
+                }
+                user.setChats(tmpList);
+                System.out.println("users userID: " + user.getUserID());
+                login.setUser(user);
+
+                IProfile returnProfile = getProfile(user.getUserID());
+                IFriends returnFriends = getFriends(user.getUserID());
+
+                user.setProfile(returnProfile);
+                user.setFriends(returnFriends);
+
+                // ILogin tempLog = new Login(2, returnUser);
+                login.setLoginvalue(2);
+                System.out.println("About to return login with: " + login.getUser().getUserID());
+                return login;
 
             } else {
 
@@ -117,8 +110,7 @@ public class DatabaseHandler {
     }
 
     private IProfile getProfile(int userID) {
-        
-        
+
         try (Connection conn = DriverManager.getConnection(url, dbUsername, dbPassword)) {
             IProfile profile = (IProfile) new PerProfile("", "", Nationality.Denmark);
             Class.forName("org.postgresql.Driver");
@@ -132,10 +124,10 @@ public class DatabaseHandler {
                 profile.setProfileText(rs.getString("profile_text"));
                 String tmpNationolaty = rs.getString("nationality");
                 profile.setPicture(rs.getString("picture_reference"));
-                
+
                 profile.setNationality(Nationality.valueOf(tmpNationolaty));
             }
-            
+
             return profile;
 
         } catch (SQLException ex) {
@@ -150,7 +142,6 @@ public class DatabaseHandler {
     boolean createUser(ILogin login) {
         boolean createBoolean = false;
         boolean createProfileBoolean = false;
-       // Map<Integer, String> friendList;
         try (Connection conn = DriverManager.getConnection(url, dbUsername, dbPassword)) {
             PreparedStatement st0 = conn.prepareStatement("Select * FROM Synchat.users WHERE users.mail = ?;");
             st0.setString(1, login.gethMail());
@@ -165,17 +156,12 @@ public class DatabaseHandler {
             }
             int userID = getUserIDfromDB(login.gethMail());
             createProfileBoolean = createProfile(login, userID);
-            //friendList = getFriends(userID);
-            
 
         } catch (SQLException ex) {
             Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
         return (createBoolean && createProfileBoolean);
     }
-    
-    
-      
 
     private boolean createProfile(ILogin login, int profileID) {
 
@@ -221,100 +207,96 @@ public class DatabaseHandler {
     }
 
     boolean verify(IManagement management, int userID) {
-        
+
         boolean returnstatus = false;
 
-        if(management.getAction() == 0){
+        if (management.getAction() == 0) {
             System.out.println("Checking pw");
             try (Connection conn = DriverManager.getConnection(url, dbUsername, dbPassword)) {
-            Class.forName("org.postgresql.Driver");
+                Class.forName("org.postgresql.Driver");
 
-            PreparedStatement st = conn.prepareStatement("SELECT users.password FROM SYNchat.users WHERE users.userid = ?;");
-            st.setInt(1, (userID));
+                PreparedStatement st = conn.prepareStatement("SELECT users.password FROM SYNchat.users WHERE users.userid = ?;");
+                st.setInt(1, (userID));
 
-            ResultSet rs = st.executeQuery();
-            if (rs.next()) {
-                if (rs.getString("password").equals(management.getPw())) {
-                    //if passwords match return 1 for success.
-                    returnstatus = true;
-                } else {
-                    returnstatus = false;
+                ResultSet rs = st.executeQuery();
+                if (rs.next()) {
+                    if (rs.getString("password").equals(management.getPw())) {
+                        //if passwords match return 1 for success.
+                        returnstatus = true;
+                    } else {
+                        returnstatus = false;
+                    }
                 }
-            }
 
-        } catch (SQLException | ClassNotFoundException ex) {
-            Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        }
-        else if(management.getAction() == 1){
+            } catch (SQLException | ClassNotFoundException ex) {
+                Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } else if (management.getAction() == 1) {
             System.out.println("Checking mail");
             try (Connection conn = DriverManager.getConnection(url, dbUsername, dbPassword)) {
-            Class.forName("org.postgresql.Driver");
+                Class.forName("org.postgresql.Driver");
 
-            PreparedStatement st = conn.prepareStatement("SELECT users.mail FROM SYNchat.users WHERE users.userid = ?;");
-            st.setInt(1, (userID));
+                PreparedStatement st = conn.prepareStatement("SELECT users.mail FROM SYNchat.users WHERE users.userid = ?;");
+                st.setInt(1, (userID));
 
-            ResultSet rs = st.executeQuery();
-            if (rs.next()) {
-                if (rs.getString("mail").equals(management.getMail())) {
-                    //if passwords match return 1 for success.
-                    returnstatus = true;
-                } else {
-                    returnstatus = false;
+                ResultSet rs = st.executeQuery();
+                if (rs.next()) {
+                    if (rs.getString("mail").equals(management.getMail())) {
+                        //if passwords match return 1 for success.
+                        returnstatus = true;
+                    } else {
+                        returnstatus = false;
+                    }
                 }
-            }
 
-        } catch (SQLException | ClassNotFoundException ex) {
-            Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (SQLException | ClassNotFoundException ex) {
+                Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
-        }
-        
-       
+
         return returnstatus;
     }
 
     boolean changePw(IManagement management, int userID) {
-      //  int passwordverification = verifyPw(userID, management.getPw());
+        //  int passwordverification = verifyPw(userID, management.getPw());
         boolean returnstatus = false;
 
-    
-                //password success, edit database entries
-                try (Connection conn = DriverManager.getConnection(url, dbUsername, dbPassword)) {
-                    Class.forName("org.postgresql.Driver");
+        //password success, edit database entries
+        try (Connection conn = DriverManager.getConnection(url, dbUsername, dbPassword)) {
+            Class.forName("org.postgresql.Driver");
 
-                    PreparedStatement st = conn.prepareStatement("UPDATE SYNchat.users SET password = ? WHERE users.userid = ?;");
-                    st.setString(1, management.getPw());
-                    st.setInt(2, (userID));
+            PreparedStatement st = conn.prepareStatement("UPDATE SYNchat.users SET password = ? WHERE users.userid = ?;");
+            st.setString(1, management.getPw());
+            st.setInt(2, (userID));
 
-                    st.executeUpdate();
-                    returnstatus = true;
+            st.executeUpdate();
+            returnstatus = true;
 
-                } catch (SQLException | ClassNotFoundException ex) {
-                    Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
-                }
-           
+        } catch (SQLException | ClassNotFoundException ex) {
+            Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
         return returnstatus;
     }
 
     boolean changeMail(IManagement management, int userID) {
         boolean returnStatus = false;
 
-      
-                //password success, edit database entries
-                try (Connection conn = DriverManager.getConnection(url, dbUsername, dbPassword)) {
-                    Class.forName("org.postgresql.Driver");
+        //password success, edit database entries
+        try (Connection conn = DriverManager.getConnection(url, dbUsername, dbPassword)) {
+            Class.forName("org.postgresql.Driver");
 
-                    PreparedStatement st = conn.prepareStatement("UPDATE SYNchat.users SET mail = ? WHERE users.userid = ?;");
-                    st.setString(1, management.getMail());
-                    st.setInt(2, (userID));
+            PreparedStatement st = conn.prepareStatement("UPDATE SYNchat.users SET mail = ? WHERE users.userid = ?;");
+            st.setString(1, management.getMail());
+            st.setInt(2, (userID));
 
-                    st.executeUpdate();
-                    //success return 1.
-                    returnStatus = true;
+            st.executeUpdate();
+            //success return 1.
+            returnStatus = true;
 
-                } catch (SQLException | ClassNotFoundException ex) {
-                    Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
-                }
+        } catch (SQLException | ClassNotFoundException ex) {
+            Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
         return returnStatus;
     }
 
@@ -328,7 +310,7 @@ public class DatabaseHandler {
             st0.setString(2, management.getProfile().getLastName());
             st0.setString(3, management.getProfile().getNationality().toString());
             st0.setString(4, management.getProfile().getProfileText());
-            
+
             st0.setString(5, management.getProfile().getPicture());
             st0.setInt(6, (userID));
             System.out.println("st0" + st0);
@@ -339,10 +321,9 @@ public class DatabaseHandler {
         }
         return updateBoolean;
     }
-    
-    private IFriends getFriends(int userID){
-        
-      
+
+    private IFriends getFriends(int userID) {
+
         List<Integer> friends = new ArrayList<>();
         try (Connection conn = DriverManager.getConnection(url, dbUsername, dbPassword)) {
 
@@ -351,24 +332,18 @@ public class DatabaseHandler {
 
             ResultSet rs = st1.executeQuery();
 
-//            if(rs.next() == false){
-//                friends.put(userID, "initialFriend");
-//            }
-            
-            while(rs.next()){
-             //   friends.addFriend(rs.getInt("friendid"),rs.getString("friendName"));
+            while (rs.next()) {
                 friends.add(rs.getInt("friendid"));
             }
 
         } catch (SQLException ex) {
             Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-         IFriends returnFriends = new PerFriends(friends);
-        
+
+        IFriends returnFriends = new PerFriends(friends);
+
         return returnFriends;
     }
-
 
     boolean addFriend(int userID, int newFriendID) {
         Boolean createBoolean = false;

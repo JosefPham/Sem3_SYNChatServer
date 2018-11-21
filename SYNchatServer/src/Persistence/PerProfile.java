@@ -7,15 +7,13 @@ package Persistence;
 
 import Acquaintance.IProfile;
 import Acquaintance.Nationality;
-import Acquaintance.Nationality;
-import javafx.scene.image.Image;
 
 /**
  *
  * @author Alexa
  */
-public class PerProfile implements IProfile{
-    
+public class PerProfile implements IProfile {
+
     String firstName;
     String lastName;
     Nationality nationality;
@@ -27,18 +25,18 @@ public class PerProfile implements IProfile{
         this.lastName = lastName;
         this.nationality = nationality;
     }
-    
+
     public PerProfile(String firstName, String lastName, Nationality nationality, String profileText) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.nationality = nationality;
         this.profileText = profileText;
     }
-    
+
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
-    
+
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
@@ -54,7 +52,7 @@ public class PerProfile implements IProfile{
     public String getFirstName() {
         return firstName;
     }
-    
+
     public String getLastName() {
         return lastName;
     }
@@ -66,7 +64,7 @@ public class PerProfile implements IProfile{
     public String getProfileText() {
         return profileText;
     }
-    
+
     @Override
     public String getPicture() {
         return picture;

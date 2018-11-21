@@ -13,7 +13,7 @@ import Acquaintance.IProfile;
  * @author Alexa
  */
 public class Management implements IManagement {
-    
+
     int action;
     String pw;
     String mail;
@@ -28,7 +28,6 @@ public class Management implements IManagement {
     public int getAction() {
         return action;
     }
-
 
     @Override
     public String getPw() {
@@ -59,6 +58,5 @@ public class Management implements IManagement {
     public void setProfile(IProfile profile) {
         this.profile = profile;
     }
-    
-    
+
 }

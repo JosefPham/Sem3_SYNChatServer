@@ -79,14 +79,14 @@ public class ClientHandler extends Thread {
             tmpList.add(userID);
             ConFriends sendFriends = new ConFriends(tmpList);
             ClientHandler ch = (ClientHandler) clients.get(friendID);
-                try {
-                    synchronized (ch.output) {
-                        ch.output.writeObject(sendFriends);
-                    }
-                    ch.output.flush();
-                } catch (IOException ex) {
-                    ch.interrupt();
+            try {
+                synchronized (ch.output) {
+                    ch.output.writeObject(sendFriends);
                 }
+                ch.output.flush();
+            } catch (IOException ex) {
+                ch.interrupt();
+            }
         } catch (Exception e) {
         }
         return true;
@@ -144,7 +144,7 @@ public class ClientHandler extends Thread {
                 return true;
             }
         } else if (obj instanceof IManagement) {
-            
+
             IManagement management = new ConManagement(((IManagement) obj).getAction());
             management.setPw(((IManagement) obj).getPw());
             System.out.println("Management pw " + management.getPw());
@@ -152,18 +152,7 @@ public class ClientHandler extends Thread {
             System.out.println("Management mail " + management.getMail());
             management.setProfile(((IManagement) obj).getProfile());
             sendBool(ConnectionFacade.getInstance().changeInfo(management, this.userID));
- 
-//            
-//            ConUser user = new ConUser(((IProfile) obj).getFirstName(), ((IProfile) obj).getLastName(), ((IProfile) obj).getNationality(), ((IUser) obj).getProfile().getProfileText());
-//            user.setUserID(((IUser) obj).getUserID());
-//            user.setChats(((IUser) obj).getChats());
-//            user.setReports(((IUser) obj).getReports());
-//            user.setBanned(((IUser) obj).isBanned());
-//            sendBool(ConnectionFacade.getInstance().updateProfile(management, userID));
-            
-            
-            
-            
+
             return true;
         } else if (obj instanceof String) {
             if (obj.toString().equals("!SYN!-logout-!SYN!")) {
@@ -282,18 +271,16 @@ public class ClientHandler extends Thread {
         IUser sendUser = new ConUser(newUser);
         synchronized (currentPublicChatMap) {
             for (Integer i : currentPublicChatMap.keySet()) {
-              //  if (i != userID) {
 
-                    ClientHandler ch = (ClientHandler) clients.get(i);
-                    try {
-                        synchronized (ch.output) {
-                            ch.output.writeObject(sendUser);
-                        }
-                        ch.output.flush();
-                    } catch (IOException ex) {
-                        ch.interrupt();
+                ClientHandler ch = (ClientHandler) clients.get(i);
+                try {
+                    synchronized (ch.output) {
+                        ch.output.writeObject(sendUser);
                     }
-               // }
+                    ch.output.flush();
+                } catch (IOException ex) {
+                    ch.interrupt();
+                }
             }
         }
 

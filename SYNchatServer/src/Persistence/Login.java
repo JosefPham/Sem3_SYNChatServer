@@ -54,7 +54,7 @@ public class Login implements ILogin {
         return user;
     }
 
-   @Override
+    @Override
     public void setLoginvalue(int loginvalue) {
         this.loginvalue = loginvalue;
     }

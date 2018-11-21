@@ -40,9 +40,6 @@ public class SYNchatServer {
             InetAddress ip = (InetAddress) InetAddress.getByName("10.126.41.217");
             int port = 8080;
             Server server = new Server(ip, port);
-
-            // Thread t = new Thread(server);
-            //    t.start();
         } catch (IOException ex) {
             Logger.getLogger(SYNchatServer.class.getName()).log(Level.SEVERE, null, ex);
         }
