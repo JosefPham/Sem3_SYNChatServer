@@ -28,7 +28,6 @@ public class SYNchatServer {
         IBusiness business = BusinessFacade.getInstance();
         IConnection con = ConnectionFacade.getInstance();
         IPersistence per = PersistenceFacade.getInstance();
-
         /**
          * Calls the injects on the business and connection facads which
          * acquaints them with the facade under then trhough there interface
