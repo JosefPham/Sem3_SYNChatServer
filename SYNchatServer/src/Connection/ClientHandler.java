@@ -165,6 +165,7 @@ public class ClientHandler extends Thread {
             return true;
         } else if (obj instanceof String) {
             if (obj.toString().equals("!SYN!-logout-!SYN!")) {
+                kick();
                 return false;
             }
 
@@ -222,13 +223,7 @@ public class ClientHandler extends Thread {
             
                 if (clients.get(userID).equals(this)) {
                     System.out.println("removing: " + userID);
-                    if(currentPublicChatMap.containsKey(userID)){
-                      sendPublicChatUser(userID);  
-                      ConnectionFacade.getInstance().updatePublicChatUsers(userID); // fjernes fra public chat
-                      currentPublicChatMap.remove(userID);  
-                        
-                    }
-                    ConnectionFacade.getInstance().removeOnlineUser(userID);
+                    kick();
                     clients.remove(userID);
                     
                 }
@@ -241,6 +236,17 @@ public class ClientHandler extends Thread {
             }
         }
 
+    }
+    
+    
+    private void kick(){
+          if(currentPublicChatMap.containsKey(userID)){
+                      sendPublicChatUser(userID);  
+                      ConnectionFacade.getInstance().updatePublicChatUsers(userID); // fjernes fra public chat
+                      currentPublicChatMap.remove(userID);  
+                        
+                    }
+                    ConnectionFacade.getInstance().removeOnlineUser(userID);
     }
 
     protected static void sendPrivateMessage(String message, Integer reciever) {
