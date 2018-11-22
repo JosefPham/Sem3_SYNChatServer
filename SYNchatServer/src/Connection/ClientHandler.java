@@ -223,9 +223,10 @@ public class ClientHandler extends Thread {
                 if (clients.get(userID).equals(this)) {
                     System.out.println("removing: " + userID);
                     if(currentPublicChatMap.containsKey(userID)){
+                      sendPublicChatUser(userID);  
                       ConnectionFacade.getInstance().updatePublicChatUsers(userID); // fjernes fra public chat
                       currentPublicChatMap.remove(userID);  
-                        sendPublicChatUser(userID);
+                        
                     }
                     ConnectionFacade.getInstance().removeOnlineUser(userID);
                     clients.remove(userID);
