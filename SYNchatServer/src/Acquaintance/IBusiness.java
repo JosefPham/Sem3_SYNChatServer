@@ -24,7 +24,7 @@ public interface IBusiness {
     
     public Map updatePublicChatUsers(int userID);
 
-    public IFriends updateFriends(IFriends friends, int userID);
+    public boolean updateFriends(IFriends friends, int userID);
     
     public boolean verify(IManagement management, int userID);
 }

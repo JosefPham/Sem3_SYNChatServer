@@ -9,10 +9,7 @@ import Acquaintance.IFriends;
 import Acquaintance.ILogin;
 import Acquaintance.IMessage;
 import Acquaintance.IUser;
-
 import Acquaintance.IManagement;
-import Acquaintance.IProfile;
-
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -73,12 +70,8 @@ public class ClientHandler extends Thread {
     boolean sendFriends(IFriends friends) {
 
         try {
-            IFriends b = ConnectionFacade.getInstance().updateFriends(friends, userID);
-            int friendID = b.getFriendlist().get(0);
-            List<Integer> tmpList = new ArrayList<>();
-            tmpList.add(userID);
-            ConFriends sendFriends = new ConFriends(tmpList);
-            ClientHandler ch = (ClientHandler) clients.get(friendID);
+            ConFriends sendFriends = new ConFriends(friends);
+            ClientHandler ch = (ClientHandler) clients.get(userID);
             try {
                 synchronized (ch.output) {
                     ch.output.writeObject(sendFriends);
@@ -163,6 +156,9 @@ public class ClientHandler extends Thread {
             sendBool(ConnectionFacade.getInstance().changeInfo(management, this.userID));
 
             return true;
+        } else if (obj instanceof ConFriends) {
+            IFriends newConFriend = new ConFriends((IFriends) obj);
+            sendBool(ConnectionFacade.getInstance().updateFriends(newConFriend, this.userID));
         } else if (obj instanceof String) {
             if (obj.toString().equals("!SYN!-logout-!SYN!")) {
                 kick();
@@ -172,10 +168,10 @@ public class ClientHandler extends Thread {
             if (obj.toString().equals("!SYN!-PublicChat-!SYN!")) {
                 System.out.println("Entered public chat with " + userID);
                 IUser removeUser = new ConUser(null);
-                if(currentPublicChatMap != null){
+                if (currentPublicChatMap != null) {
                     removeUser = currentPublicChatMap.get(userID);
                 }
-                
+
                 currentPublicChatMap = ConnectionFacade.getInstance().updatePublicChatUsers(userID);
                 if (currentPublicChatMap.containsKey(userID) && !currentPublicChatMap.isEmpty()) { // login
                     sendMap(currentPublicChatMap);
