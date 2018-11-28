@@ -10,6 +10,7 @@ import Acquaintance.ILogin;
 import Acquaintance.IMessage;
 import Acquaintance.IUser;
 import Acquaintance.IManagement;
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -207,7 +208,6 @@ public class ClientHandler extends Thread {
                                     System.out.println("Logged out");
                                     l = null;
                                 }
-                                //  l = null;
                             }
                         }
                     } else if (l == null && obj != null) {
@@ -217,10 +217,11 @@ public class ClientHandler extends Thread {
 
             }
         } catch (IOException ex) {
-            Logger.getLogger(ClientHandler.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("Error reading from client! - client disconnected");
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(ClientHandler.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
+        } 
+            finally {
 
             if (clients.get(userID).equals(this)) {
                 System.out.println("removing: " + userID);
