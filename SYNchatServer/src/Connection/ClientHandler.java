@@ -156,7 +156,7 @@ public class ClientHandler extends Thread {
             sendBool(ConnectionFacade.getInstance().changeInfo(management, this.userID));
 
             return true;
-        } else if (obj instanceof ConFriends) {
+        } else if (obj instanceof IFriends) {
             IFriends newConFriend = new ConFriends((IFriends) obj);
             sendBool(ConnectionFacade.getInstance().updateFriends(newConFriend, this.userID));
         } else if (obj instanceof String) {
