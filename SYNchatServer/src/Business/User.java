@@ -91,19 +91,17 @@ public class User implements IUser {
         this.friends = (Friends) friends;
     }
 
-    IFriends updateFriends(IFriends newFriends, int userID) {
+    public boolean updateFriends(IFriends newFriends, int userID) {
         int friendID = friends.updateFriends(newFriends, userID);
         if (friendID == -1) {
             System.out.println("No friend to add");
-            return new Friends(new ArrayList<>());
+            return false;
         } else {
             if (ServerSystem.getInstance().getOnlineUsers().containsKey(friendID)) {
-                List<Integer> tmpList = new ArrayList<>();
-                tmpList.add(friendID);
-                return new Friends(tmpList);
+                return true;
             }
         }
-        return new Friends(new ArrayList<>());
+        return false;
     }
 
 }

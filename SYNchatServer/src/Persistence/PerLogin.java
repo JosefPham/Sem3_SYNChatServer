@@ -6,7 +6,7 @@ import Acquaintance.IUser;
 /**
  * class used for returning a login object containing loginvalue and User
  */
-public class Login implements ILogin {
+public class PerLogin implements ILogin {
 
     private String hMail = null;
     private String hPW = null;
@@ -22,12 +22,12 @@ public class Login implements ILogin {
      * @param user case(loginvalue) 0 and 1 return user= null case 2 return user
      * from db
      */
-    Login(int loginvalue, IUser user) {
+    PerLogin(int loginvalue, IUser user) {
         this.loginvalue = loginvalue;
         this.user = user;
     }
 
-    Login(String mail, String pw, int value, IUser user) {
+    PerLogin(String mail, String pw, int value, IUser user) {
         this.hMail = mail;
         this.hPW = pw;
         this.loginvalue = value;

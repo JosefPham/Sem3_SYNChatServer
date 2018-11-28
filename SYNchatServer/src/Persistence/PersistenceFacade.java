@@ -48,6 +48,7 @@ public class PersistenceFacade implements IPersistence {
         return sqlDatabase.changePw(management, userID);
     }
 
+    @Override
     public boolean verify(IManagement management, int userID) {
         return sqlDatabase.verify(management, userID);
     }

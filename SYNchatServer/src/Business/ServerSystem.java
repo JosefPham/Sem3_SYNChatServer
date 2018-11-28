@@ -71,10 +71,10 @@ public class ServerSystem {
 
     }
 
-    synchronized IFriends updateFriends(IFriends friends, int userID) {
+    synchronized boolean updateFriends(IFriends friends, int userID) {
         if (!onlineUsers.containsKey(userID)) {
             System.out.println("User not found in onlineUsers!");
-            return new Friends(new ArrayList<>());
+            return false;
         } else {
             return onlineUsers.get(userID).updateFriends(friends, userID);
         }
@@ -90,11 +90,8 @@ public class ServerSystem {
             return publicChatUser;
         } else {
             publicChatUser.put(userID, onlineUsers.get(userID));
-            System.out.println("Mappet i serverSYs: " + publicChatUser.get(userID));
+            System.out.println("Mappet i serverSYs: " + publicChatUser.entrySet());
             return publicChatUser;
-            // send tilbage til sigurd
         }
-
     }
-
 }

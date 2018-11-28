@@ -9,10 +9,8 @@ import Acquaintance.IFriends;
 import Acquaintance.ILogin;
 import Acquaintance.IMessage;
 import Acquaintance.IUser;
-
 import Acquaintance.IManagement;
-import Acquaintance.IProfile;
-
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -64,7 +62,7 @@ public class ClientHandler extends Thread {
     public void sendBool(Boolean b) {
         try {
             output.writeObject(b);
-            System.out.println("Sendte en boolean");
+            System.out.println("Sendte en boolean " + b);
         } catch (IOException ex) {
             Logger.getLogger(ClientHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -73,12 +71,8 @@ public class ClientHandler extends Thread {
     boolean sendFriends(IFriends friends) {
 
         try {
-            IFriends b = ConnectionFacade.getInstance().updateFriends(friends, userID);
-            int friendID = b.getFriendlist().get(0);
-            List<Integer> tmpList = new ArrayList<>();
-            tmpList.add(userID);
-            ConFriends sendFriends = new ConFriends(tmpList);
-            ClientHandler ch = (ClientHandler) clients.get(friendID);
+            ConFriends sendFriends = new ConFriends(friends);
+            ClientHandler ch = (ClientHandler) clients.get(userID);
             try {
                 synchronized (ch.output) {
                     ch.output.writeObject(sendFriends);
@@ -104,15 +98,14 @@ public class ClientHandler extends Thread {
     public void sendMap(Map<Integer, IUser> m) {
         try {
             Map<Integer, IUser> conMap = new HashMap<>();
-            for(int i : m.keySet()){
+            for (int i : m.keySet()) {
                 conMap.put(i, new ConUser(m.get(i)));
             }
-            for(int i : conMap.keySet()){
-                
+            for (int i : conMap.keySet()) {
+
             }
             output.writeObject(conMap);
-            
-            System.out.println("Sendte en map " + userID);
+            System.out.println("Sender et map til: " + userID);
             System.out.println("Map: " + m.get(userID));
         } catch (IOException ex) {
             Logger.getLogger(ClientHandler.class.getName()).log(Level.SEVERE, null, ex);
@@ -163,6 +156,9 @@ public class ClientHandler extends Thread {
             sendBool(ConnectionFacade.getInstance().changeInfo(management, this.userID));
 
             return true;
+        } else if (obj instanceof IFriends) {
+            IFriends newConFriend = new ConFriends((IFriends) obj);
+            sendBool(ConnectionFacade.getInstance().updateFriends(newConFriend, this.userID));
         } else if (obj instanceof String) {
             if (obj.toString().equals("!SYN!-logout-!SYN!")) {
                 kick();
@@ -171,15 +167,20 @@ public class ClientHandler extends Thread {
 
             if (obj.toString().equals("!SYN!-PublicChat-!SYN!")) {
                 System.out.println("Entered public chat with " + userID);
-                Map m = ConnectionFacade.getInstance().updatePublicChatUsers(userID);
-                currentPublicChatMap = m;
-               // if (m.containsKey(userID)) {
-                    sendMap(m);
-                    sendPublicChatUser(userID);
-               // }
+                IUser removeUser = new ConUser(null);
+                if (currentPublicChatMap != null) {
+                    removeUser = currentPublicChatMap.get(userID);
+                }
+
+                currentPublicChatMap = ConnectionFacade.getInstance().updatePublicChatUsers(userID);
+                if (currentPublicChatMap.containsKey(userID) && !currentPublicChatMap.isEmpty()) { // login
+                    sendMap(currentPublicChatMap);
+                    sendPublicChatUser(currentPublicChatMap.get(userID));
+                } else { // logout
+                    sendPublicChatUser(removeUser);
+                }
             }
         }
-
         return true;
     }
 
@@ -206,7 +207,6 @@ public class ClientHandler extends Thread {
                                     System.out.println("Logged out");
                                     l = null;
                                 }
-                                //  l = null;
                             }
                         }
                     } else if (l == null && obj != null) {
@@ -216,18 +216,18 @@ public class ClientHandler extends Thread {
 
             }
         } catch (IOException ex) {
-            Logger.getLogger(ClientHandler.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("Error reading from client! - client disconnected");
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(ClientHandler.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            
-                if (clients.get(userID).equals(this)) {
-                    System.out.println("removing: " + userID);
-                    kick();
-                    clients.remove(userID);
-                    
-                }
-            
+        } 
+            finally {
+
+            if (clients.get(userID).equals(this)) {
+                System.out.println("removing: " + userID);
+                kick();
+                clients.remove(userID);
+
+            }
 
             try {
                 s.close();
@@ -237,16 +237,14 @@ public class ClientHandler extends Thread {
         }
 
     }
-    
-    
-    private void kick(){
-          if(currentPublicChatMap.containsKey(userID)){
-                      sendPublicChatUser(userID);  
-                      ConnectionFacade.getInstance().updatePublicChatUsers(userID); // fjernes fra public chat
-                      currentPublicChatMap.remove(userID);  
-                        
-                    }
-                    ConnectionFacade.getInstance().removeOnlineUser(userID);
+
+    private void kick() {
+        if (currentPublicChatMap.containsKey(userID)) {
+            sendPublicChatUser(currentPublicChatMap.get(userID));
+            ConnectionFacade.getInstance().updatePublicChatUsers(userID); // fjernes fra public chat
+            currentPublicChatMap.remove(userID);
+        }
+        ConnectionFacade.getInstance().removeOnlineUser(userID);
     }
 
     protected static void sendPrivateMessage(String message, Integer reciever) {
@@ -285,23 +283,23 @@ public class ClientHandler extends Thread {
         }
     }
 
-    protected synchronized void sendPublicChatUser(int userID) { // opdater saa den kan sende friends ogsaa - sendMap
-        IUser newUser = currentPublicChatMap.get(userID);
-        IUser sendUser = new ConUser(newUser);
+    protected synchronized void sendPublicChatUser(IUser user) { // opdater saa den kan sende friends ogsaa - sendMap
+        IUser sendUser = new ConUser(user);
         synchronized (currentPublicChatMap) {
             for (Integer i : currentPublicChatMap.keySet()) {
 
-                if(i != userID){
-                    
-                ClientHandler ch = (ClientHandler) clients.get(i);
-                try {
-                    synchronized (ch.output) {
-                        ch.output.writeObject(sendUser);
+                if (i != userID) {
+
+                    ClientHandler ch = (ClientHandler) clients.get(i);
+                    try {
+                        synchronized (ch.output) {
+                            System.out.println("Sending user: " + sendUser.getUserID());
+                            ch.output.writeObject(sendUser);
+                        }
+                        ch.output.flush();
+                    } catch (IOException ex) {
+                        ch.interrupt();
                     }
-                    ch.output.flush();
-                } catch (IOException ex) {
-                    ch.interrupt();
-                }
                 }
             }
         }

@@ -88,15 +88,15 @@ public class BusinessFacade implements IBusiness {
     }
 
     @Override
-    public IFriends updateFriends(IFriends friends, int userID) {
+    public boolean updateFriends(IFriends friends, int userID) {
         return ServerSystem.getInstance().updateFriends(friends, userID);
     }
 
-    boolean addFriend(int userID, int newFriendID) {
+    protected boolean addFriend(int userID, int newFriendID) {
         return persistence.addFriend(userID, newFriendID);
     }
 
-    boolean removeFriend(int userID, int oldFriendID) {
+    protected boolean removeFriend(int userID, int oldFriendID) {
         return persistence.removeFriend(userID, oldFriendID);
     }
 
