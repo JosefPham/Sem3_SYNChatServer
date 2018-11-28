@@ -62,7 +62,7 @@ public class ClientHandler extends Thread {
     public void sendBool(Boolean b) {
         try {
             output.writeObject(b);
-            System.out.println("Sendte en boolean");
+            System.out.println("Sendte en boolean " + b);
         } catch (IOException ex) {
             Logger.getLogger(ClientHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -105,8 +105,7 @@ public class ClientHandler extends Thread {
 
             }
             output.writeObject(conMap);
-
-            System.out.println("Sendte en map " + userID);
+            System.out.println("Sender et map til: " + userID);
             System.out.println("Map: " + m.get(userID));
         } catch (IOException ex) {
             Logger.getLogger(ClientHandler.class.getName()).log(Level.SEVERE, null, ex);
@@ -294,6 +293,7 @@ public class ClientHandler extends Thread {
                     ClientHandler ch = (ClientHandler) clients.get(i);
                     try {
                         synchronized (ch.output) {
+                            System.out.println("Sending user: " + sendUser.getUserID());
                             ch.output.writeObject(sendUser);
                         }
                         ch.output.flush();
