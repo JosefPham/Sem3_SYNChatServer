@@ -4,10 +4,13 @@ import Acquaintance.IFriends;
 import Acquaintance.ILogin;
 import Acquaintance.IManagement;
 import Acquaintance.IUser;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ *
+ * @author Group 9
+ */
 public class ServerSystem {
 
     private static ServerSystem instance = null;

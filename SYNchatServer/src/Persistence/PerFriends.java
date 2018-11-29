@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Persistence;
 
 import Acquaintance.IFriends;
@@ -11,7 +6,7 @@ import java.util.List;
 
 /**
  *
- * @author Peter
+ * @author Group 9
  */
 public class PerFriends implements IFriends {
 

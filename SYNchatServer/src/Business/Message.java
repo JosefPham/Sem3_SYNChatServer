@@ -1,9 +1,9 @@
 package Business;
 
+
 import Acquaintance.IMessage;
 import java.io.Serializable;
 import java.time.Instant;
-
 /**
  *
  * @author Group 9

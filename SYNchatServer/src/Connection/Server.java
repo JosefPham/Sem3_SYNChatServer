@@ -5,6 +5,10 @@
  */
 package Connection;
 
+/**
+ *
+ * @author Group 9
+ */
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
@@ -16,11 +20,10 @@ import java.util.logging.Logger;
 
 /**
  *
- * @author Sigurd E. Espersen
+ * @author Group 9
  */
 public class Server {
 
-    private int nudeCounter;
     private int port;
     private boolean isStopped = false;
     ExecutorService threadpool = Executors.newFixedThreadPool(10);
@@ -52,8 +55,6 @@ public class Server {
             Socket clientSocket;
             try {
                 clientSocket = this.serverSocket.accept(); // Wait for connection and accept
-                nudeCounter++;
-                System.out.println("You recieved a nude! It is nude number: " + nudeCounter);
                 ClientHandler ch = new ClientHandler(clientSocket);
                 // check login
                 ch.start();

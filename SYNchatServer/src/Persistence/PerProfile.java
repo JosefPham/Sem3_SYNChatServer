@@ -10,7 +10,7 @@ import Acquaintance.Nationality;
 
 /**
  *
- * @author Alexa
+ * @author Group 9
  */
 public class PerProfile implements IProfile {
 

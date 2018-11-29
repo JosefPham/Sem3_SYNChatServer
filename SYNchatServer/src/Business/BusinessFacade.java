@@ -6,13 +6,16 @@ import Acquaintance.ILogin;
 import Acquaintance.IManagement;
 import Acquaintance.IPersistence;
 import java.util.Map;
-
+/**
+ *
+ * @author Group 9
+ */
 public class BusinessFacade implements IBusiness {
 
     private IPersistence persistence;
 
     private ServerSystem serversys = ServerSystem.getInstance();
-    
+
     private static BusinessFacade instance;
 
     /**
@@ -28,8 +31,8 @@ public class BusinessFacade implements IBusiness {
      * @return the facade itself.
      */
     public static BusinessFacade getInstance() {
-        
-            if(instance == null){
+
+        if (instance == null) {
             instance = new BusinessFacade();
         }
         return instance;
@@ -48,9 +51,9 @@ public class BusinessFacade implements IBusiness {
 
     @Override
     public ILogin checkLogin(ILogin login) {
-     return serversys.login(login);
+        return serversys.login(login);
     }
-    
+
     ILogin checkLoginDB(ILogin login) {
         ILogin tmpLogin = persistence.Login(login);
         ILogin returnLogin = new Login(tmpLogin);
@@ -61,27 +64,27 @@ public class BusinessFacade implements IBusiness {
     public Boolean createUser(ILogin login) {
         return persistence.createUser(login);
     }
-    
+
     @Override
     public boolean changeInfo(IManagement management, int userID) {
         return serversys.changeInfo(management, userID);
     }
-    
+
     @Override
     public boolean updateProfile(IManagement management, int userID) {
         return serversys.updateProfile(management, userID);
     }
-    
+
     @Override
     public boolean alterProfile(IManagement management, int userID) {
         return persistence.alterProfile(management, userID);
     }
-    
+
     @Override
     public boolean updateMailSQL(IManagement management, int userID) {
         return persistence.changeMail(management, userID);
     }
-    
+
     @Override
     public boolean updatePwSQL(IManagement management, int userID) {
         return persistence.changePw(management, userID);
@@ -104,15 +107,15 @@ public class BusinessFacade implements IBusiness {
     public void removeOnlineUser(int userID) {
         serversys.removeOnlineUser(userID);
     }
-    
+
     @Override
-    public Map updatePublicChatUsers(int userID){
+    public Map updatePublicChatUsers(int userID) {
         return serversys.updatePublicChatUsers(userID);
     }
 
     @Override
     public boolean verify(IManagement management, int userID) {
-       return persistence.verify(management, userID);
+        return persistence.verify(management, userID);
     }
 
 }

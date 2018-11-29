@@ -4,9 +4,12 @@ import Acquaintance.IFriends;
 import Acquaintance.IProfile;
 import Acquaintance.IUser;
 import Acquaintance.Nationality;
-import java.util.ArrayList;
 import java.util.List;
 
+/**
+ *
+ * @author Group 9
+ */
 public class User implements IUser {
 
     private int userID;

@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Connection;
 
 import Acquaintance.IFriends;
@@ -10,21 +5,18 @@ import Acquaintance.ILogin;
 import Acquaintance.IMessage;
 import Acquaintance.IUser;
 import Acquaintance.IManagement;
-import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
  *
- * @author Peter
+ * @author Group 9
  */
 public class ClientHandler extends Thread {
 
@@ -53,7 +45,7 @@ public class ClientHandler extends Thread {
     public void sendLoginInfo(ILogin login) {
         try {
             output.writeObject(login);
-            System.out.println("Sendte et login");
+            System.out.println("Sent a login");
         } catch (IOException ex) {
             Logger.getLogger(ClientHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -62,7 +54,7 @@ public class ClientHandler extends Thread {
     public void sendBool(Boolean b) {
         try {
             output.writeObject(b);
-            System.out.println("Sendte en boolean " + b);
+            System.out.println("Sent a boolean " + b);
         } catch (IOException ex) {
             Logger.getLogger(ClientHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -89,7 +81,7 @@ public class ClientHandler extends Thread {
     public void sendInt(int value) {
         try {
             output.writeObject(value);
-            System.out.println("Sendte en int");
+            System.out.println("Sent an int");
         } catch (IOException ex) {
             Logger.getLogger(ClientHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -105,7 +97,7 @@ public class ClientHandler extends Thread {
 
             }
             output.writeObject(conMap);
-            System.out.println("Sender et map til: " + userID);
+            System.out.println("Sending map to: " + userID);
             System.out.println("Map: " + m.get(userID));
         } catch (IOException ex) {
             Logger.getLogger(ClientHandler.class.getName()).log(Level.SEVERE, null, ex);
@@ -117,7 +109,7 @@ public class ClientHandler extends Thread {
         ILogin l = null;
 
         if (obj instanceof ILogin) {
-            System.out.println("Det er et login");
+            System.out.println("It's a login");
 
             if (((ILogin) obj).getUser() == null) {
                 l = ConnectionFacade.getInstance().checkLogin((ILogin) obj);
@@ -125,7 +117,7 @@ public class ClientHandler extends Thread {
                 sendLoginInfo(sendConLog);
             } else {
                 Boolean b = ConnectionFacade.getInstance().createUser((ILogin) obj);
-                System.out.println("Sender: " + b);
+                System.out.println("Sending: " + b);
                 sendBool(b);
             }
         }
@@ -219,8 +211,7 @@ public class ClientHandler extends Thread {
             System.out.println("Error reading from client! - client disconnected");
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(ClientHandler.class.getName()).log(Level.SEVERE, null, ex);
-        } 
-            finally {
+        } finally {
 
             if (clients.get(userID).equals(this)) {
                 System.out.println("removing: " + userID);

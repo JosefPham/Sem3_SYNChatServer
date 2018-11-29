@@ -3,6 +3,10 @@ package Connection;
 import Acquaintance.IManagement;
 import Acquaintance.IProfile;
 
+/**
+ *
+ * @author Group 9
+ */
 public class ConManagement implements IManagement {
 
     private final int action;

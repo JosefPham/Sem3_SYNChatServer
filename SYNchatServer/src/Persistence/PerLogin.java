@@ -4,6 +4,10 @@ import Acquaintance.ILogin;
 import Acquaintance.IUser;
 
 /**
+ *
+ * @author Group 9
+ */
+/**
  * class used for returning a login object containing loginvalue and User
  */
 public class PerLogin implements ILogin {

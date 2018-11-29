@@ -4,13 +4,18 @@ import Acquaintance.IFriends;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ *
+ * @author Group 9
+ */
 public class ConFriends implements IFriends {
 
     private List<Integer> friendlist;
 
     public ConFriends(IFriends friends) {
-        if(friends != null)
-        this.friendlist = friends.getFriendlist();
+        if (friends != null) {
+            this.friendlist = friends.getFriendlist();
+        }
     }
 
     public ConFriends(List<Integer> friends) {
