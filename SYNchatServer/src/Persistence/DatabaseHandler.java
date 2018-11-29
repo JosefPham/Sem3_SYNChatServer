@@ -181,7 +181,7 @@ public class DatabaseHandler {
                 st1.setString(3, login.getUser().getProfile().getNationality().toString());
                 st1.setInt(4, profileID);
                 st1.setString(5, "");
-                st1.setString(6, "src/Assets/Avatar_0.png");
+                st1.setString(6, "src/Assets/Avatars/Avatar_0.png");
 
                 st1.executeUpdate();
                 success = true;

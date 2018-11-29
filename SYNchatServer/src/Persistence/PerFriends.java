@@ -28,7 +28,6 @@ public class PerFriends implements IFriends {
             friendlist.add(userID);
             return true;
         } else {
-            System.out.println("user is already in friendlist");
             return false;
         }
 

@@ -36,34 +36,42 @@ public class Profile implements IProfile {
         this.profileText = profileText;
     }
 
+    @Override
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
 
+    @Override
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
 
+    @Override
     public void setNationality(Nationality nationality) {
         this.nationality = nationality;
     }
 
+    @Override
     public void setProfileText(String profileText) {
         this.profileText = profileText;
     }
 
+    @Override
     public String getFirstName() {
         return firstName;
     }
 
+    @Override
     public String getLastName() {
         return lastName;
     }
 
+    @Override
     public Nationality getNationality() {
         return nationality;
     }
 
+    @Override
     public String getProfileText() {
         return profileText;
     }

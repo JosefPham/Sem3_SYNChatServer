@@ -97,7 +97,6 @@ public class User implements IUser {
     public boolean updateFriends(IFriends newFriends, int userID) {
         int friendID = friends.updateFriends(newFriends, userID);
         if (friendID == -1) {
-            System.out.println("No friend to add");
             return false;
         } else {
             if (ServerSystem.getInstance().getOnlineUsers().containsKey(friendID)) {

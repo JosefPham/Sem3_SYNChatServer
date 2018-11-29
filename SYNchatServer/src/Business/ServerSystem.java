@@ -76,7 +76,6 @@ public class ServerSystem {
 
     synchronized boolean updateFriends(IFriends friends, int userID) {
         if (!onlineUsers.containsKey(userID)) {
-            System.out.println("User not found in onlineUsers!");
             return false;
         } else {
             return onlineUsers.get(userID).updateFriends(friends, userID);
@@ -93,7 +92,7 @@ public class ServerSystem {
             return publicChatUser;
         } else {
             publicChatUser.put(userID, onlineUsers.get(userID));
-            System.out.println("Mappet i serverSYs: " + publicChatUser.entrySet());
+            System.out.println("Map contains: " + publicChatUser.entrySet());
             return publicChatUser;
         }
     }

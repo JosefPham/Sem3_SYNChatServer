@@ -42,7 +42,6 @@ public class Server {
     private boolean createSocket() {
         try {
             serverSocket = new ServerSocket(port, 0, ip);
-            // port = sslServerSocket.getLocalPort();
             return true;
         } catch (IOException ex) {
             Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
@@ -50,13 +49,15 @@ public class Server {
         return false;
     }
 
+    /**
+     * Accepts a client trying to connect to the server, assigns and starts a thread to the client
+     */
     private void acceptClient() {
         while (!isStopped()) {
             Socket clientSocket;
             try {
                 clientSocket = this.serverSocket.accept(); // Wait for connection and accept
                 ClientHandler ch = new ClientHandler(clientSocket);
-                // check login
                 ch.start();
             } catch (IOException e) {
                 throw new RuntimeException("Error accepting client connection", e);

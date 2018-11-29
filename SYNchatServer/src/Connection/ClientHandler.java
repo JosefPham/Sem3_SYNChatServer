@@ -104,6 +104,13 @@ public class ClientHandler extends Thread {
         }
     }
 
+    /**
+     * Checks the login sent my the client
+     * Returns a boolean if the user is being created
+     * Returns an ILogin if the client is trying to login
+     * @param Object
+     * @return ILogin
+     */
     public ILogin checkLogin(Object obj) {
 
         ILogin l = null;
@@ -125,6 +132,13 @@ public class ClientHandler extends Thread {
         return l;
     }
 
+    /**
+     * readStream receives an object from the client and manages it according to
+     * the object type
+     *
+     * @param Object
+     * @return boolean
+     */
     public boolean readStream(Object obj) {
 
         System.out.println("Waiting");
@@ -176,6 +190,9 @@ public class ClientHandler extends Thread {
         return true;
     }
 
+    /**
+     * runs the clientHandler thread, that receives input from the client
+     */
     public void run() {
 
         ILogin l = null;
@@ -229,6 +246,9 @@ public class ClientHandler extends Thread {
 
     }
 
+    /**
+     * Removes the client from the hashmaps throughout the system.
+     */
     private void kick() {
         if (currentPublicChatMap.containsKey(userID)) {
             sendPublicChatUser(currentPublicChatMap.get(userID));
@@ -255,6 +275,10 @@ public class ClientHandler extends Thread {
 
     }
 
+    /**
+     * Sends a message to all the users in the public chat
+     * @param IMessage
+     */
     protected synchronized void sendPublicMessage(IMessage message) {
         synchronized (clients) {
             System.out.println("Trying to send a message!");
@@ -274,6 +298,10 @@ public class ClientHandler extends Thread {
         }
     }
 
+    /**
+     * Sends the user who just entered the public chat out to all the clients in the public chat
+     * @param IUser 
+     */
     protected synchronized void sendPublicChatUser(IUser user) { // opdater saa den kan sende friends ogsaa - sendMap
         IUser sendUser = new ConUser(user);
         synchronized (currentPublicChatMap) {
