@@ -9,11 +9,11 @@ import Acquaintance.Nationality;
  */
 public class Profile implements IProfile {
 
-    String firstName;
-    String lastName;
-    Nationality nationality;
-    String picture; //Watch out for the datatype!
-    String profileText;
+   private String firstName;
+   private String lastName;
+   private Nationality nationality;
+   private String picture; //Watch out for the datatype!
+   private String profileText;
 
     public Profile(IProfile profile) {
         this.firstName = profile.getFirstName();

@@ -41,6 +41,13 @@ public class DatabaseHandler {
         }
     }
      */
+    /**
+     * Compares hashed mail and pw if correct, get the user and the chats, and
+     * set integer based on success
+     *
+     * @param ILogin
+     * @return ILogin
+     */
     ILogin Login(ILogin login) {
         //User only for initializing purposes
         PerUser user = new PerUser(-1, true, -1, null);
@@ -165,6 +172,12 @@ public class DatabaseHandler {
         return (createBoolean && createProfileBoolean);
     }
 
+    /**
+     * creates a profile and sets the avatar to Avatar_0
+     * @param ILogin
+     * @param int
+     * @return boolean
+     */
     private boolean createProfile(ILogin login, int profileID) {
 
         boolean success = false;
@@ -191,6 +204,12 @@ public class DatabaseHandler {
         return success;
     }
 
+    /**
+     * Used to find the userID based off mail
+     * used by createUser
+     * @param hashedMail
+     * @return userID
+     */
     private int getUserIDfromDB(String hashedMail) {
         int userID = -1;
 
@@ -208,6 +227,12 @@ public class DatabaseHandler {
         return userID;
     }
 
+    /**
+     * used to verify if user can update mail and password
+     * @param management
+     * @param userID
+     * @return boolean
+     */
     boolean verify(IManagement management, int userID) {
 
         boolean returnstatus = false;
@@ -256,7 +281,12 @@ public class DatabaseHandler {
 
         return returnstatus;
     }
-
+/**
+ * Updates the users password if access was granted by verify
+ * @param management
+ * @param userID
+ * @return boolean
+ */
     boolean changePw(IManagement management, int userID) {
         //  int passwordverification = verifyPw(userID, management.getPw());
         boolean returnstatus = false;
@@ -279,6 +309,12 @@ public class DatabaseHandler {
         return returnstatus;
     }
 
+    /**
+     * Updates the mail if access was granted by verify
+     * @param management
+     * @param userID
+     * @return 
+     */
     boolean changeMail(IManagement management, int userID) {
         boolean returnStatus = false;
 
@@ -300,6 +336,12 @@ public class DatabaseHandler {
         return returnStatus;
     }
 
+    /**
+     * Changes the profile information without verification
+     * @param management
+     * @param userID
+     * @return 
+     */
     boolean alterProfile(IManagement management, int userID) {
         Boolean updateBoolean = false;
         try (Connection conn = DriverManager.getConnection(url, dbUsername, dbPassword)) {

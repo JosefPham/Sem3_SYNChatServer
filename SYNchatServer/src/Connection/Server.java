@@ -13,8 +13,6 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -26,15 +24,13 @@ public class Server {
 
     private int port;
     private boolean isStopped = false;
-    ExecutorService threadpool = Executors.newFixedThreadPool(10);
-    InetAddress ip;
-    ServerSocket serverSocket;
+    private InetAddress ip;
+    private ServerSocket serverSocket;
 
     public Server(InetAddress ip, int port) {
         this.port = port;
         this.ip = ip;
         createSocket();
-        System.out.println("Server started");
         acceptClient();
 
     }
@@ -73,7 +69,6 @@ public class Server {
     public synchronized void stop() {
         this.isStopped = true;
         try {
-            System.out.println("Closing web server");
             this.serverSocket.close();
         } catch (IOException e) {
             throw new RuntimeException("Error closing server", e);

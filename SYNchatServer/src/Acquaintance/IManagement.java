@@ -14,17 +14,17 @@ public interface IManagement extends Serializable {
      *
      * @return
      */
-    public int getAction();
+    int getAction();
 
-    public String getPw();
+    String getPw();
 
-    public void setPw(String pw);
+    void setPw(String pw);
 
-    public String getMail();
+    String getMail();
 
-    public void setMail(String mail);
+    void setMail(String mail);
 
-    public IProfile getProfile();
+    IProfile getProfile();
 
-    public void setProfile(IProfile profile);
+    void setProfile(IProfile profile);
 }

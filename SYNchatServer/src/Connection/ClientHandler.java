@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
@@ -22,8 +23,8 @@ public class ClientHandler extends Thread {
 
     private volatile Map<Integer, IUser> currentPublicChatMap;
     private Socket s;
-    ObjectInputStream input;
-    ObjectOutputStream output;
+    private ObjectInputStream input;
+    private ObjectOutputStream output;
 
     Integer userID = -1;
 
@@ -136,7 +137,7 @@ public class ClientHandler extends Thread {
 
         if (obj instanceof IMessage) {
             ConMessage msg = new ConTextMessage(((IMessage) obj).getSenderID(), ((IMessage) obj).getContext());
-
+            msg.setTimestamp(Instant.now());
             if (!msg.getContext().contains("!SYN!-logout-!SYN!")) {
                 sendPublicMessage(msg);
                 return true;
@@ -217,7 +218,6 @@ public class ClientHandler extends Thread {
         } finally {
 
             if (clients.get(userID).equals(this)) {
-                System.out.println("removing: " + userID);
                 kick();
                 clients.remove(userID);
 

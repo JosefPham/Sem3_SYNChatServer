@@ -49,6 +49,14 @@ public class ServerSystem {
 
     }
 
+    /**
+     * The client applies to changes mail or password, and sends a management object with action=0, or action=2 to just alter profile info
+     * The server then verifies the sent information and returns a boolean if the action was 0
+     * If the information was correct, the user changes the action to 2 and updates the settings
+     * @param management
+     * @param userID
+     * @return 
+     */
     protected synchronized boolean changeInfo(IManagement management, int userID) {
         boolean returnstatus = false;
         if ((management.getAction() == 0) || (management.getAction() == 1)) {

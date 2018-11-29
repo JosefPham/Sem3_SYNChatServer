@@ -15,7 +15,6 @@ public abstract class ConMessage implements Serializable, IMessage {
 
     public ConMessage(int senderID) {
         this.senderID = senderID;
-        timestamp = Instant.now();
     }
 
     @Override

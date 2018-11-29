@@ -8,17 +8,17 @@ import java.io.Serializable;
  */
 public interface ILogin extends Serializable {
 
-    public String gethMail();
+    String gethMail();
 
-    public String gethPW();
+    String gethPW();
 
-    public int getLoginvalue();
+    int getLoginvalue();
 
-    public IUser getUser();
+    IUser getUser();
 
-    public void setLoginvalue(int loginvalue);
+    void setLoginvalue(int loginvalue);
 
-    public void setUser(IUser user);
+    void setUser(IUser user);
 
-    public int login(ILogin finalLogin);
+    int login(ILogin finalLogin);
 }

@@ -13,5 +13,7 @@ public interface IMessage {
 
     Instant getTimestamp();
 
+    void setTimestamp(Instant timestamp);
+
     String getContext();
 }
