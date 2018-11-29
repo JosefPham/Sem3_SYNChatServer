@@ -12,6 +12,10 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ *
+ * @author Group 9
+ */
 public class DatabaseHandler {
 
     static String url = "jdbc:postgresql://tek-mmmi-db0a.tek.c.sdu.dk:5432/si3_2018_group_9_db";
@@ -36,6 +40,13 @@ public class DatabaseHandler {
             Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+     */
+    /**
+     * Compares hashed mail and pw if correct, get the user and the chats, and
+     * set integer based on success
+     *
+     * @param ILogin
+     * @return ILogin
      */
     ILogin Login(ILogin login) {
         //User only for initializing purposes
@@ -81,7 +92,6 @@ public class DatabaseHandler {
                     tmpList.add(rs3.getInt("chatid"));
                 }
                 user.setChats(tmpList);
-                System.out.println("users userID: " + user.getUserID());
                 login.setUser(user);
 
                 IProfile returnProfile = getProfile(user.getUserID());
@@ -92,7 +102,6 @@ public class DatabaseHandler {
 
                 // ILogin tempLog = new Login(2, returnUser);
                 login.setLoginvalue(2);
-                System.out.println("About to return login with: " + login.getUser().getUserID());
                 return login;
 
             } else {
@@ -163,6 +172,12 @@ public class DatabaseHandler {
         return (createBoolean && createProfileBoolean);
     }
 
+    /**
+     * creates a profile and sets the avatar to Avatar_0
+     * @param ILogin
+     * @param int
+     * @return boolean
+     */
     private boolean createProfile(ILogin login, int profileID) {
 
         boolean success = false;
@@ -177,7 +192,7 @@ public class DatabaseHandler {
                 st1.setString(3, login.getUser().getProfile().getNationality().toString());
                 st1.setInt(4, profileID);
                 st1.setString(5, "");
-                st1.setString(6, "src/Assets/Avatar_0.png");
+                st1.setString(6, "src/Assets/Avatars/Avatar_0.png");
 
                 st1.executeUpdate();
                 success = true;
@@ -189,6 +204,12 @@ public class DatabaseHandler {
         return success;
     }
 
+    /**
+     * Used to find the userID based off mail
+     * used by createUser
+     * @param hashedMail
+     * @return userID
+     */
     private int getUserIDfromDB(String hashedMail) {
         int userID = -1;
 
@@ -206,12 +227,17 @@ public class DatabaseHandler {
         return userID;
     }
 
+    /**
+     * used to verify if user can update mail and password
+     * @param management
+     * @param userID
+     * @return boolean
+     */
     boolean verify(IManagement management, int userID) {
 
         boolean returnstatus = false;
 
         if (management.getAction() == 0) {
-            System.out.println("Checking pw");
             try (Connection conn = DriverManager.getConnection(url, dbUsername, dbPassword)) {
                 Class.forName("org.postgresql.Driver");
 
@@ -232,7 +258,6 @@ public class DatabaseHandler {
                 Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
             }
         } else if (management.getAction() == 1) {
-            System.out.println("Checking mail");
             try (Connection conn = DriverManager.getConnection(url, dbUsername, dbPassword)) {
                 Class.forName("org.postgresql.Driver");
 
@@ -256,7 +281,12 @@ public class DatabaseHandler {
 
         return returnstatus;
     }
-
+/**
+ * Updates the users password if access was granted by verify
+ * @param management
+ * @param userID
+ * @return boolean
+ */
     boolean changePw(IManagement management, int userID) {
         //  int passwordverification = verifyPw(userID, management.getPw());
         boolean returnstatus = false;
@@ -279,6 +309,12 @@ public class DatabaseHandler {
         return returnstatus;
     }
 
+    /**
+     * Updates the mail if access was granted by verify
+     * @param management
+     * @param userID
+     * @return 
+     */
     boolean changeMail(IManagement management, int userID) {
         boolean returnStatus = false;
 
@@ -300,8 +336,13 @@ public class DatabaseHandler {
         return returnStatus;
     }
 
+    /**
+     * Changes the profile information without verification
+     * @param management
+     * @param userID
+     * @return 
+     */
     boolean alterProfile(IManagement management, int userID) {
-        System.out.println("user: " + management.getProfile().getFirstName() + " " + management.getProfile().getLastName());
         Boolean updateBoolean = false;
         try (Connection conn = DriverManager.getConnection(url, dbUsername, dbPassword)) {
             Class.forName("org.postgresql.Driver");
@@ -313,7 +354,6 @@ public class DatabaseHandler {
 
             st0.setString(5, management.getProfile().getPicture());
             st0.setInt(6, (userID));
-            System.out.println("st0" + st0);
             st0.executeUpdate();
             updateBoolean = true;
         } catch (SQLException | ClassNotFoundException ex) {

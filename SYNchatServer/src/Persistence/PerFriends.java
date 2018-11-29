@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Persistence;
 
 import Acquaintance.IFriends;
@@ -11,11 +6,11 @@ import java.util.List;
 
 /**
  *
- * @author Peter
+ * @author Group 9
  */
 public class PerFriends implements IFriends {
 
-    List<Integer> friendlist = new ArrayList<>();
+   private List<Integer> friendlist = new ArrayList<>();
 
     public PerFriends(List<Integer> friendlist) {
         for (Integer key : friendlist) {
@@ -33,7 +28,6 @@ public class PerFriends implements IFriends {
             friendlist.add(userID);
             return true;
         } else {
-            System.out.println("user is already in friendlist");
             return false;
         }
 

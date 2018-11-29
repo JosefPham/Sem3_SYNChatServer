@@ -5,6 +5,10 @@ import Acquaintance.IProfile;
 import Acquaintance.IUser;
 import java.util.List;
 
+/**
+ *
+ * @author Group 9
+ */
 public class ConUser implements IUser {
 
     private int userID;

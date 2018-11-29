@@ -9,14 +9,13 @@ import Persistence.PersistenceFacade;
 
 import Connection.Server;
 import java.io.IOException;
-import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
  *
- * @author Peter Test server
+ * @author Group 9
  */
 public class SYNchatServer {
 

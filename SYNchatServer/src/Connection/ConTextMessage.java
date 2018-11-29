@@ -1,6 +1,7 @@
 package Connection;
 
 import Acquaintance.ITextMessage;
+import java.time.Instant;
 
 /**
  *
@@ -26,5 +27,10 @@ public class ConTextMessage extends ConMessage implements ITextMessage {
     @Override
     public String getContext() {
         return msg;
+    }
+
+    @Override
+    public void setTimestamp(Instant timestamp) {
+        this.timestamp = timestamp;
     }
 }

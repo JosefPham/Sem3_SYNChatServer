@@ -6,6 +6,10 @@ import Acquaintance.IUser;
 import Acquaintance.Nationality;
 import java.util.List;
 
+/**
+ *
+ * @author Group 9
+ */
 public class PerUser implements IUser {
 
     private int userID;

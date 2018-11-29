@@ -7,6 +7,10 @@ import Acquaintance.ILogin;
 import Acquaintance.IManagement;
 import java.util.Map;
 
+/**
+ *
+ * @author Group 9
+ */
 public class ConnectionFacade implements IConnection {
 
     private IBusiness business;

@@ -10,6 +10,10 @@ public class PersistenceFacade implements IPersistence {
     private DatabaseHandler sqlDatabase = new DatabaseHandler();
 
     /**
+     *
+     * @author Group 9
+     */
+    /**
      * Private Constructor, requred for singleton
      */
     private PersistenceFacade() {

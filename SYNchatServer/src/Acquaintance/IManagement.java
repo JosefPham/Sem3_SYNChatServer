@@ -2,26 +2,29 @@ package Acquaintance;
 
 import java.io.Serializable;
 
+/**
+ *
+ * @author Group 9
+ */
 public interface IManagement extends Serializable {
 
     /**
-     * Action int = task. 
-     * 0 boolean check password 
-     * 1 boolean check mail 
-     * 2 update entire profile
+     * Action int = task. 0 boolean check password 1 boolean check mail 2 update
+     * entire profile
+     *
      * @return
      */
-    public int getAction();
+    int getAction();
 
-    public String getPw();
+    String getPw();
 
-    public void setPw(String pw);
+    void setPw(String pw);
 
-    public String getMail();
+    String getMail();
 
-    public void setMail(String mail);
+    void setMail(String mail);
 
-    public IProfile getProfile();
+    IProfile getProfile();
 
-    public void setProfile(IProfile profile);
+    void setProfile(IProfile profile);
 }

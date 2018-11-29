@@ -1,9 +1,9 @@
 package Business;
 
+
 import Acquaintance.IMessage;
 import java.io.Serializable;
 import java.time.Instant;
-
 /**
  *
  * @author Group 9
@@ -32,4 +32,10 @@ public abstract class Message implements Serializable, IMessage {
     public String getContext() {
         return "Abstract klasse getContext";
     }
+
+    @Override
+    public void setTimestamp(Instant timestamp) {
+        this.timestamp = timestamp;
+    }
+    
 }

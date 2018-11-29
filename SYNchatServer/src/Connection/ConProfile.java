@@ -3,6 +3,10 @@ package Connection;
 import Acquaintance.IProfile;
 import Acquaintance.Nationality;
 
+/**
+ *
+ * @author Group 9
+ */
 public class ConProfile implements IProfile {
 
     private String firstName;
