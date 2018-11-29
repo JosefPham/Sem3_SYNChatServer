@@ -85,7 +85,6 @@ public class DatabaseHandler {
                     tmpList.add(rs3.getInt("chatid"));
                 }
                 user.setChats(tmpList);
-                System.out.println("users userID: " + user.getUserID());
                 login.setUser(user);
 
                 IProfile returnProfile = getProfile(user.getUserID());
@@ -96,7 +95,6 @@ public class DatabaseHandler {
 
                 // ILogin tempLog = new Login(2, returnUser);
                 login.setLoginvalue(2);
-                System.out.println("About to return login with: " + login.getUser().getUserID());
                 return login;
 
             } else {
@@ -215,7 +213,6 @@ public class DatabaseHandler {
         boolean returnstatus = false;
 
         if (management.getAction() == 0) {
-            System.out.println("Checking pw");
             try (Connection conn = DriverManager.getConnection(url, dbUsername, dbPassword)) {
                 Class.forName("org.postgresql.Driver");
 
@@ -236,7 +233,6 @@ public class DatabaseHandler {
                 Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
             }
         } else if (management.getAction() == 1) {
-            System.out.println("Checking mail");
             try (Connection conn = DriverManager.getConnection(url, dbUsername, dbPassword)) {
                 Class.forName("org.postgresql.Driver");
 
@@ -305,7 +301,6 @@ public class DatabaseHandler {
     }
 
     boolean alterProfile(IManagement management, int userID) {
-        System.out.println("user: " + management.getProfile().getFirstName() + " " + management.getProfile().getLastName());
         Boolean updateBoolean = false;
         try (Connection conn = DriverManager.getConnection(url, dbUsername, dbPassword)) {
             Class.forName("org.postgresql.Driver");
@@ -317,7 +312,6 @@ public class DatabaseHandler {
 
             st0.setString(5, management.getProfile().getPicture());
             st0.setInt(6, (userID));
-            System.out.println("st0" + st0);
             st0.executeUpdate();
             updateBoolean = true;
         } catch (SQLException | ClassNotFoundException ex) {

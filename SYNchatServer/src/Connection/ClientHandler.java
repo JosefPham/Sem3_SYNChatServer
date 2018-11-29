@@ -32,7 +32,6 @@ public class ClientHandler extends Thread {
     public ClientHandler(Socket s) {
         try {
             this.s = s;
-            System.out.println("got: " + s.getInetAddress());
 
             output = new ObjectOutputStream(s.getOutputStream());
             input = new ObjectInputStream(s.getInputStream());
@@ -45,7 +44,6 @@ public class ClientHandler extends Thread {
     public void sendLoginInfo(ILogin login) {
         try {
             output.writeObject(login);
-            System.out.println("Sent a login");
         } catch (IOException ex) {
             Logger.getLogger(ClientHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -54,7 +52,6 @@ public class ClientHandler extends Thread {
     public void sendBool(Boolean b) {
         try {
             output.writeObject(b);
-            System.out.println("Sent a boolean " + b);
         } catch (IOException ex) {
             Logger.getLogger(ClientHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -81,7 +78,6 @@ public class ClientHandler extends Thread {
     public void sendInt(int value) {
         try {
             output.writeObject(value);
-            System.out.println("Sent an int");
         } catch (IOException ex) {
             Logger.getLogger(ClientHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -97,8 +93,6 @@ public class ClientHandler extends Thread {
 
             }
             output.writeObject(conMap);
-            System.out.println("Sending map to: " + userID);
-            System.out.println("Map: " + m.get(userID));
         } catch (IOException ex) {
             Logger.getLogger(ClientHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -116,7 +110,6 @@ public class ClientHandler extends Thread {
         ILogin l = null;
 
         if (obj instanceof ILogin) {
-            System.out.println("It's a login");
 
             if (((ILogin) obj).getUser() == null) {
                 l = ConnectionFacade.getInstance().checkLogin((ILogin) obj);
@@ -124,7 +117,6 @@ public class ClientHandler extends Thread {
                 sendLoginInfo(sendConLog);
             } else {
                 Boolean b = ConnectionFacade.getInstance().createUser((ILogin) obj);
-                System.out.println("Sending: " + b);
                 sendBool(b);
             }
         }
@@ -141,12 +133,10 @@ public class ClientHandler extends Thread {
      */
     public boolean readStream(Object obj) {
 
-        System.out.println("Waiting");
 
         if (obj instanceof IMessage) {
             ConMessage msg = new ConTextMessage(((IMessage) obj).getSenderID(), ((IMessage) obj).getContext());
 
-            System.out.println("msg: " + msg.getContext() + " at time: " + msg.getTimestamp().toString());
             if (!msg.getContext().contains("!SYN!-logout-!SYN!")) {
                 sendPublicMessage(msg);
                 return true;
@@ -155,9 +145,7 @@ public class ClientHandler extends Thread {
 
             IManagement management = new ConManagement(((IManagement) obj).getAction());
             management.setPw(((IManagement) obj).getPw());
-            System.out.println("Management pw " + management.getPw());
             management.setMail(((IManagement) obj).getMail());
-            System.out.println("Management mail " + management.getMail());
             management.setProfile(((IManagement) obj).getProfile());
             sendBool(ConnectionFacade.getInstance().changeInfo(management, this.userID));
 
@@ -172,7 +160,6 @@ public class ClientHandler extends Thread {
             }
 
             if (obj.toString().equals("!SYN!-PublicChat-!SYN!")) {
-                System.out.println("Entered public chat with " + userID);
                 IUser removeUser = new ConUser(null);
                 if (currentPublicChatMap != null) {
                     removeUser = currentPublicChatMap.get(userID);
@@ -213,7 +200,6 @@ public class ClientHandler extends Thread {
 
                             if ((obj != null) && (!(obj instanceof ILogin))) {
                                 if (!readStream(obj)) {
-                                    System.out.println("Logged out");
                                     l = null;
                                 }
                             }
@@ -250,10 +236,14 @@ public class ClientHandler extends Thread {
      * Removes the client from the hashmaps throughout the system.
      */
     private void kick() {
+        if(currentPublicChatMap != null){
+            
+        
         if (currentPublicChatMap.containsKey(userID)) {
             sendPublicChatUser(currentPublicChatMap.get(userID));
             ConnectionFacade.getInstance().updatePublicChatUsers(userID); // fjernes fra public chat
             currentPublicChatMap.remove(userID);
+        }
         }
         ConnectionFacade.getInstance().removeOnlineUser(userID);
     }
@@ -281,13 +271,11 @@ public class ClientHandler extends Thread {
      */
     protected synchronized void sendPublicMessage(IMessage message) {
         synchronized (clients) {
-            System.out.println("Trying to send a message!");
 
             for (Integer i : currentPublicChatMap.keySet()) {
                 ClientHandler ch = (ClientHandler) clients.get(i);
                 try {
                     synchronized (ch.output) {
-                        System.out.println("About to write: " + message.getContext());
                         ch.output.writeObject(message);
                     }
                     ch.output.flush();
@@ -312,7 +300,6 @@ public class ClientHandler extends Thread {
                     ClientHandler ch = (ClientHandler) clients.get(i);
                     try {
                         synchronized (ch.output) {
-                            System.out.println("Sending user: " + sendUser.getUserID());
                             ch.output.writeObject(sendUser);
                         }
                         ch.output.flush();

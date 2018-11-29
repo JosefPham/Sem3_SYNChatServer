@@ -92,7 +92,6 @@ public class ServerSystem {
             return publicChatUser;
         } else {
             publicChatUser.put(userID, onlineUsers.get(userID));
-            System.out.println("Map contains: " + publicChatUser.entrySet());
             return publicChatUser;
         }
     }
